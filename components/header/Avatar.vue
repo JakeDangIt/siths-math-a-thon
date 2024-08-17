@@ -14,7 +14,7 @@
 const userStore = useUserStore()
 const user = useSupabaseUser()
 
-const { name } = user.value.user_metadata
+const name = computed(() => user.value?.user_metadata?.name || '')
 const firstName = computed(() => {
     const [first] = name.value.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';

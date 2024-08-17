@@ -1,0 +1,72 @@
+<script setup>
+import { useToastStore } from '@/stores/toast'
+import { useToast } from '@/components/ui/toast/use-toast'
+
+// idk why but i had to import vueuse so i can have reactive window size
+import { useWindowSize } from "#imports";
+
+const toastStore = useToastStore()
+const { toast } = useToast()
+
+// reactive vars
+const { width } = useWindowSize();
+const layout = ref("default");
+const isLoading = ref(true);
+
+// mobile screen is width less than 1024px
+const isMobile = computed(() => width.value < 1024);
+
+onMounted(async () => {
+  // set layout based on screen size and watches change in widths
+  watch(
+    isMobile,
+    (newValue) => {
+      layout.value = newValue ? "mobile" : "default";
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => [toastStore.toastID],
+    ([newID]) => {
+      toast({
+        title: toastStore.titleMessage,
+        description: toastStore.descriptionMessage,
+      })
+    }
+  )
+
+  isLoading.value = false
+})
+</script>
+
+<template>
+
+  <Head>
+    <Title>SITHS Math-a-Thon</Title>
+    <Meta name="description" content="insert description here" />
+    <Link rel="preconnect" href="https://fonts.googleapis.com" />
+    <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <Link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet" />
+  </Head>
+
+  <!-- show skeleton when loading the layout -->
+  <Skeleton v-if="isLoading" class="h-[48px] w-full" />
+
+  <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 
+  so only render on client while loading (which should show nothing anyway)  -->
+  <ClientOnly v-if="isLoading">
+    <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
+      <NuxtPage />
+    </NuxtLayout>
+  </ClientOnly>
+
+  <!-- show mobile if mobile screen, show default if larger -->
+  <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
+    <NuxtLoadingIndicator color="#CB5D56" />
+    <NuxtPage />
+    <Toaster />
+  </NuxtLayout>
+</template>

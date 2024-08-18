@@ -1,5 +1,6 @@
 <script setup>
 defineProps(['default'])
+import { teachers } from '../../utils/teachers'
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const toastStore = useToastStore()
@@ -187,8 +188,8 @@ onMounted(() => {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Teachers</SelectLabel>
-                                                        <SelectItem value="something">
-                                                            Mrs. Something
+                                                        <SelectItem v-for="teacher in teachers" :value="teacher.value">
+                                                            {{ teacher.name }}
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -203,8 +204,17 @@ onMounted(() => {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Grade</SelectLabel>
-                                                        <SelectItem value="1234">
-                                                            1234
+                                                        <SelectItem value="9">
+                                                            9th
+                                                        </SelectItem>
+                                                        <SelectItem value="10">
+                                                            10th
+                                                        </SelectItem>
+                                                        <SelectItem value="11">
+                                                            11th
+                                                        </SelectItem>
+                                                        <SelectItem value="12">
+                                                            12th
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>

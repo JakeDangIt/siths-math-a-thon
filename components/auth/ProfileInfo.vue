@@ -1,4 +1,5 @@
 <script setup>
+import { teachers } from '../../utils/teachers'
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 const userStore = useUserStore()
@@ -12,8 +13,8 @@ const teacher = computed(() => user.value?.user_metadata?.teacher || '')
 const grade = computed(() => user.value?.user_metadata?.grade || '')
 
 const firstName = computed(() => {
-  const [first] = name.value.split(' ');
-  return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
+    const [first] = name.value.split(' ');
+    return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
 });
 
 // input values
@@ -167,7 +168,9 @@ async function updateUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Teachers</SelectLabel>
-                                    <SelectItem value="Mrs. Something">Mrs. Something</SelectItem>
+                                    <SelectItem v-for="teacher in teachers" :value="teacher.value">
+                                        {{ teacher.name }}
+                                    </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -181,7 +184,21 @@ async function updateUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Grade</SelectLabel>
-                                    <SelectItem value="1234">1234</SelectItem>
+                                    <SelectGroup>
+                                        <SelectLabel>Grade</SelectLabel>
+                                        <SelectItem value="9">
+                                            9th
+                                        </SelectItem>
+                                        <SelectItem value="10">
+                                            10th
+                                        </SelectItem>
+                                        <SelectItem value="11">
+                                            11th
+                                        </SelectItem>
+                                        <SelectItem value="12">
+                                            12th
+                                        </SelectItem>
+                                    </SelectGroup>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

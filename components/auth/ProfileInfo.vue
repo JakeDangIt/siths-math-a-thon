@@ -157,7 +157,7 @@ async function updateUser() {
                     </div>
                     <div class="space-y-1">
                         <Label for="osis">OSIS Number</Label>
-                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
+                        <Input id="osis" type="tel" v-model="newOsis" :placeholder="osis" inputmode="numeric"
                             pattern="[0-9]*" />
                     </div>
                     <div class="space-y-1">
@@ -215,11 +215,3 @@ async function updateUser() {
         </Card>
     </div>
 </template>
-
-<style scoped>
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>

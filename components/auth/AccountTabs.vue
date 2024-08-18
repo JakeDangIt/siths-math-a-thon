@@ -183,7 +183,7 @@ onMounted(() => {
                                         </div>
                                         <div class="space-y-1">
                                             <Label for="osis">OSIS Number</Label>
-                                            <Input type="number" id="osis" v-model="userOSIS" inputmode="numeric"
+                                            <Input type="tel" id="osis" v-model="userOSIS" inputmode="numeric"
                                                 pattern="[0-9]*" />
                                         </div>
                                         <div class="space-y-1">
@@ -274,11 +274,3 @@ onMounted(() => {
         </Tabs>
     </div>
 </template>
-
-<style scoped>
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>

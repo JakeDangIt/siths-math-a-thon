@@ -18,7 +18,8 @@ const userAgreement = ref(false)
 
 // validity
 const passwordValid = computed(() => userPassword.value.length >= 6)
-const isSignupFormValid = computed(() => userEmail.value !== '' && userPassword.value !== '' && userAgreement.value && passwordValid.value)
+const emailValid = computed(() => userEmail.value.includes('@nycstudents.net'))
+const isSignupFormValid = computed(() => emailValid.value && passwordValid.value && userAgreement.value )
 const isPersonalValid = computed(() => userOSIS.value !== '' && userName.value !== '' && userTeacher.value !== '' && userGrade.value !== '')
 
 // loading
@@ -136,15 +137,20 @@ onMounted(() => {
                         <CardContent class="space-y-2">
                             <!-- sign up fields -->
                             <div class="space-y-1">
-                                <Label for="email">Email (NYCDOE)</Label>
+                                <Label for="email" :class="{ 'text-theme-red': !emailValid && userEmail.length > 0 }">{{
+                                    !emailValid && userEmail.length > 0
+                                        ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
                                 <Input type="email" id="email" v-model="userEmail" />
                             </div>
                             <div class="space-y-1">
                                 <Label for="password"
-                                    :class="{ 'text-theme-red': !passwordValid && (userPassword.length > 0 && userPassword.length < 6) }">
-                                    {{ !passwordValid && (userPassword.length > 0 && userPassword.length < 6)
-                                        ? 'Please enter a password longer than 6 characters' : 'Password' }} </Label>
-                                        <Input type="password" id="password" v-model="userPassword" />
+                                    :class="{ 'text-theme-red': !passwordValid && userPassword.length > 0 }">
+
+                                    {{ !passwordValid && userPassword.length > 0
+                                        ? 'Please enter a password longer than 6 characters' : 'Password' }}
+
+                                </Label>
+                                <Input type="password" id="password" v-model="userPassword" />
                             </div>
 
                             <div class="space-x-2">
@@ -177,7 +183,8 @@ onMounted(() => {
                                         </div>
                                         <div class="space-y-1">
                                             <Label for="osis">OSIS Number</Label>
-                                            <Input type="number" id="osis" v-model="userOSIS" />
+                                            <Input type="number" id="osis" v-model="userOSIS" inputmode="numeric"
+                                                pattern="[0-9]*" />
                                         </div>
                                         <div class="space-y-1">
                                             <Label for="teacher">Teacher</Label>

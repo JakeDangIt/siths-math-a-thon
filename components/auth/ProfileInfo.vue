@@ -20,6 +20,7 @@ const firstName = computed(() => {
 // input values
 const newName = ref('')
 const newEmail = ref('')
+const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
 const newOsis = ref('')
 const newTeacher = ref('')
 const newGrade = ref('')
@@ -106,7 +107,7 @@ async function updateUser() {
         } else {
             setTimeout(() => {
                 toastStore.changeToast('User updated', newEmail.value !== '' ? 'Your information has been updated. Please confirm your email change.' : 'Your information has been updated.')
-            }, 1000);
+            }, 600);
         }
 
         // Clear all fields
@@ -117,9 +118,6 @@ async function updateUser() {
         newGrade.value = ''
 
         updateLoading.value = false
-
-        // user info is updated, refresh the user
-        user.value = await userStore.refreshUser()
     } else {
         toastStore.changeToast('No changes made', 'Please fill out your information to update.')
     }
@@ -152,12 +150,15 @@ async function updateUser() {
                         <Input id="name" type="text" v-model="newName" :placeholder="name" />
                     </div>
                     <div class="space-y-1">
-                        <Label for="email">Email</Label>
-                        <Input id="email" type="text" v-model="newEmail" :placeholder="email" />
+                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">{{
+                            !emailValid && newEmail.length > 0
+                                ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
+                        <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
                     </div>
                     <div class="space-y-1">
                         <Label for="osis">OSIS Number</Label>
-                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" />
+                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
+                            pattern="[0-9]*" />
                     </div>
                     <div class="space-y-1">
                         <Label for="teacher">Teacher</Label>

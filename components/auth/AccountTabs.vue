@@ -1,6 +1,7 @@
 <script setup>
 defineProps(['default'])
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 const toastStore = useToastStore()
 
 const isLoading = ref(true)
@@ -42,14 +43,16 @@ async function handleSignup() {
                 osis: userOSIS.value,
                 teacher: userTeacher.value,
                 grade: userGrade.value,
+                profile_complete: false
             }
         }
     })
     if (error) {
-        toastStore.changeToast('Error', error.message)
+        toastStore.changeToast('Error signing up', error.message)
     } else {
         toastStore.changeToast('Success', 'You have successfully signed up. Please confirm in your email.')
     }
+
     isDialogOpen.value = false
     signupLoading.value = false
 }
@@ -64,12 +67,36 @@ async function handleLogin() {
     if (error) {
         toastStore.changeToast('Error', error.message)
     } else {
+        if (!user.value.user_metadata.profile_complete) {
+            const { error: uploadError } = await supabase
+                .from('profiles')
+                .insert({
+                    uuid: user.value.id,
+                    name: user.value.user_metadata.name,
+                    email: user.value.email,
+                    osis: Number(user.value.user_metadata.osis),
+                    teacher: user.value.user_metadata.teacher,
+                    grade: Number(user.value.user_metadata.grade),
+                })
+            if (uploadError) {
+                toastStore.changeToast('Error uploading profile', uploadError.message)
+            }
+
+            const { error: updateError } = await supabase.auth.updateUser({
+                data: {
+                    profile_complete: true
+                }
+            })
+            if (updateError) {
+                toastStore.changeToast('Error updating user', updateError.message)
+            }
+        }
         toastStore.changeToast('Success', 'You have successfully logged in.')
+
+        // redirect to profile 
+        await navigateTo('/auth/profile')
     }
     loginLoading.value = false
-
-    // redirect to profile 
-    await navigateTo('/auth/profile')
 }
 
 onMounted(() => {

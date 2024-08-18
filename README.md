@@ -1,5 +1,16 @@
 # Math-a-thon 2025
 
+> You're on the Math Team? What a nerd.
+
+If you're reading this, you're in a very niche intersection of fields:
+
+- Mathematics
+- Computer Science
+- Web Design
+- and whatever other nerd subjects you can think of.
+
+Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! I hope this README allows you to more easily understand the code I've written. But for some context, the Math-a-thon is a school-wide math competition where more questions right means more points and more points means closer to winning. This website aims to digitize the whole process, making it easier on the Math Team and the competition's participants and hopefully gaining more users.
+
 ## Creator + Maintainer: [Jake J. Deng](https://github.com/JakeDangIt), class of 2025
 
 - Email: <jakejdeng@gmail.com>
@@ -10,18 +21,29 @@
 
 > What if we just didn't use paper anymore?
 
-I realized that this competition could be graded so much easier if I made it a website. 
-So that's what I did, and here's how I did it.
+I realized that this competition could be graded so much easier if I made it a website. <br>
+Things got a little out of hand from there...
+
+### Features
+- User registration and authentication
+- Automatic grading of Math-a-thon submissions
+- Real-time data display and updates
+- User profile management (including custom avatars)
+
+### Goals
+- Advertise the competition and appeal to the student body
+- Organize and streamline student participation
 
 ### Installation + Contributions
 
 1. Open the repo in your IDE
-2. Install dependencies <br>
-`> npm i`
-3. Run development server <br>
-`> npm run dev`
-4. Commit and create a pull request.
-5. Wait for it to be pushed.
+2. Install dependencies and run development server
+```
+> npm i
+> npm run dev
+```
+3. Commit and create a pull request.
+4. Wait for it to be pushed.
 
 ### Main Structure and Services I've Used
 
@@ -41,9 +63,9 @@ Supabase, the very *free* Firebase alternative, requires an SMTP to send more th
 - Spreadsheets: Google Sheets
 
 Unfortunately, the general-ness of the Math Team does not use software like Supabase, instead opting for the more basic Google Sheets to handle the data. Previously, that's how it's always been done, with papers being graded and then inputed on the spreadsheet. But now, I'm here! <br>
-In 2024, instead of sending the data to Supa, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
-It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supa auth) and have them resubmit. <br>
-Hopefully for 2025, I am sticking to Supa, and if they need the data, I'll send it to them or input it myself on the sheet.
+In 2024, instead of sending the data to Supabase, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
+It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supabase auth) and have them resubmit. <br>
+Hopefully for 2025, I am sticking to Supabase, and if they need the data, I'll send it to them or input it myself on the sheet.
 
 - Important modules/plugins: [Pinia](https://pinia.vuejs.org/ssr/nuxt.html), [TailwindCSS](https://tailwindcss.com/docs/guides/nuxtjs), [ShadCN](https://www.shadcn-vue.com/), [Icons](https://nuxt.com/modules/icon)
 
@@ -59,9 +81,9 @@ There is very necessary information to be kept about each user, so the dialog in
 
 ### Profile + Avatar
 
-Unforunately, I spent a long time figuring out this feature, but eventually I got it. <br>
+Unfortunately, I spent a long time figuring out this feature, but eventually I got it. <br>
 To put it very briefly, you can update your user data and upload an avatar, of which you crop yourself. <br>
-Might be best to just leave this stuff alone since I'm not too confident in changing it.
+Might be best to just leave this stuff alone since I'm not too confident in changing it. It was very hard adding the cropper library, converting the canvas to images, figuring out how to update it on the app and on the DB, etc.
 
 ### Archive
 

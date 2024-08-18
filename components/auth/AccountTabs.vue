@@ -19,8 +19,9 @@ const userAgreement = ref(false)
 // validity
 const passwordValid = computed(() => userPassword.value.length >= 6)
 const emailValid = computed(() => userEmail.value.includes('@nycstudents.net'))
-const isSignupFormValid = computed(() => emailValid.value && passwordValid.value && userAgreement.value )
-const isPersonalValid = computed(() => userOSIS.value !== '' && userName.value !== '' && userTeacher.value !== '' && userGrade.value !== '')
+const osisValid = computed(() => String(userOSIS.value).length == 9 && !isNaN(Number(userOSIS.value)))
+const isSignupFormValid = computed(() => emailValid.value && passwordValid.value && userAgreement.value)
+const isPersonalValid = computed(() => osisValid.value && userName.value !== '' && userTeacher.value !== '' && userGrade.value !== '')
 
 // loading
 const signupLoading = ref(false)
@@ -182,8 +183,11 @@ onMounted(() => {
                                             <Input type="text" id="name" v-model="userName" />
                                         </div>
                                         <div class="space-y-1">
-                                            <Label for="osis">OSIS Number</Label>
-                                            <Input type="tel" id="osis" v-model="userOSIS" inputmode="numeric"
+                                            <Label for="osis"
+                                                :class="{ 'text-theme-red': !osisValid && String(userOSIS).length > 0 }">
+                                                {{ !osisValid && String(userOSIS).length > 0
+                                                    ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
+                                            <Input type="" id="osis" v-model="userOSIS" inputmode="numeric"
                                                 pattern="[0-9]*" />
                                         </div>
                                         <div class="space-y-1">
@@ -231,7 +235,8 @@ onMounted(() => {
 
                                     <DialogFooter>
                                         <!-- real sign up button -->
-                                        <Button @click="handleSignup()" :disabled="!isPersonalValid || signupLoading">
+                                        <Button @click="handleSignup()"
+                                            :disabled="!isPersonalValid || signupLoading || !osisValid">
                                             Submit
                                         </Button>
                                     </DialogFooter>

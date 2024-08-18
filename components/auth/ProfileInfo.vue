@@ -1,5 +1,5 @@
 <script setup>
-import { teachers } from '../../utils/teachers'
+import { teachers } from '../../utils/teachers.js'
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 const userStore = useUserStore()
@@ -22,6 +22,7 @@ const newName = ref('')
 const newEmail = ref('')
 const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
 const newOsis = ref('')
+const osisValid = computed(() => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value)))
 const newTeacher = ref('')
 const newGrade = ref('')
 
@@ -150,14 +151,16 @@ async function updateUser() {
                         <Input id="name" type="text" v-model="newName" :placeholder="name" />
                     </div>
                     <div class="space-y-1">
-                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">{{
-                            !emailValid && newEmail.length > 0
+                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">
+                            {{ !emailValid && newEmail.length > 0
                                 ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
                         <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
                     </div>
                     <div class="space-y-1">
-                        <Label for="osis">OSIS Number</Label>
-                        <Input id="osis" type="tel" v-model="newOsis" :placeholder="osis" inputmode="numeric"
+                        <Label for="osis" :class="{ 'text-theme-red': !osisValid && String(newOsis).length > 0 }">
+                            {{ !osisValid && String(newOsis).length > 0
+                                ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
+                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
                             pattern="[0-9]*" />
                     </div>
                     <div class="space-y-1">
@@ -208,7 +211,7 @@ async function updateUser() {
             </CardContent>
 
             <CardFooter class="flex justify-between">
-                <Button @click="updateUser" :disabled="updateLoading">Save</Button>
+                <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
                 <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
                     class="flex text-md" />
             </CardFooter>

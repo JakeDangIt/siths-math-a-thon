@@ -1,5 +1,17 @@
 # Math-a-thon 2025
 
+> You're on the math team? What a nerd.
+
+If you're reading this, unfortunately you are in the very niche intersection of two of the nerdiest fields in the world:
+- Competitive Mathematics
+- Computer Science
+
+Fortunately for you, I'm tasked with pioneering the development of the Math-a-thon web app, so you don't have to! <br>
+But, before you begin on deciphering my code (possibly to maintain it for future years), the Staten Island Technical High School Math-a-thon is a school-wide competition where students attempt a number of 20 questions released each week, and the person with the most questions answered correctly wins. <br>
+Simple enough, right? <br>
+The questions are hardly any simpler. That's why every week, a bonus set of 12 questions are released for a total of 32 max points per week. <br>
+This continues until the 3rd week.
+
 ## Creator + Maintainer: [Jake J. Deng](https://github.com/JakeDangIt), class of 2025
 
 - Email: <jakejdeng@gmail.com>

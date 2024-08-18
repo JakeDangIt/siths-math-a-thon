@@ -49,7 +49,7 @@ Things got a little out of hand from there...
 
 - Framework: Nuxt 3
 
-I started off using vanilla Vue (special mentions to Mr. Whalen, whom I learned from indirectly, since I never took his class) and eventually switched to Nuxt for the SSR and better SEO and autoimports.
+I started off using vanilla Vue and eventually switched to Nuxt for the SSR and better SEO and autoimports.
 
 - Domain Name and Website Hosting: Namecheap, Vercel
 
@@ -88,6 +88,9 @@ Might be best to just leave this stuff alone since I'm not too confident in chan
 ### Archive
 
 I use a store to fetch the data only once, and then it just becomes links that opens up the .pdf files.
+
+### Acknowledgments
+Special thanks to Mr. Whalen for indirectly teaching me the basics of Vue.js, and to the Math Team members and CS students (Bridget Feng and Andrea Guo) for helping with testing and designing the early versions of the app.
 
 ## Contributing
 

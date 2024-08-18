@@ -172,7 +172,7 @@ async function updateUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Teachers</SelectLabel>
-                                    <SelectItem v-for="teacher in teachers" :value="teacher.value">
+                                    <SelectItem v-for="teacher in teachers" :value="teacher.name">
                                         {{ teacher.name }}
                                     </SelectItem>
                                 </SelectGroup>

@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-theme-red bg-opacity-20 flex items-center justify-between">
-        <div class="flex">
+    <div class="bg-theme-red bg-opacity-20 flex justify-between">
+        <div class="flex items-center">
             <Icon name="gravity-ui:circle-letter-c"></Icon>
-            <p class="text-lg text-[12px] leading-tight">2024 SITHS Math-a-Thon, all rights reserved.</p>
+            <p class="text-[14px] leading-tight">2024 SITHS Math-a-Thon, all rights reserved.</p>
         </div>
         <FooterGithubLogoLink />
     </div>

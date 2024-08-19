@@ -46,21 +46,23 @@ const user = useSupabaseUser()
             </SheetClose>
           </nav>
 
-          <div v-if="user?.role !== 'authenticated'" class="flex justify-center gap-4">
-            <SheetClose>
-              <HeaderNavButtonSignUp />
-            </SheetClose>
-            <SheetClose>
-              <HeaderNavButtonLogIn />
-            </SheetClose>
-          </div>
-          <div v-if="user?.role == 'authenticated'" class="flex justify-center gap-4">
-            <SheetClose>
-              <HeaderAvatar />
-            </SheetClose>
-            <SheetClose>
-              <HeaderNavButtonLogOut />
-            </SheetClose>
+          <div class="flex flex-col items-center justify-center">
+            <div v-if="user?.role !== 'authenticated'" class="flex gap-4">
+              <SheetClose>
+                <HeaderNavButtonSignUp />
+              </SheetClose>
+              <SheetClose>
+                <HeaderNavButtonLogIn />
+              </SheetClose>
+            </div>
+            <div v-if="user?.role == 'authenticated'" class="flex gap-4">
+              <SheetClose>
+                <HeaderAvatar />
+              </SheetClose>
+              <SheetClose>
+                <HeaderNavButtonLogOut />
+              </SheetClose>
+            </div>
           </div>
         </SheetDescription>
       </SheetHeader>

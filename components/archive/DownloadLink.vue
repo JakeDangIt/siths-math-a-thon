@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a class="underline text-md hover:bg-0" :href="fileUrl" target="_blank">{{ fileUrl ? file.name : 'Loading...' }}</a>
+        <a class="underline text-md hover:bg-theme-dark-blue hover:bg-opacity-20" :href="fileUrl" target="_blank">{{ fileUrl ? file.name : 'Loading...' }}</a>
     </div>
 </template>
 

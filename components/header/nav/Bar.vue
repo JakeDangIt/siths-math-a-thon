@@ -13,7 +13,7 @@ const props = defineProps(["routePath", "routeName"])
 <template>
   <header class="flex items-center bg-theme-blue dark:bg-theme-dark-blue h-12 px-4 py-1">
     <!-- left + home -->
-    <div class="h-full w-1/4">
+    <div class="h-full w-1/4 flex-1">
       <nuxt-link to="/" class="flex items-center h-full w-fit" draggable="false">
         <div class="bg-theme-dark-blue rounded-md h-full my-2 mr-2">
           <img src="/math-a-thon-icon.webp" class="h-full">
@@ -38,8 +38,8 @@ const props = defineProps(["routePath", "routeName"])
 
         <DropdownMenuContent>
           <DropdownMenuItem v-for="route in routes.slice(3, 6)">
-            <HeaderNavLink :route-path="route.routePath" :route-name="route.routeName" variant="link" class="w-full text-lg"
-              :class="{ 'font-bold': currentRouteName == route.routePath }" />
+            <HeaderNavLink :route-path="route.routePath" :route-name="route.routeName" variant="link"
+              class="w-full text-lg" :class="{ 'font-bold': currentRouteName == route.routePath }" />
           </DropdownMenuItem>
         </DropdownMenuContent>
 
@@ -47,13 +47,15 @@ const props = defineProps(["routePath", "routeName"])
     </nav>
 
     <!-- right buttons -->
-    <div v-if="user?.role !== 'authenticated'" class="w-1/4 flex gap-2 align-center justify-end">
-      <HeaderNavButtonSignUp />
-      <HeaderNavButtonLogIn />
-    </div>
-    <div v-if="user?.role == 'authenticated'" class="w-1/4 h-fit flex gap-2 items-center justify-end">
-      <HeaderAvatar />
-      <HeaderNavButtonLogOut />
+    <div class="flex flex-1 gap-2 items-center justify-end">
+      <div v-if="user?.role !== 'authenticated'" class="flex gap-2">
+        <HeaderNavButtonSignUp />
+        <HeaderNavButtonLogIn />
+      </div>
+      <div v-if="user?.role == 'authenticated'" class="flex gap-2">
+        <HeaderAvatar />
+        <HeaderNavButtonLogOut />
+      </div>
     </div>
   </header>
 </template>

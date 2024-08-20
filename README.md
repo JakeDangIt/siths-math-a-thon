@@ -13,7 +13,7 @@ If you're reading this, you're in a very niche intersection of fields:
 - Web Design
 - and whatever other nerd subjects you can think of.
 
-Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! I hope this README allows you to more easily understand the code I've written. But for some context, the Math-a-thon is a school-wide math competition where more questions right means more points and more points means closer to winning. This website aims to digitize the whole process, making it easier on the Math Team and the competition's participants and hopefully gaining more users.
+Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! I hope this README allows you to more easily understand the code I've written. But for some context, the Math-a-thon is a school-wide math competition where more questions right means more points and more points means closer to winning. Every week, 20 questions are released, alongside 12 bonus questions, increasing in difficulty as you go until the last 3rd week. This website aims to digitize the whole process, making it easier on the Math Team and the competition's participants and hopefully gaining more users.
 
 ## Creator + Maintainer: [Jake J. Deng](https://github.com/JakeDangIt), class of 2025
 

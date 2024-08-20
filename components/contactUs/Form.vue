@@ -86,8 +86,8 @@ onMounted(() => {
     const lastTimeSubmited = localStorage.getItem('timeSubmitted')
     if (lastTimeSubmited) {
         const timeSinceLastSubmit = Date.now() - parseInt(lastTimeSubmited)
-        if (timeSinceLastSubmit < 1000 * 60 * 30) {
-            toastStore.changeToast('Please wait', 'Thank you for reaching out! Please wait 30 minutes before submitting another form.')
+        if (timeSinceLastSubmit < 1000 * 60 * 60 * 1) {
+            toastStore.changeToast('Please wait', 'Thank you for reaching out! Please wait 1 hour before submitting another form.')
             timeDisableForm.value = true
         }
     }

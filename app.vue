@@ -9,7 +9,7 @@ const toastStore = useToastStore()
 const { toast } = useToast()
 
 // reactive vars
-const { width } = useWindowSize();
+const { width, height } = useWindowSize();
 const layout = ref("default");
 const isLoading = ref(true);
 
@@ -41,10 +41,9 @@ onMounted(async () => {
 </script>
 
 <template>
-
   <Head>
     <Title>SITHS Math-a-Thon</Title>
-    <Meta name="description" content="insert description here" />
+    <Meta name="description" content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
     <Link rel="preconnect" href="https://fonts.googleapis.com" />
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link

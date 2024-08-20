@@ -28,7 +28,7 @@ const user = useSupabaseUser()
     </header>
 
     <!-- sheet nav content -->
-    <SheetContent side="left" class="h-screen flex flex-col">
+    <SheetContent side="left" class="h-[100dvh] flex flex-col">
       <SheetHeader>
         <SheetTitle class="w-full">
           <div class="rounded-md w-2/6">
@@ -47,7 +47,7 @@ const user = useSupabaseUser()
         </nav>
       </SheetDescription>
 
-      <SheetFooter class="mt-auto sm:flex-col flex-col gap-4">
+      <SheetFooter class="sm:flex-col flex-col gap-4">
         <div class="flex flex-col items-center justify-center">
           <div v-if="user?.role !== 'authenticated'" class="flex gap-4">
             <SheetClose>
@@ -71,4 +71,3 @@ const user = useSupabaseUser()
     </SheetContent>
   </Sheet>
 </template>
-

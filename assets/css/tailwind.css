@@ -80,7 +80,7 @@
 body, html{
   background: #FAF9F6;
   padding-bottom: env(safe-area-inset-bottom);
-  height: 100svh;
+  height: 100dvh;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

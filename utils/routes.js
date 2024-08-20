@@ -25,7 +25,7 @@ export const routes = [
         iconName: 'folder',
     },
     {
-        routePath: '/contactus',
+        routePath: '/contact',
         routeName: 'Contact Us',
         iconName: 'envelope',
     },

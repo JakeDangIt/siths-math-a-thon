@@ -41,7 +41,6 @@ onMounted(async () => {
 </script>
 
 <template>
-{{ height }}
   <Head>
     <Title>SITHS Math-a-Thon</Title>
     <Meta name="description" content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />

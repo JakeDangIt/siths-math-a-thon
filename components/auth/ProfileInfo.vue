@@ -1,4 +1,5 @@
 <script setup>
+import { teachers } from '../../utils/teachers.js'
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 const userStore = useUserStore()
@@ -12,14 +13,16 @@ const teacher = computed(() => user.value?.user_metadata?.teacher || '')
 const grade = computed(() => user.value?.user_metadata?.grade || '')
 
 const firstName = computed(() => {
-  const [first] = name.value.split(' ');
-  return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
+    const [first] = name.value.split(' ');
+    return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
 });
 
 // input values
 const newName = ref('')
 const newEmail = ref('')
+const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
 const newOsis = ref('')
+const osisValid = computed(() => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value)))
 const newTeacher = ref('')
 const newGrade = ref('')
 
@@ -105,7 +108,7 @@ async function updateUser() {
         } else {
             setTimeout(() => {
                 toastStore.changeToast('User updated', newEmail.value !== '' ? 'Your information has been updated. Please confirm your email change.' : 'Your information has been updated.')
-            }, 1000);
+            }, 600);
         }
 
         // Clear all fields
@@ -116,9 +119,6 @@ async function updateUser() {
         newGrade.value = ''
 
         updateLoading.value = false
-
-        // user info is updated, refresh the user
-        user.value = await userStore.refreshUser()
     } else {
         toastStore.changeToast('No changes made', 'Please fill out your information to update.')
     }
@@ -151,12 +151,17 @@ async function updateUser() {
                         <Input id="name" type="text" v-model="newName" :placeholder="name" />
                     </div>
                     <div class="space-y-1">
-                        <Label for="email">Email</Label>
-                        <Input id="email" type="text" v-model="newEmail" :placeholder="email" />
+                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">
+                            {{ !emailValid && newEmail.length > 0
+                                ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
+                        <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
                     </div>
                     <div class="space-y-1">
-                        <Label for="osis">OSIS Number</Label>
-                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" />
+                        <Label for="osis" :class="{ 'text-theme-red': !osisValid && String(newOsis).length > 0 }">
+                            {{ !osisValid && String(newOsis).length > 0
+                                ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
+                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
+                            pattern="[0-9]*" />
                     </div>
                     <div class="space-y-1">
                         <Label for="teacher">Teacher</Label>
@@ -167,7 +172,9 @@ async function updateUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Teachers</SelectLabel>
-                                    <SelectItem value="Mrs. Something">Mrs. Something</SelectItem>
+                                    <SelectItem v-for="teacher in teachers" :value="teacher.name">
+                                        {{ teacher.name }}
+                                    </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -181,7 +188,21 @@ async function updateUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Grade</SelectLabel>
-                                    <SelectItem value="1234">1234</SelectItem>
+                                    <SelectGroup>
+                                        <SelectLabel>Grade</SelectLabel>
+                                        <SelectItem value="9">
+                                            9th
+                                        </SelectItem>
+                                        <SelectItem value="10">
+                                            10th
+                                        </SelectItem>
+                                        <SelectItem value="11">
+                                            11th
+                                        </SelectItem>
+                                        <SelectItem value="12">
+                                            12th
+                                        </SelectItem>
+                                    </SelectGroup>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -190,18 +211,10 @@ async function updateUser() {
             </CardContent>
 
             <CardFooter class="flex justify-between">
-                <Button @click="updateUser" :disabled="updateLoading">Save</Button>
+                <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
                 <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
                     class="flex text-md" />
             </CardFooter>
         </Card>
     </div>
 </template>
-
-<style scoped>
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>

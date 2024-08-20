@@ -1,6 +1,8 @@
 <script setup>
 defineProps(['default'])
+import { teachers } from '../../utils/teachers'
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 const toastStore = useToastStore()
 
 const isLoading = ref(true)
@@ -16,8 +18,10 @@ const userAgreement = ref(false)
 
 // validity
 const passwordValid = computed(() => userPassword.value.length >= 6)
-const isSignupFormValid = computed(() => userEmail.value !== '' && userPassword.value !== '' && userAgreement.value && passwordValid.value)
-const isPersonalValid = computed(() => userOSIS.value !== '' && userName.value !== '' && userTeacher.value !== '' && userGrade.value !== '')
+const emailValid = computed(() => userEmail.value.includes('@nycstudents.net'))
+const osisValid = computed(() => String(userOSIS.value).length == 9 && !isNaN(Number(userOSIS.value)))
+const isSignupFormValid = computed(() => emailValid.value && passwordValid.value && userAgreement.value)
+const isPersonalValid = computed(() => osisValid.value && userName.value !== '' && userTeacher.value !== '' && userGrade.value !== '')
 
 // loading
 const signupLoading = ref(false)
@@ -42,14 +46,16 @@ async function handleSignup() {
                 osis: userOSIS.value,
                 teacher: userTeacher.value,
                 grade: userGrade.value,
+                profile_complete: false
             }
         }
     })
     if (error) {
-        toastStore.changeToast('Error', error.message)
+        toastStore.changeToast('Error signing up', error.message)
     } else {
         toastStore.changeToast('Success', 'You have successfully signed up. Please confirm in your email.')
     }
+
     isDialogOpen.value = false
     signupLoading.value = false
 }
@@ -64,12 +70,36 @@ async function handleLogin() {
     if (error) {
         toastStore.changeToast('Error', error.message)
     } else {
+        if (!user.value.user_metadata.profile_complete) {
+            const { error: uploadError } = await supabase
+                .from('profiles')
+                .insert({
+                    uuid: user.value.id,
+                    name: user.value.user_metadata.name,
+                    email: user.value.email,
+                    osis: Number(user.value.user_metadata.osis),
+                    teacher: user.value.user_metadata.teacher,
+                    grade: Number(user.value.user_metadata.grade),
+                })
+            if (uploadError) {
+                toastStore.changeToast('Error uploading profile', uploadError.message)
+            }
+
+            const { error: updateError } = await supabase.auth.updateUser({
+                data: {
+                    profile_complete: true
+                }
+            })
+            if (updateError) {
+                toastStore.changeToast('Error updating user', updateError.message)
+            }
+        }
         toastStore.changeToast('Success', 'You have successfully logged in.')
+
+        // redirect to profile 
+        await navigateTo('/auth/profile')
     }
     loginLoading.value = false
-
-    // redirect to profile 
-    await navigateTo('/auth/profile')
 }
 
 onMounted(() => {
@@ -108,15 +138,20 @@ onMounted(() => {
                         <CardContent class="space-y-2">
                             <!-- sign up fields -->
                             <div class="space-y-1">
-                                <Label for="email">Email (NYCDOE)</Label>
+                                <Label for="email" :class="{ 'text-theme-red': !emailValid && userEmail.length > 0 }">{{
+                                    !emailValid && userEmail.length > 0
+                                        ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
                                 <Input type="email" id="email" v-model="userEmail" />
                             </div>
                             <div class="space-y-1">
                                 <Label for="password"
-                                    :class="{ 'text-theme-red': !passwordValid && (userPassword.length > 0 && userPassword.length < 6) }">
-                                    {{ !passwordValid && (userPassword.length > 0 && userPassword.length < 6)
-                                        ? 'Please enter a password longer than 6 characters' : 'Password' }} </Label>
-                                        <Input type="password" id="password" v-model="userPassword" />
+                                    :class="{ 'text-theme-red': !passwordValid && userPassword.length > 0 }">
+
+                                    {{ !passwordValid && userPassword.length > 0
+                                        ? 'Please enter a password longer than 6 characters' : 'Password' }}
+
+                                </Label>
+                                <Input type="password" id="password" v-model="userPassword" />
                             </div>
 
                             <div class="space-x-2">
@@ -148,8 +183,12 @@ onMounted(() => {
                                             <Input type="text" id="name" v-model="userName" />
                                         </div>
                                         <div class="space-y-1">
-                                            <Label for="osis">OSIS Number</Label>
-                                            <Input type="number" id="osis" v-model="userOSIS" />
+                                            <Label for="osis"
+                                                :class="{ 'text-theme-red': !osisValid && String(userOSIS).length > 0 }">
+                                                {{ !osisValid && String(userOSIS).length > 0
+                                                    ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
+                                            <Input type="" id="osis" v-model="userOSIS" inputmode="numeric"
+                                                pattern="[0-9]*" />
                                         </div>
                                         <div class="space-y-1">
                                             <Label for="teacher">Teacher</Label>
@@ -160,8 +199,8 @@ onMounted(() => {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Teachers</SelectLabel>
-                                                        <SelectItem value="something">
-                                                            Mrs. Something
+                                                        <SelectItem v-for="teacher in teachers" :value="teacher.name">
+                                                            {{ teacher.name }}
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -176,8 +215,17 @@ onMounted(() => {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Grade</SelectLabel>
-                                                        <SelectItem value="1234">
-                                                            1234
+                                                        <SelectItem value="9">
+                                                            9th
+                                                        </SelectItem>
+                                                        <SelectItem value="10">
+                                                            10th
+                                                        </SelectItem>
+                                                        <SelectItem value="11">
+                                                            11th
+                                                        </SelectItem>
+                                                        <SelectItem value="12">
+                                                            12th
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -187,7 +235,8 @@ onMounted(() => {
 
                                     <DialogFooter>
                                         <!-- real sign up button -->
-                                        <Button @click="handleSignup()" :disabled="!isPersonalValid || signupLoading">
+                                        <Button @click="handleSignup()"
+                                            :disabled="!isPersonalValid || signupLoading || !osisValid">
                                             Submit
                                         </Button>
                                     </DialogFooter>
@@ -230,11 +279,3 @@ onMounted(() => {
         </Tabs>
     </div>
 </template>
-
-<style scoped>
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>

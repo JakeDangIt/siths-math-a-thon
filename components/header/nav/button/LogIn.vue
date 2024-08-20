@@ -1,3 +1,3 @@
 <template>
-        <HeaderNavLink route-path="/auth/login" route-name="Login" class="p-1" variant='secondary' />
+        <HeaderNavLink route-path="/auth/login" route-name="Login" class="text-lg p-1" variant='secondary' />
 </template>

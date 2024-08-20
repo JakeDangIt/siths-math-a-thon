@@ -1,16 +1,20 @@
 # Math-a-thon 2025
 
-> You're on the math team? What a nerd.
+![GitHub License](https://img.shields.io/github/license/jakedangit/siths-math-a-thon)
+![GitHub Repo stars](https://img.shields.io/github/stars/jakedangit/siths-math-a-thon)
+![GitHub watchers](https://img.shields.io/github/watchers/jakedangit/siths-math-a-thon)
 
-If you're reading this, unfortunately you are in the very niche intersection of two of the nerdiest fields in the world:
-- Competitive Mathematics
+> You're on the Math Team? What a nerd.
+
+If you're reading this, you're in a very niche intersection of fields:
+
+- Mathematics
 - Computer Science
+- Web Design
+- and whatever other nerd subjects you can think of.
 
-Fortunately for you, I'm tasked with pioneering the development of the Math-a-thon web app, so you don't have to! <br>
-But, before you begin on deciphering my code (possibly to maintain it for future years), the Staten Island Technical High School Math-a-thon is a school-wide competition where students attempt a number of 20 questions released each week, and the person with the most questions answered correctly wins. <br>
-Simple enough, right? <br>
-The questions are hardly any simpler. That's why every week, a bonus set of 12 questions are released for a total of 32 max points per week. <br>
-This continues until the 3rd week.
+Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! I hope this README allows you to more easily understand the code I've written. But for some context, the Math-a-thon is a school-wide math competition where more questions right means more points and more points means closer to winning. Every week, 20 questions are released, alongside 12 bonus questions, increasing in difficulty as you go until the last 3rd week. This website aims to digitize the whole process, making it easier on the Math Team and the competition's participants and hopefully gaining more users.
+
 
 ## Creator + Maintainer: [Jake J. Deng](https://github.com/JakeDangIt), class of 2025
 
@@ -18,20 +22,40 @@ This continues until the 3rd week.
 - [Instagram](https://www.instagram.com/jakedangit/)
 - [LinkedIn](https://www.linkedin.com/in/jake-deng-905229322/)
 
-## About the Web App
+### About the Web App
 
 > What if we just didn't use paper anymore?
 
-I realized that this competition could be graded so much easier if I made it a website. 
-So that's what I did, and here's how I did it.
+I realized that this competition could be graded so much easier if I made it a website. <br>
+Things got a little out of hand from there...
+
+## Demos
+
+![Demo of Profile Page](https://cdn.discordapp.com/attachments/895126354549440512/1274866650285477971/demo_1.png?ex=66c3cf97&is=66c27e17&hm=9e3a2e1fef277684a961bae63ecacecd22a304e3f67753394ce74b22794acc18&)
+
+### Features
+- User registration and authentication
+- Automatic grading of Math-a-thon submissions
+- Real-time data display and updates
+- User profile management (including custom avatars)
+
+### Goals
+- Advertise the competition and appeal to the student body
+- Organize and streamline student participation
 
 ### Installation + Contributions
 
 1. Open the repo in your IDE
-2. Install dependencies <br>
-`> npm i`
-3. Run development server <br>
-`> npm run dev`
+2. Set up Supabase project and create .env file with your key and url.
+```
+SUPABASE_URL = <insert_url>
+SUPABASE_KEY = <insert_key>
+```
+3. Install dependencies and run development server
+```
+> npm i
+> npm run dev
+```
 4. Commit and create a pull request.
 5. Wait for it to be pushed.
 
@@ -39,7 +63,7 @@ So that's what I did, and here's how I did it.
 
 - Framework: Nuxt 3
 
-I started off using vanilla Vue (special mentions to Mr. Whalen, whom I learned from indirectly, since I never took his class) and eventually switched to Nuxt for the SSR and better SEO and autoimports.
+I started off using vanilla Vue and eventually switched to Nuxt for the SSR and better SEO and autoimports.
 
 - Domain Name and Website Hosting: Namecheap, Vercel
 
@@ -53,9 +77,9 @@ Supabase, the very *free* Firebase alternative, requires an SMTP to send more th
 - Spreadsheets: Google Sheets
 
 Unfortunately, the general-ness of the Math Team does not use software like Supabase, instead opting for the more basic Google Sheets to handle the data. Previously, that's how it's always been done, with papers being graded and then inputed on the spreadsheet. But now, I'm here! <br>
-In 2024, instead of sending the data to Supa, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
-It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supa auth) and have them resubmit. <br>
-Hopefully for 2025, I am sticking to Supa, and if they need the data, I'll send it to them or input it myself on the sheet.
+In 2024, instead of sending the data to Supabase, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
+It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supabase auth) and have them resubmit. <br>
+Hopefully for 2025, I am sticking to Supabase, and if they need the data, I'll send it to them or input it myself on the sheet.
 
 - Important modules/plugins: [Pinia](https://pinia.vuejs.org/ssr/nuxt.html), [TailwindCSS](https://tailwindcss.com/docs/guides/nuxtjs), [ShadCN](https://www.shadcn-vue.com/), [Icons](https://nuxt.com/modules/icon)
 
@@ -71,13 +95,16 @@ There is very necessary information to be kept about each user, so the dialog in
 
 ### Profile + Avatar
 
-Unforunately, I spent a long time figuring out this feature, but eventually I got it. <br>
+Unfortunately, I spent a long time figuring out this feature, but eventually I got it. <br>
 To put it very briefly, you can update your user data and upload an avatar, of which you crop yourself. <br>
-Might be best to just leave this stuff alone since I'm not too confident in changing it.
+Might be best to just leave this stuff alone since I'm not too confident in changing it. It was very hard adding the cropper library, converting the canvas to images, figuring out how to update it on the app and on the DB, etc.
 
 ### Archive
 
 I use a store to fetch the data only once, and then it just becomes links that opens up the .pdf files.
+
+### Acknowledgments
+Special thanks to Mr. Whalen for indirectly teaching me the basics of Vue.js, and to the Math Team members and CS students (Bridget Feng and Andrea Guo) for helping with testing and designing the early versions of the app.
 
 ## Contributing
 

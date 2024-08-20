@@ -76,3 +76,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+body, html{
+  background: #FAF9F6;
+  padding-bottom: env(safe-area-inset-bottom);
+  height: 100dvh;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

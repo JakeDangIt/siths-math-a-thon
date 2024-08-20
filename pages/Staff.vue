@@ -1,12 +1,5 @@
 <template>
     <div>
-        <p>this is the staff page</p>
+        <StaffList />
     </div>
 </template>
-
-<script setup>
-</script>
-
-<style scoped>
-
-</style>

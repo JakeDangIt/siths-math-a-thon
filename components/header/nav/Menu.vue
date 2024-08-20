@@ -28,7 +28,7 @@ const user = useSupabaseUser()
     </header>
 
     <!-- sheet nav content -->
-    <SheetContent side="left" class="h-screen flex flex-col">
+    <SheetContent side="left" class="min-h-screen flex flex-col">
       <SheetHeader>
         <SheetTitle class="w-full">
           <div class="rounded-md w-2/6">
@@ -66,9 +66,14 @@ const user = useSupabaseUser()
             </SheetClose>
           </div>
         </div>
-        <FooterBar />
+        <FooterBar class="footer" />
       </SheetFooter>
     </SheetContent>
   </Sheet>
 </template>
 
+<style>
+.footer {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+</style>

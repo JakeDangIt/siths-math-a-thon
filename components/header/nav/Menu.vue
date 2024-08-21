@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
+
+const route = useRoute()
+const currentRoutePath = computed(() => route.path)
+const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS Math-a-Thon' : routes.find(route => route.routePath == currentRoutePath.value).routeName)
 </script>
 
 <template>
@@ -13,12 +17,12 @@ const user = useSupabaseUser()
           <HeaderHamburgerIcon />
         </SheetTrigger>
 
-        <div class="bg-theme-dark-blue rounded-md h-full m-1">
+        <div class="bg-theme-dark-blue rounded-md h-10 m-2">
           <!-- <Icon name="gravity-ui:math-operations" class="h-[32px] w-[32px]" /> -->
           <img src="/math-a-thon-icon.webp" class="h-full">
         </div>
 
-        <h1 class="text-lg">SITHS Math-a-Thon</h1>
+        <h1 class="text-lg">{{ currentRouteName }}</h1>
       </div>
 
       <!-- right -->
@@ -40,7 +44,7 @@ const user = useSupabaseUser()
       <SheetDescription class="flex-1">
         <!-- nav links -->
         <nav class="flex flex-col items-start">
-          <SheetClose v-for="route in routes" class="w-full hover:bg-gray-500 hover:bg-opacity-20">
+          <SheetClose v-for="route in routes.slice(0, 6)" class="w-full hover:bg-gray-500 hover:bg-opacity-20">
             <HeaderNavLink :route-path="route.routePath" :route-name="route.routeName" :icon-name="route.iconName"
               :variant="'link'" class="text-lg" />
           </SheetClose>

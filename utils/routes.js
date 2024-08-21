@@ -29,4 +29,24 @@ export const routes = [
         routeName: 'Contact Us',
         iconName: 'envelope',
     },
+    {
+        routePath: '/auth/login',
+        routeName: 'Login',
+    },
+    {
+        routePath: '/auth/signup',
+        routeName: 'Sign Up',
+    },
+    {
+        routePath: '/auth/profile',
+        routeName: 'Profile',
+    },
+    {
+        routePath: '/auth/forgotpassword',
+        routeName: 'Forgot Password',
+    },
+    {
+        routePath: '/auth/updatepassword',
+        routeName: 'Update Password',
+    }
 ]

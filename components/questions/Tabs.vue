@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="questionsStore.isLoading" class="mx-2 space-y-2">
+        <div v-if="questionsStore.isLoading" class="mx-auto space-y-2 lg:w-2/3">
             <Skeleton class="h-10 w-full mb-4" />
             <Skeleton class="h-24 w-full" />
             <Skeleton class="h-24 w-full" />

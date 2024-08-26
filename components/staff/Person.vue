@@ -1,5 +1,5 @@
 <template>
-    <Card class="p-4 h-1/2">
+    <Card class="px-8 py-4 h-1/2">
         <h1 class="font-bold text-2xl">{{ person.name }}</h1>
         <Separator />
         <p class="text-gray-600">{{ person.title }}</p>

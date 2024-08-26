@@ -20,14 +20,14 @@ export const routes = [
         iconName: 'persons',
     },
     {
-        routePath: '/archive',
-        routeName: 'Archive',
-        iconName: 'folder',
-    },
-    {
         routePath: '/contact',
         routeName: 'Contact Us',
         iconName: 'envelope',
+    },
+    {
+        routePath: '/archive',
+        routeName: 'Archive',
+        iconName: 'folder',
     },
     {
         routePath: '/auth/login',

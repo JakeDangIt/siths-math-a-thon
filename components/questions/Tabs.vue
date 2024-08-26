@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Tabs v-if="questionData.length > 0" :default-value="1" class="mx-auto w-[600px]">
-            <Carousel class="relative w-full">
+        <Tabs v-if="questionData.length > 0" :default-value="1" class="mx-auto lg:w-2/3">
+            <Carousel class="relative w-3/5 mx-auto">
                 <CarouselContent>
                     <CarouselItem v-for="(weeks, index) in filteredWeekData" :key="index">
                         <TabsList class="grid w-full grid-cols-2">
@@ -17,7 +17,7 @@
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
-            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]">
+            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2">
                 <QuestionsQuestionCard v-if="questionData.length > 0" v-for="question in weekDataValues[index].value"
                     :questionNumber="question.question" :mathContent="question.tex_content" />
             </TabsContent>

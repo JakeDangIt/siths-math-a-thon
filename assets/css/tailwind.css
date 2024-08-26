@@ -79,6 +79,7 @@
 
 body, html{
   background: #FAF9F6;
+  color: #252525;
   padding-bottom: env(safe-area-inset-bottom);
   height: 100dvh;
 }

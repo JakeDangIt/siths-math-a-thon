@@ -126,7 +126,7 @@ async function updateUser() {
 </script>
 
 <template>
-    <div v-if="user" class="flex flex-col lg:flex-row justify-center gap-8 mt-[20px]">
+    <div v-if="user" class="flex flex-col lg:flex-row justify-center gap-8">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <div class="flex justify-between">

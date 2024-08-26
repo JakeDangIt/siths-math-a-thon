@@ -108,10 +108,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <Skeleton v-if="isLoading" class="mt-[40px] mx-auto h-[400px] w-[600px]" />
+    <Skeleton v-if="isLoading" class="mx-auto h-[400px] w-[600px]" />
 
     <!-- tabs -->
-    <div v-if="!isLoading" class="w-full mt-[40px] flex justify-center">
+    <div v-if="!isLoading" class="w-full flex justify-center">
         <Tabs :default-value="default" class="mx-8 w-[600px]">
 
             <!-- triggers on the top -->

@@ -1,13 +1,5 @@
 <template>
     <div>
-        this is the questions
+        <QuestionsTabs/>
     </div>
 </template>
-
-<script setup>
-
-</script>
-
-<style scoped>
-
-</style>

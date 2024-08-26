@@ -1,8 +1,8 @@
 <template>
     <div>
-        <Card class="w-4/5 mx-auto">
+        <Card>
             <CardHeader>
-                <CardTitle>Week {{ week }} {{ bonus ? 'Bonus' : '' }}</CardTitle>
+                <CardTitle>Question {{ questionNumber }}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div v-html="mathContent"></div>
@@ -12,8 +12,7 @@
 </template>
 
 <script setup>
-const props = defineProps(['week', 'bonus' ,'mathContent'])
+const props = defineProps(['questionNumber', 'bonus' ,'mathContent'])
 const mathContent = ref(props.mathContent)
-const week = ref(props.week)
-const bonus = ref(props.bonus)
+const questionNumber = ref(props.questionNumber)
 </script>

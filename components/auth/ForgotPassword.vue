@@ -26,7 +26,7 @@ async function sendResetPassword() {
 </script>
 
 <template>
-    <div class="flex flex-col lg:flex-row justify-center gap-8 mt-[20px]">
+    <div class="flex flex-col lg:flex-row justify-center gap-8">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <CardTitle>Forgot Password</CardTitle>

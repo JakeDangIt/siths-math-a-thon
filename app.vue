@@ -84,7 +84,7 @@ onMounted(async () => {
   <!-- show mobile if mobile screen, show default if larger -->
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage />
+    <NuxtPage class="mt-12" />
     <Toaster />
   </NuxtLayout>
 </template>

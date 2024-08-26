@@ -37,7 +37,7 @@ async function changePassword() {
 </script>
 
 <template>
-    <div v-if="showPasswordChange" class="flex flex-col lg:flex-row justify-center gap-8 mt-[20px]">
+    <div v-if="showPasswordChange" class="flex flex-col lg:flex-row justify-center gap-8">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <CardTitle>Update Password</CardTitle>
@@ -63,7 +63,7 @@ async function changePassword() {
             </CardFooter>
         </Card>
     </div>
-    <div v-else class="flex justify-center mt-[20px]">
+    <div v-else class="flex justify-center">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <CardTitle>Invalid Reset Session</CardTitle>

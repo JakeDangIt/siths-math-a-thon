@@ -1,6 +1,11 @@
 <template>
     <div>
-        <Tabs v-if="questionData.length > 0" :default-value="1" class="mx-auto lg:w-2/3">
+        <div v-if="isLoading" class="mx-2 space-y-2">
+            <Skeleton class="h-10 w-full mb-4" />
+            <Skeleton class="h-24 w-full" />
+            <Skeleton class="h-24 w-full" />
+        </div>
+        <Tabs :default-value="1" class="mx-auto lg:w-2/3" :class="isLoading ? 'opacity-0' : ''">
             <Carousel class="relative w-3/5 mx-auto">
                 <CarouselContent>
                     <CarouselItem v-for="(weeks, index) in filteredWeekData" :key="index">
@@ -17,8 +22,8 @@
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
-            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2">
-                <QuestionsQuestionCard v-if="questionData.length > 0" v-for="question in weekDataValues[index].value"
+            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
+                <QuestionsQuestionCard v-for="question in weekDataValues[index].value"
                     :questionNumber="question.question" :mathContent="question.tex_content" />
             </TabsContent>
         </Tabs>
@@ -26,14 +31,24 @@
 </template>
 
 <script setup>
+import { toast } from '../ui/toast';
+
 const supabase = useSupabaseClient()
+const toastStore = useToastStore()
+
 const questionData = ref([])
+
+const isLoading = ref(true)
 
 async function getQuestions() {
     const { data, error } = await supabase
         .from('questions')
         .select('*')
 
+    if (error) {
+        toastStore.changeToast('Error retrieving questions', error.message)
+        return
+    }
     questionData.value = data
 }
 
@@ -42,6 +57,13 @@ function getMathJax() {
     script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
     script.async = true
     document.head.appendChild(script)
+    script.onload = () => {
+        isLoading.value = false
+    }
+    script.onerror = () => {
+        toastStore.changeToast('Error loading MathJax', 'Please refresh the page')
+        isLoading.value = false
+    }
 }
 
 onMounted(async () => {

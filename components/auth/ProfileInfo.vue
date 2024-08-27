@@ -1,3 +1,97 @@
+<template>
+    <div v-if="user" class="flex flex-col lg:flex-row justify-center gap-8">
+        <Card class="mx-4 lg:w-1/3">
+            <CardHeader class="flex">
+                <div class="flex justify-between">
+                    <div>
+                        <CardTitle>{{ firstName }}'s Profile</CardTitle>
+                        <CardDescription>Ensure your information is correct.</CardDescription>
+                    </div>
+                    <Avatar v-if="showAvatar" class="h-16 w-16">
+                        <AvatarImage :src="avatarImage || userStore.avatarImage" draggable="false" />
+                    </Avatar>
+                    <Avatar v-else class="h-16 w-16">
+                        <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
+                    </Avatar>
+                </div>
+                <AuthChangeAvatar @avatarUploaded="handleAvatarUploaded" @avatarRemoval="handleAvatarRemove" />
+            </CardHeader>
+
+            <CardContent>
+                <form class="mr-4 flex flex-col">
+                    <div class="space-y-1">
+                        <Label for="name">Name</Label>
+                        <Input id="name" type="text" v-model="newName" :placeholder="name" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">
+                            {{ !emailValid && newEmail.length > 0
+                                ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
+                        <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label for="osis" :class="{ 'text-theme-red': !osisValid && String(newOsis).length > 0 }">
+                            {{ !osisValid && String(newOsis).length > 0
+                                ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
+                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
+                            pattern="[0-9]*" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label for="teacher">Teacher</Label>
+                        <Select id="teacher" v-model="newTeacher">
+                            <SelectTrigger>
+                                <SelectValue :placeholder="teacher" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Teachers</SelectLabel>
+                                    <SelectItem v-for="teacher in teachers" :value="teacher.name">
+                                        {{ teacher.name }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label for="grade">Grade</Label>
+                        <Select id="grade" v-model="newGrade">
+                            <SelectTrigger>
+                                <SelectValue :placeholder="grade" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Grade</SelectLabel>
+                                    <SelectGroup>
+                                        <SelectLabel>Grade</SelectLabel>
+                                        <SelectItem value="9">
+                                            9th
+                                        </SelectItem>
+                                        <SelectItem value="10">
+                                            10th
+                                        </SelectItem>
+                                        <SelectItem value="11">
+                                            11th
+                                        </SelectItem>
+                                        <SelectItem value="12">
+                                            12th
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </form>
+            </CardContent>
+
+            <CardFooter class="flex justify-between">
+                <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
+                <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
+                    class="flex text-md" />
+            </CardFooter>
+        </Card>
+    </div>
+</template>
+
 <script setup>
 import { teachers } from '../../utils/teachers.js'
 const user = useSupabaseUser()
@@ -124,97 +218,3 @@ async function updateUser() {
     }
 }
 </script>
-
-<template>
-    <div v-if="user" class="flex flex-col lg:flex-row justify-center gap-8">
-        <Card class="mx-4 lg:w-1/3">
-            <CardHeader class="flex">
-                <div class="flex justify-between">
-                    <div>
-                        <CardTitle>{{ firstName }}'s Profile</CardTitle>
-                        <CardDescription>Ensure your information is correct.</CardDescription>
-                    </div>
-                    <Avatar v-if="showAvatar" class="h-16 w-16">
-                        <AvatarImage :src="avatarImage || userStore.avatarImage" draggable="false" />
-                    </Avatar>
-                    <Avatar v-else class="h-16 w-16">
-                        <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
-                    </Avatar>
-                </div>
-                <AuthChangeAvatar @avatarUploaded="handleAvatarUploaded" @avatarRemoval="handleAvatarRemove" />
-            </CardHeader>
-
-            <CardContent>
-                <form class="mr-4 flex flex-col">
-                    <div class="space-y-1">
-                        <Label for="name">Name</Label>
-                        <Input id="name" type="text" v-model="newName" :placeholder="name" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">
-                            {{ !emailValid && newEmail.length > 0
-                                ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
-                        <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label for="osis" :class="{ 'text-theme-red': !osisValid && String(newOsis).length > 0 }">
-                            {{ !osisValid && String(newOsis).length > 0
-                                ? 'Please enter a valid OSIS number' : 'OSIS Number' }}</Label>
-                        <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
-                            pattern="[0-9]*" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label for="teacher">Teacher</Label>
-                        <Select id="teacher" v-model="newTeacher">
-                            <SelectTrigger>
-                                <SelectValue :placeholder="teacher" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Teachers</SelectLabel>
-                                    <SelectItem v-for="teacher in teachers" :value="teacher.name">
-                                        {{ teacher.name }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label for="grade">Grade</Label>
-                        <Select id="grade" v-model="newGrade">
-                            <SelectTrigger>
-                                <SelectValue :placeholder="grade" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Grade</SelectLabel>
-                                    <SelectGroup>
-                                        <SelectLabel>Grade</SelectLabel>
-                                        <SelectItem value="9">
-                                            9th
-                                        </SelectItem>
-                                        <SelectItem value="10">
-                                            10th
-                                        </SelectItem>
-                                        <SelectItem value="11">
-                                            11th
-                                        </SelectItem>
-                                        <SelectItem value="12">
-                                            12th
-                                        </SelectItem>
-                                    </SelectGroup>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </form>
-            </CardContent>
-
-            <CardFooter class="flex justify-between">
-                <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
-                <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
-                    class="flex text-md" />
-            </CardFooter>
-        </Card>
-    </div>
-</template>

@@ -26,8 +26,8 @@
             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
                 <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
                     :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
+                <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save Answers</Button>
             </TabsContent>
-            <Button @click="saveAnswers()" :disabled="saveLoading">Save Answers</Button>
         </Tabs>
     </div>
 </template>

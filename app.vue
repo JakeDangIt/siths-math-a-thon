@@ -2,9 +2,6 @@
 import { useToastStore } from '@/stores/toast'
 import { useToast } from '@/components/ui/toast/use-toast'
 
-// idk why but i had to import vueuse so i can have reactive window size
-import { useWindowSize } from "#imports";
-
 const toastStore = useToastStore()
 const { toast } = useToast()
 

@@ -1,9 +1,9 @@
 <template>
     <div>
         <div v-if="questionsStore.isLoading" class="mx-auto space-y-2 lg:w-2/3">
-            <Skeleton class="h-10 w-full mb-4" />
-            <Skeleton class="h-24 w-full" />
-            <Skeleton class="h-24 w-full" />
+            <Skeleton class="h-10 mb-4 mx-2" />
+            <Skeleton class="h-24 mx-2" />
+            <Skeleton class="h-24 mx-2" />
         </div>
         <Tabs :default-value="1" class="mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
             @update:model-value="onTabChange">
@@ -26,7 +26,10 @@
             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
                 <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
                     :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
-                <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save Answers</Button>
+                <div class="flex gap-2">
+                    <Button @click="submitAnswers()" :disabled="submitLoading">Submit Answers</Button>
+                    <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save Answers</Button>
+                </div>
             </TabsContent>
         </Tabs>
     </div>
@@ -40,6 +43,7 @@ const toastStore = useToastStore()
 const user = useSupabaseUser()
 
 const saveLoading = ref(false)
+const submitLoading = ref(false)
 
 const weekData = [[[1, false], [1, true]], [[2, false], [2, true]], [[3, false], [3, true]]]
 
@@ -82,6 +86,16 @@ async function saveAnswers() {
     }
     await answersStore.saveAnswers();
     saveLoading.value = false;
+}
+
+async function submitAnswers() {
+    submitLoading.value = true;
+    if (user.value === null) {
+        toastStore.changeToast('You must be logged in to submit answers');
+        return;
+    }
+    await answersStore.submitAnswers();
+    submitLoading.value = false;
 }
 
 onMounted(() => {

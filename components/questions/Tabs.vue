@@ -24,15 +24,22 @@
                 <CarouselNext />
             </Carousel>
             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
-                <QuestionsQuestionCard v-for="question in weekDataValues[index].value"
-                    :questionNumber="question.question" :mathContent="question.tex_content" />
+                <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
+                    :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
             </TabsContent>
+            <Button @click="saveAnswers()" :disabled="saveLoading">Save Answers</Button>
         </Tabs>
     </div>
 </template>
 
 <script setup>
+const answersStore = useAnswersStore()
 const questionsStore = useQuestionsStore()
+const toastStore = useToastStore()
+
+const user = useSupabaseUser()
+
+const saveLoading = ref(false)
 
 const weekData = [[[1, false], [1, true]], [[2, false], [2, true]], [[3, false], [3, true]]]
 
@@ -65,6 +72,16 @@ function onTabChange() {
     nextTick(() => {
         questionsStore.rerenderMathJax();
     });
+}
+
+async function saveAnswers() {
+    saveLoading.value = true;
+    if (user.value === null) {
+        toastStore.changeToast('You must be logged in to save answers');
+        return;
+    }
+    await answersStore.saveAnswers();
+    saveLoading.value = false;
 }
 
 onMounted(() => {

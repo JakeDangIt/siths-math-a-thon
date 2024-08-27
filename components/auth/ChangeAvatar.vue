@@ -1,3 +1,27 @@
+<template>
+    <div class="flex flex-col items-center">
+        <div>
+            <Label class="my-1 mr-4">Upload your avatar</Label>
+            <Button class="my-1" @click="handleAvatarRemove()" variant="secondary">Remove Avatar</Button>
+        </div>
+        <Input id="uploadAvatar" type="file" accept="image/*" @change="setImage" />
+
+        <Dialog v-model:open="isDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Crop your avatar</DialogTitle>
+                    <DialogDescription>
+                        <vue-cropper ref="cropper" :src="imageUrl" :aspect-ratio="1" :viewMode="2" />
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button @click="uploadAvatar">Upload Avatar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    </div>
+</template>
+
 <script setup>
 // i use cropperjs library
 import VueCropper from 'vue-cropperjs'
@@ -66,27 +90,3 @@ async function handleAvatarRemove() {
     }
 }
 </script>
-
-<template>
-    <div class="flex flex-col items-center">
-        <div>
-            <Label class="my-1 mr-4">Upload your avatar</Label>
-            <Button class="my-1" @click="handleAvatarRemove()" variant="secondary">Remove Avatar</Button>
-        </div>
-        <Input id="uploadAvatar" type="file" accept="image/*" @change="setImage" />
-
-        <Dialog v-model:open="isDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Crop your avatar</DialogTitle>
-                    <DialogDescription>
-                        <vue-cropper ref="cropper" :src="imageUrl" :aspect-ratio="1" :viewMode="2" />
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button @click="uploadAvatar">Upload Avatar</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    </div>
-</template>

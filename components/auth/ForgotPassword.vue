@@ -1,3 +1,26 @@
+<template>
+    <div class="flex flex-col lg:flex-row justify-center gap-8">
+        <Card class="mx-4 lg:w-1/3">
+            <CardHeader class="flex">
+                <CardTitle>Forgot Password</CardTitle>
+                <CardDescription>Enter your email and follow the reset password link in your email.</CardDescription>
+            </CardHeader>
+
+            <CardContent class="mr-4 flex flex-col">
+                <div class="space-y-1">
+                    <Label for="email">Email</Label>
+                    <Input id="email" type="email" v-model="email" />
+                </div>
+
+            </CardContent>
+
+            <CardFooter class="flex justify-between">
+                <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading">Send link</Button>
+            </CardFooter>
+        </Card>
+    </div>
+</template>
+
 <script setup>
 import { useToastStore } from '@/stores/toast'
 
@@ -24,26 +47,3 @@ async function sendResetPassword() {
     sendResetPasswordLoading.value = false
 }
 </script>
-
-<template>
-    <div class="flex flex-col lg:flex-row justify-center gap-8">
-        <Card class="mx-4 lg:w-1/3">
-            <CardHeader class="flex">
-                <CardTitle>Forgot Password</CardTitle>
-                <CardDescription>Enter your email and follow the reset password link in your email.</CardDescription>
-            </CardHeader>
-
-            <CardContent class="mr-4 flex flex-col">
-                <div class="space-y-1">
-                    <Label for="email">Email</Label>
-                    <Input id="email" type="email" v-model="email" />
-                </div>
-
-            </CardContent>
-
-            <CardFooter class="flex justify-between">
-                <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading">Send link</Button>
-            </CardFooter>
-        </Card>
-    </div>
-</template>

@@ -28,15 +28,14 @@ export const useQuestionsStore = defineStore("questions", () => {
     script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
     script.async = true;
     document.head.appendChild(script);
+
     script.onload = () => {
       rerenderMathJax(); // Initial rendering after MathJax loads
       isLoading.value = false;
     };
+    
     script.onerror = () => {
-      toastStore.changeToast(
-        "Error loading MathJax",
-        "Please refresh the page"
-      );
+      toastStore.changeToast("Error loading MathJax", "Please refresh the page");
       isLoading.value = false;
     };
   }

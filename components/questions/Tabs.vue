@@ -14,7 +14,7 @@
                             <TabsTrigger :value="weeks[0][0]">
                                 Week {{ weeks[0][0] }}
                             </TabsTrigger>
-                            <TabsTrigger :value="weeks[1][0] + 'Bonus'">
+                            <TabsTrigger :value="weeks[1][0] + ' Bonus'">
                                 Week {{ weeks[1][0] }} Bonus
                             </TabsTrigger>
                         </TabsList>
@@ -26,10 +26,56 @@
             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
                 <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
                     :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
-                <div class="flex gap-2">
-                    <Button @click="submitAnswers()" :disabled="submitLoading">Submit Answers</Button>
-                    <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save Answers</Button>
-                </div>
+
+                <Sheet>
+                    <SheetTrigger><Button>Preview Answers</Button></SheetTrigger>
+                    <SheetContent>
+                        <SheetHeader>
+                            <SheetTitle>Your Answers</SheetTitle>
+                            <SheetDescription>
+                                Ensure your answers are correct before submitting
+                            </SheetDescription>
+                        </SheetHeader>
+                        <Tabs :default-value="weekNames[index]" class="mx-auto">
+                            <TabsList>
+                                <Carousel class="relative w-3/5 mx-auto">
+                                    <CarouselContent>
+                                        <CarouselItem v-for="(weeks, index) in filteredWeekData" :key="index">
+                                            <TabsList class="grid w-full grid-cols-2">
+                                                <TabsTrigger :value="weeks[0][0]">
+                                                    Week {{ weeks[0][0] }}
+                                                </TabsTrigger>
+                                                <TabsTrigger :value="weeks[1][0] + ' Bonus'">
+                                                    Week {{ weeks[1][0] }} Bonus
+                                                </TabsTrigger>
+                                            </TabsList>
+                                        </CarouselItem>
+                                    </CarouselContent>
+                                    <CarouselPrevious />
+                                    <CarouselNext />
+                                </Carousel>
+                            </TabsList>
+                            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
+                                class="mx-2 space-y-2">
+                                <p
+                                    v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index])">
+                                    {{ answer.questionNumber }}. {{ answer.answer }}
+                                </p>
+
+                                <Button
+                                    @click="submitAnswers(weekNames[index], answersStore.answerData.filter(answer => answer.week == weekNames[index]))"
+                                    :disabled="submitLoading">
+                                    Submit Week
+                                    {{ weekNames[index] }}
+                                </Button>
+                                <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save
+                                    Answers</Button>
+                            </TabsContent>
+                        </Tabs>
+                        <SheetFooter>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
             </TabsContent>
         </Tabs>
     </div>
@@ -54,7 +100,7 @@ const week2BonusData = computed(() => questionsStore.questionData.filter(questio
 const week3Data = computed(() => questionsStore.questionData.filter(question => question.week == 3 && question.bonus == false))
 const week3BonusData = computed(() => questionsStore.questionData.filter(question => question.week == 3 && question.bonus == true))
 
-const weekNames = [1, '1Bonus', 2, '2Bonus', 3, '3Bonus']
+const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus']
 const weekDataValues = [
     week1Data,
     week1BonusData,
@@ -67,7 +113,7 @@ const weekDataValues = [
 const filteredWeekData = computed(() => {
     return weekData.filter(weeks => {
         const weekIndex = weekNames.indexOf(weeks[0][0]);
-        const bonusIndex = weekNames.indexOf(weeks[1][0] + 'Bonus');
+        const bonusIndex = weekNames.indexOf(weeks[1][0] + ' Bonus');
         return weekDataValues[weekIndex].value.length > 0 || weekDataValues[bonusIndex].value.length > 0;
     });
 });
@@ -88,13 +134,13 @@ async function saveAnswers() {
     saveLoading.value = false;
 }
 
-async function submitAnswers() {
+async function submitAnswers(week, answers) {
     submitLoading.value = true;
     if (user.value === null) {
         toastStore.changeToast('You must be logged in to submit answers');
         return;
     }
-    await answersStore.submitAnswers();
+    await answersStore.submitAnswers(week, answers);
     submitLoading.value = false;
 }
 

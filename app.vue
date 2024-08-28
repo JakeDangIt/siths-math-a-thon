@@ -2,9 +2,6 @@
 import { useToastStore } from '@/stores/toast'
 import { useToast } from '@/components/ui/toast/use-toast'
 
-// idk why but i had to import vueuse so i can have reactive window size
-import { useWindowSize } from "#imports";
-
 const toastStore = useToastStore()
 const { toast } = useToast()
 
@@ -84,7 +81,7 @@ onMounted(async () => {
   <!-- show mobile if mobile screen, show default if larger -->
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage class="mt-12" />
+    <NuxtPage class="pt-12 pb-12" />
     <Toaster />
   </NuxtLayout>
 </template>

@@ -25,9 +25,9 @@
                 <CarouselNext />
             </Carousel>
             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
+                <h1 class="text-xl text-center font-bold">Week {{ weekNames[index] }} Questions</h1>
                 <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
                     :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
-
                 <Sheet>
                     <SheetTrigger><Button>Preview Answers</Button></SheetTrigger>
                     <SheetContent>
@@ -57,9 +57,9 @@
                                 </Carousel>
                             </TabsList>
                             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
-                                class="mx-2 space-y-2">
+                                class="mx-2 grid grid-cols-2 lg:grid-cols-1">
                                 <p
-                                    v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index])">
+                                    v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.questionNumber - b.questionNumber)">
                                     {{ answer.questionNumber }}. {{ answer.answer }}
                                 </p>
                             </TabsContent>

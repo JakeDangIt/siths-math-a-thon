@@ -31,13 +31,14 @@
                 <Sheet>
                     <div>
                         <div class="flex items-center gap-2 fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto transition-all"
-                            :class="isFarDownEnough ? 'translate-x-[6rem] lg:translate-x-[-14rem]' : 'translate-x-0'">
+                            :class="isFarDownEnough ? 'translate-x-[14rem] lg:translate-x-[-14rem]' : 'translate-x-0'">
                             <Button @click="scrollDown()">
                                 <Icon name="gravity-ui:arrow-down" class="w-6 h-full"></Icon>
                             </Button>
                             <SheetTrigger><Button>Preview {{ width > 1024 ? 'Answers' : '' }}</Button></SheetTrigger>
                         </div>
                     </div>
+                    <SheetTrigger><Button>Preview Answers</Button></SheetTrigger>
                     <SheetContent>
                         <SheetHeader>
                             <SheetTitle>Your Answers</SheetTitle>

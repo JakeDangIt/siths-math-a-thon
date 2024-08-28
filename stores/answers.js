@@ -133,8 +133,10 @@ export const useAnswersStore = defineStore("answers", () => {
   }
 
   onMounted(async () => {
-    await retrieveAnswers();
-    getAnswerLoading.value = false;
+    if (user.value) {
+      await retrieveAnswers();
+      getAnswerLoading.value = false;
+    }
   });
 
   return {

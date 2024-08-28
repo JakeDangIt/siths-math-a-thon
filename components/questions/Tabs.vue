@@ -29,7 +29,15 @@
                 <QuestionsQuestionCard v-for="question in weekDataValues[index].value" :key="question.question"
                     :questionNumber="question.question" :mathContent="question.tex_content" :week="weekNames[index]" />
                 <Sheet>
-                    <SheetTrigger><Button>Preview Answers</Button></SheetTrigger>
+                    <div>
+                        <div class="flex items-center gap-2 fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto transition-all"
+                            :class="isFarDownEnough ? 'translate-x-[6rem] lg:translate-x-[-14rem]' : 'translate-x-0'">
+                            <Button @click="scrollDown()">
+                                <Icon name="gravity-ui:arrow-down" class="w-6 h-full"></Icon>
+                            </Button>
+                            <SheetTrigger><Button>Preview {{ width > 1024 ? 'Answers' : '' }}</Button></SheetTrigger>
+                        </div>
+                    </div>
                     <SheetContent>
                         <SheetHeader>
                             <SheetTitle>Your Answers</SheetTitle>
@@ -47,7 +55,7 @@
                                                     <p>Week {{ weeks[0][0] }}</p>
                                                 </TabsTrigger>
                                                 <TabsTrigger :value="weeks[1][0] + ' Bonus'">
-                                                    <p>Week {{ weeks[1][0] }} Bonus</p>
+                                                    <p class="tracking-tighter">Week {{ weeks[1][0] }} Bonus</p>
                                                 </TabsTrigger>
                                             </TabsList>
                                         </CarouselItem>
@@ -89,6 +97,10 @@ const questionsStore = useQuestionsStore()
 const toastStore = useToastStore()
 
 const user = useSupabaseUser()
+
+const { x, y } = useWindowScroll()
+const { width, height } = useWindowSize()
+const isFarDownEnough = ref(false)
 
 const saveLoading = ref(false)
 const submitLoading = ref(false)
@@ -146,11 +158,26 @@ async function submitAnswers(week, answers) {
     submitLoading.value = false;
 }
 
+function checkIsFarDownEnough() {
+    isFarDownEnough.value = y.value > document.body.scrollHeight - window.innerHeight * 2
+}
+
+function scrollDown() {
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
 onMounted(() => {
     if (questionsStore.questionData.length !== 0) {
         nextTick(() => {
             questionsStore.rerenderMathJax();
         });
     }
+
+    watch(y, () => {
+        checkIsFarDownEnough()
+    })
 })
 </script>

@@ -2,8 +2,9 @@
     <div>
         <div v-if="questionsStore.isLoading" class="mx-auto space-y-2 lg:w-2/3">
             <Skeleton class="h-10 mb-4 mx-2" />
-            <Skeleton class="h-24 mx-2" />
-            <Skeleton class="h-24 mx-2" />
+            <Skeleton class="h-32 mx-2" />
+            <Skeleton class="h-32 mx-2" />
+            <Skeleton class="h-10 w-36 mx-2" />
         </div>
         <Tabs :default-value="1" class="mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
             @update:model-value="onTabChange">
@@ -36,17 +37,17 @@
                                 Ensure your answers are correct before submitting
                             </SheetDescription>
                         </SheetHeader>
-                        <Tabs :default-value="weekNames[index]" class="mx-auto">
+                        <Tabs :default-value="weekNames[index]" class="mx-auto my-2">
                             <TabsList>
                                 <Carousel class="relative w-3/5 mx-auto">
                                     <CarouselContent>
                                         <CarouselItem v-for="(weeks, index) in filteredWeekData" :key="index">
                                             <TabsList class="grid w-full grid-cols-2">
                                                 <TabsTrigger :value="weeks[0][0]">
-                                                    Week {{ weeks[0][0] }}
+                                                    <p>Week {{ weeks[0][0] }}</p>
                                                 </TabsTrigger>
                                                 <TabsTrigger :value="weeks[1][0] + ' Bonus'">
-                                                    Week {{ weeks[1][0] }} Bonus
+                                                    <p>Week {{ weeks[1][0] }} Bonus</p>
                                                 </TabsTrigger>
                                             </TabsList>
                                         </CarouselItem>
@@ -61,7 +62,8 @@
                                     v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index])">
                                     {{ answer.questionNumber }}. {{ answer.answer }}
                                 </p>
-
+                            </TabsContent>
+                            <div class="space-x-2 mt-12">
                                 <Button
                                     @click="submitAnswers(weekNames[index], answersStore.answerData.filter(answer => answer.week == weekNames[index]))"
                                     :disabled="submitLoading">
@@ -70,7 +72,7 @@
                                 </Button>
                                 <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save
                                     Answers</Button>
-                            </TabsContent>
+                            </div>
                         </Tabs>
                         <SheetFooter>
                         </SheetFooter>

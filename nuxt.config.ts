@@ -35,5 +35,8 @@ export default defineNuxtConfig({
       include: ['/auth/profile'],
       exclude: [],
     }
+  },
+  content: {
+    contentHead: false,
   }
 })

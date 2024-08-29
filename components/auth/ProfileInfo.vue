@@ -29,12 +29,14 @@
                         <Label for="name">Name</Label>
                         <Input id="name" type="text" v-model="newName" :placeholder="name" />
                     </div>
+
                     <div class="space-y-1">
                         <Label for="email" :class="{ 'text-theme-red': !emailValid && newEmail.length > 0 }">
                             {{ !emailValid && newEmail.length > 0
                                 ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
                         <Input id="email" type="email" v-model="newEmail" :placeholder="email" />
                     </div>
+
                     <div class="space-y-1">
                         <Label for="osis" :class="{ 'text-theme-red': !osisValid && String(newOsis).length > 0 }">
                             {{ !osisValid && String(newOsis).length > 0
@@ -42,6 +44,7 @@
                         <Input id="osis" type="number" v-model="newOsis" :placeholder="osis" inputmode="numeric"
                             pattern="[0-9]*" />
                     </div>
+
                     <div class="space-y-1">
                         <Label for="teacher">Teacher</Label>
                         <Select id="teacher" v-model="newTeacher">
@@ -91,7 +94,8 @@
 
             <!-- button -->
             <CardFooter class="flex justify-between">
-                <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
+                <Button @click="updateUser"
+                    :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
                 <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
                     class="flex text-md" />
             </CardFooter>
@@ -180,7 +184,7 @@ async function updateUser() {
     Object.entries(updates).forEach(([key, value]) => previousInfo[key] == value ? delete updates[key] : null)
 
     // if there are updates, update the user
-    if (Object.values(updates).length > 0 || avatarFile.value) {
+    if (Object.values(updates).length > 0 || avatarFile.value || newEmail.value) {
 
         // if avatar changed, update the avatar path and upload file of the avatar (cropped image)
         if (avatarFile.value) {
@@ -212,17 +216,17 @@ async function updateUser() {
         if (error) {
             toastStore.changeToast('Error updating user', error.message)
         } else {
-            setTimeout(() => {
-                toastStore.changeToast('User updated', newEmail.value !== '' ? 'Your information has been updated. Please confirm your email change.' : 'Your information has been updated.')
-            }, 600);
+            toastStore.changeToast('User updated', newEmail.value !== '' ? 'Your information has been updated. Please confirm your email change.' : 'Your information has been updated.')
         }
 
         // clear all fields
-        newName.value = ''
-        newEmail.value = ''
-        newOsis.value = ''
-        newTeacher.value = ''
-        newGrade.value = ''
+        setTimeout(() => {
+            newName.value = ''
+            newEmail.value = ''
+            newOsis.value = ''
+            newTeacher.value = ''
+            newGrade.value = ''
+        }, 600);
 
         updateLoading.value = false
     } else {

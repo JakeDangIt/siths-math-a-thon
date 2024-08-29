@@ -1,3 +1,4 @@
+// all routes to be in the menu and bar, as well as an icon (maybe) and name
 export const routes = [
     {
         routePath: '/',

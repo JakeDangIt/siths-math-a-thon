@@ -1,3 +1,4 @@
+// to be filled in with math team members
 export const staff = [
     {
         name: 'Jake Deng',

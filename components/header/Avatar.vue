@@ -19,5 +19,6 @@ const firstName = computed(() => {
     const [first] = name.value.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
 });
+
 const showAvatar = computed(() => userStore.avatarImage !== '' && userStore.avatarImage !== null)
 </script>

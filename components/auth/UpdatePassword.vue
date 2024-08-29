@@ -73,6 +73,9 @@ async function changePassword() {
         toastStore.changeToast('Success', 'Your password has been changed successfully.')
     }
 
+    password.value = ''
+    confirmPassword.value = ''
+
     changePasswordLoading.value = false
 }
 </script>

@@ -53,6 +53,7 @@
                         </CardContent>
                         <CardFooter>
                             <Dialog v-model:open="isDialogOpen">
+
                                 <!-- fake sign up button, opens dialog -->
                                 <DialogTrigger as-child>
                                     <Button :disabled="!isSignupFormValid">
@@ -61,7 +62,7 @@
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Profile information</DialogTitle>
+                                        <DialogTitle>Complete your sign up</DialogTitle>
                                     </DialogHeader>
                                     <DialogDescription>
                                         Please finish your profile.
@@ -90,6 +91,7 @@
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Teachers</SelectLabel>
+                                                        <!-- teachers from teachers.js -->
                                                         <SelectItem v-for="teacher in teachers" :value="teacher.name">
                                                             {{ teacher.name }}
                                                         </SelectItem>
@@ -149,6 +151,7 @@
                                 Welcome back! Please enter your information.
                             </CardDescription>
                         </CardHeader>
+
                         <CardContent class="space-y-2">
                             <div class="space-y-1">
                                 <Label for="loginEmail">Email Address</Label>
@@ -159,6 +162,7 @@
                                 <Input type="password" id="loginPassword" v-model="userLoginPassword" />
                             </div>
                         </CardContent>
+
                         <CardFooter class="flex justify-between">
                             <Button @click="handleLogin()" :disabled="loginLoading">Log in</Button>
                             <HeaderNavLink routePath="/auth/forgotpassword" routeName="Forgot Password?" variant="link"

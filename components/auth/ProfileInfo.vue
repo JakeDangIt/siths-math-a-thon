@@ -1,23 +1,29 @@
 <template>
+    <!-- if you're logged in, but it should redirect to login -->
     <div v-if="user" class="flex flex-col lg:flex-row justify-center gap-8">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <div class="flex justify-between">
+                    <!-- header with name and avatar -->
                     <div>
                         <CardTitle>{{ firstName }}'s Profile</CardTitle>
                         <CardDescription>Ensure your information is correct.</CardDescription>
                     </div>
+
                     <Avatar v-if="showAvatar" class="h-16 w-16">
                         <AvatarImage :src="avatarImage || userStore.avatarImage" draggable="false" />
                     </Avatar>
                     <Avatar v-else class="h-16 w-16">
                         <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
                     </Avatar>
+
                 </div>
+
                 <AuthChangeAvatar @avatarUploaded="handleAvatarUploaded" @avatarRemoval="handleAvatarRemove" />
             </CardHeader>
 
             <CardContent>
+                <!-- details and inputs -->
                 <form class="mr-4 flex flex-col">
                     <div class="space-y-1">
                         <Label for="name">Name</Label>
@@ -44,6 +50,7 @@
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
+                                    <!-- teachers from the teachers.js -->
                                     <SelectLabel>Teachers</SelectLabel>
                                     <SelectItem v-for="teacher in teachers" :value="teacher.name">
                                         {{ teacher.name }}
@@ -83,6 +90,7 @@
                 </form>
             </CardContent>
 
+            <!-- button -->
             <CardFooter class="flex justify-between">
                 <Button @click="updateUser" :disabled="updateLoading || (String(newOsis).length > 0 && !osisValid) || (newEmail.length > 0 && !emailValid)">Save</Button>
                 <HeaderNavLink routePath="/auth/updatepassword" routeName="Change Password" variant="link"
@@ -114,11 +122,12 @@ const firstName = computed(() => {
 // input values
 const newName = ref('')
 const newEmail = ref('')
-const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
 const newOsis = ref('')
-const osisValid = computed(() => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value)))
 const newTeacher = ref('')
 const newGrade = ref('')
+
+const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
+const osisValid = computed(() => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value)))
 
 // avatar info
 const showAvatar = computed(() => userStore.avatarImage !== null || avatarImage.value !== '')
@@ -139,12 +148,16 @@ function handleAvatarUploaded(imagePath, file, dataURL) {
     })
 }
 
+
+// remove avatar
 function handleAvatarRemove() {
     avatarPath.value = ''
     avatarFile.value = null
     avatarImage.value = ''
 }
 
+
+// update user
 async function updateUser() {
     toastStore.changeToast('Updating user', 'Please wait while we update your information.')
 
@@ -205,7 +218,7 @@ async function updateUser() {
             }, 600);
         }
 
-        // Clear all fields
+        // clear all fields
         newName.value = ''
         newEmail.value = ''
         newOsis.value = ''

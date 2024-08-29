@@ -1,3 +1,4 @@
+// all math teachers for the select dropdown
 export const teachers = [
   {
     name: "Ms. Asher",

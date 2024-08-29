@@ -6,6 +6,7 @@
         </CardHeader>
         <CardContent class="space-y-4">
             <form>
+                <!-- autofilled and disabled with name + email if logged in -->
                 <div>
                     <Label for="name">Full Name</Label>
                     <Input v-model="formName" type="text" :disabled="name || timeDisableForm"
@@ -32,6 +33,7 @@
             </form>
         </CardContent>
         <CardFooter>
+            <!-- disabled if stuff arent filled in, submission is loading, or you already sent a form in the last hour -->
             <Button type="submit" @click="submitForm"
                 :disabled="!formValid || formLoading || timeDisableForm">Submit</Button>
         </CardFooter>
@@ -41,6 +43,8 @@
 <script setup>
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
+
+// for autofilling form
 const { name, email } = user.value?.user_metadata || {}
 
 const toastStore = useToastStore()
@@ -49,15 +53,20 @@ const formLoading = ref(false)
 
 const formName = name ? ref(name) : ref('')
 const formEmail = email ? ref(email) : ref('')
-const emailValid = computed(() => formEmail.value.includes('@nycstudents.net'))
 const formSubject = ref('')
 const formBody = ref('')
 
+// validity
+const emailValid = computed(() => formEmail.value.includes('@nycstudents.net'))
 const formValid = computed(() => formName.value && emailValid.value && formSubject.value && formBody.value)
 const timeDisableForm = ref(false)
 
+
+// submit form
 async function submitForm() {
     formLoading.value = true
+
+    // submitting
     const { data, error } = await supabase.from('contact').insert([
         {
             name: formName.value,
@@ -77,11 +86,13 @@ async function submitForm() {
         formSubject.value = ''
         formBody.value = ''
 
+        // has to be set in localstorage to prevent spamming for unauthenticated users
         localStorage.setItem('timeSubmitted', Date.now())
     }
     formLoading.value = false
 }
 
+// disable form if you submitted a form in the last hour
 onMounted(() => {
     const lastTimeSubmited = localStorage.getItem('timeSubmitted')
     if (lastTimeSubmited) {

@@ -4,8 +4,11 @@
             <Label class="my-1 mr-4">Upload your avatar</Label>
             <Button class="my-1" @click="handleAvatarRemove()" variant="secondary">Remove Avatar</Button>
         </div>
+
+        <!-- image file input for avatar -->
         <Input id="uploadAvatar" type="file" accept="image/*" @change="setImage" />
 
+        <!-- dialog for cropping the image -->
         <Dialog v-model:open="isDialogOpen">
             <DialogContent>
                 <DialogHeader>
@@ -14,6 +17,8 @@
                         <vue-cropper ref="cropper" :src="imageUrl" :aspect-ratio="1" :viewMode="2" />
                     </DialogDescription>
                 </DialogHeader>
+
+                <!-- upload (but not actually upload until they save it) -->
                 <DialogFooter>
                     <Button @click="uploadAvatar">Upload Avatar</Button>
                 </DialogFooter>
@@ -79,6 +84,7 @@ function uploadAvatar() {
     isDialogOpen.value = false
 }
 
+// remove avatar
 async function handleAvatarRemove() {
     toastStore.changeToast("Removing avatar", "Please wait...");
     const success = await userStore.removeAvatar()

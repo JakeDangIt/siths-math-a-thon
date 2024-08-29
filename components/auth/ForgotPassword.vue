@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col lg:flex-row justify-center gap-8">
+        <!-- just a form to get a reset link (which doesnt actually reset, you just log in and then go to update password) -->
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
                 <CardTitle>Forgot Password</CardTitle>
@@ -8,14 +9,16 @@
 
             <CardContent class="mr-4 flex flex-col">
                 <div class="space-y-1">
-                    <Label for="email">Email</Label>
+                    <Label for="email" :class="{ 'text-theme-red': !emailValid && email.length > 0 }">
+                        {{ !emailValid && email.length > 0
+                        ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }}</Label>
                     <Input id="email" type="email" v-model="email" />
                 </div>
 
             </CardContent>
 
             <CardFooter class="flex justify-between">
-                <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading">Send link</Button>
+                <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading || !emailValid">Send link</Button>
             </CardFooter>
         </Card>
     </div>
@@ -31,6 +34,8 @@ const sendResetPasswordLoading = ref(false)
 
 // input
 const email = ref('')
+
+const emailValid = computed(() => email.value.includes('@nycstudents.net'))
 
 // send reset password email
 async function sendResetPassword() {

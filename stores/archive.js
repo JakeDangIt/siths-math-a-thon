@@ -2,16 +2,17 @@ export const useArchiveStore = defineStore("archive", () => {
   const toastStore = useToastStore();
   const supabase = useSupabaseClient();
 
-  const isLoading = ref(true);
+  // archive data and loading state
   const files2023 = ref([]);
   const files2024 = ref([]);
+  const isLoading = ref(true);
+  
 
   onMounted(async () => {
+    // get archive files
     const { data: archive, error } = await supabase.storage
       .from("archive")
       .list();
-
-    if (error) throw error;
 
     files2023.value = archive.filter((file) => file.name.startsWith("2023"));
     files2024.value = archive.filter((file) => file.name.startsWith("2024"));

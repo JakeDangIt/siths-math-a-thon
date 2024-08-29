@@ -4,6 +4,7 @@ export const useToastStore = defineStore('toast', () => {
   const titleMessage = ref('')
   const descriptionMessage = ref('')
 
+  
   // change toast message
   function changeToast(title, description) {
     toastID.value++

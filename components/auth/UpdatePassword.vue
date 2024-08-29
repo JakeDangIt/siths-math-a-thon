@@ -1,4 +1,5 @@
 <template>
+    <!-- show the form if youre logged in  -->
     <div v-if="showPasswordChange" class="flex flex-col lg:flex-row justify-center gap-8">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
@@ -7,6 +8,7 @@
             </CardHeader>
 
             <CardContent>
+                <!-- password and new password -->
                 <form class="mr-4 flex flex-col">
                     <div class="space-y-1">
                         <Label for="password">New Password</Label>
@@ -20,11 +22,14 @@
                 <Label class="text-theme-red space-y-1">{{ (password !== confirmPassword) && (confirmPassword.length > 0) ? 'Your passwords do not match' : '' }}</Label>
             </CardContent>
 
+            <!-- button -->
             <CardFooter class="flex justify-between">
                 <Button @click="changePassword" :disabled="changePasswordLoading">Update</Button>
             </CardFooter>
         </Card>
     </div>
+
+    <!-- if youre not logged in -->
     <div v-else class="flex justify-center">
         <Card class="mx-4 lg:w-1/3">
             <CardHeader class="flex">
@@ -36,7 +41,6 @@
 </template>
 
 <script setup>
-
 import { useToastStore } from '@/stores/toast'
 
 const user = useSupabaseUser()

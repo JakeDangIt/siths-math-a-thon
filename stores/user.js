@@ -1,12 +1,11 @@
 export const useUserStore = defineStore("user", () => {
-  const toastStore = useToastStore();
-
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
-  // avatar stuff
+  // avatar file info
   const avatarPath = ref("");
   const avatarImage = ref(null);
+
 
   // refresh user data
   async function refreshUser() {
@@ -17,6 +16,7 @@ export const useUserStore = defineStore("user", () => {
 
     return updatedUser.user;
   }
+
 
   // retrieve avatar
   async function retrieveAvatar() {
@@ -31,6 +31,8 @@ export const useUserStore = defineStore("user", () => {
     avatarImage.value = URL.createObjectURL(data);
   }
 
+
+  // remove avatar
   async function removeAvatar() {
     // delete avatar from storage
     
@@ -57,6 +59,7 @@ export const useUserStore = defineStore("user", () => {
     return true;
   }
 
+  
   onMounted(async () => {
     // retrieve avatar from local storage, so you dont have to re-download it and saves time before it refreshes user
     avatarImage.value = localStorage.getItem("avatarImage");

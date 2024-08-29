@@ -108,16 +108,16 @@
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Grade</SelectLabel>
-                                                        <SelectItem value="9">
+                                                        <SelectItem value="9th">
                                                             9th
                                                         </SelectItem>
-                                                        <SelectItem value="10">
+                                                        <SelectItem value="10th">
                                                             10th
                                                         </SelectItem>
-                                                        <SelectItem value="11">
+                                                        <SelectItem value="11th">
                                                             11th
                                                         </SelectItem>
-                                                        <SelectItem value="12">
+                                                        <SelectItem value="12th">
                                                             12th
                                                         </SelectItem>
                                                     </SelectGroup>
@@ -214,6 +214,8 @@ const userLoginPassword = ref('')
 async function handleSignup() {
     // loading and sign up user
     signupLoading.value = true
+    toastStore.changeToast('Signing up', 'Please wait while we sign you up.')
+
     const { data, error } = await supabase.auth.signUp({
         email: userEmail.value,
         password: userPassword.value,
@@ -247,6 +249,8 @@ async function handleLogin() {
     if (error) {
         toastStore.changeToast('Error', error.message)
     } else {
+
+        // on first login, upload profile to table
         if (!user.value.user_metadata.profile_complete) {
             const { error: uploadError } = await supabase
                 .from('profiles')

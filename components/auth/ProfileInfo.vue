@@ -67,19 +67,18 @@
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Grade</SelectLabel>
                                     <SelectGroup>
                                         <SelectLabel>Grade</SelectLabel>
-                                        <SelectItem value="9">
+                                        <SelectItem value="9th">
                                             9th
                                         </SelectItem>
-                                        <SelectItem value="10">
+                                        <SelectItem value="10th">
                                             10th
                                         </SelectItem>
-                                        <SelectItem value="11">
+                                        <SelectItem value="11th">
                                             11th
                                         </SelectItem>
-                                        <SelectItem value="12">
+                                        <SelectItem value="12th">
                                             12th
                                         </SelectItem>
                                     </SelectGroup>

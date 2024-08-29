@@ -100,14 +100,15 @@
                                 </p>
 
                                 <!-- submit and save button -->
-                                <div class="space-x-2 mt-12 col-span-2">
+                                <div class="space-x-2 mt-12 col-span-2 lg:col-auto">
                                     <Button
                                         @click="submitAnswers(weekNames[index], answersStore.answerData.filter(answer => answer.week == weekNames[index]))"
-                                        :disabled="submitLoading">
+                                        :disabled="submitLoading || answersStore.answerData.filter(answer => answer.week == weekNames[index]).length == 0">
                                         Submit Week
                                         {{ weekNames[index] }}
                                     </Button>
-                                    <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading">Save
+                                    <Button @click="saveAnswers()" variant="secondary"
+                                        :disabled="saveLoading || answersStore.answerData.length == 0">Save
                                         Answers</Button>
                                 </div>
 
@@ -166,7 +167,9 @@ async function saveAnswers() {
         toastStore.changeToast('You must answer at least one question to save');
         return;
     }
-    await answersStore.saveAnswers();
+    else {
+        await answersStore.saveAnswers();
+    }
     saveLoading.value = false;
 }
 
@@ -181,7 +184,9 @@ async function submitAnswers(week, answers) {
         toastStore.changeToast('You must answer at least one question to submit');
         return;
     }
-    await answersStore.submitAnswers(week, answers);
+    else {
+        await answersStore.submitAnswers(week, answers);
+    }
     submitLoading.value = false;
 }
 

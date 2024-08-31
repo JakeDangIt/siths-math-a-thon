@@ -21,24 +21,49 @@ const answersStore = useAnswersStore()
 const props = defineProps(['questionNumber', 'week', 'mathContent'])
 const mathContent = ref(props.mathContent)
 const questionNumber = ref(props.questionNumber)
-const week = props.week
+const week = ref(props.week)
 
 // question input
 const input = ref()
 
 // if the answer is changed, update the answer in the store
 function changeAnswer() {
-    if (input.value === '') {
-        answersStore.removeAnswer(week, questionNumber.value)
-        return
-    }
-    answersStore.setAnswer(week, questionNumber.value, input.value)
+    const correspondingQuestionIndex = answersStore.answerData.findIndex(
+        (question) => question.week == week.value && question.questionNumber == questionNumber.value
+    )
+
+    answersStore.answerData[correspondingQuestionIndex].answer = input.value
 }
 
-// when the answers are done loading, fill in the input with your saved answer
+// watch for changes in the store
 onMounted(() => {
-    watch(() => answersStore.getAnswerLoading, () => {
-        input.value = answersStore.getAnswer(week, questionNumber.value)
-    }, { immediate: true })
+    // once the answers are loaded from the store, update the input value (really only for users logged in)
+    watch(
+        () => answersStore.getAnswerLoading,
+        async (newIsLoading) => {
+            if (!newIsLoading) {
+                const correspondingQuestionIndex = answersStore.answerData.findIndex(
+                    (question) => question.week == week.value && question.questionNumber == questionNumber.value
+                )
+
+                input.value = answersStore.answerData[correspondingQuestionIndex].answer
+            }
+        },
+        { immediate: true }
+    );
+
+    // if the answer is removed, clear the input
+    watch(
+        () => answersStore.answerRemoved,
+        (newAnswerRemoved) => {
+            if (newAnswerRemoved) {
+                if (answersStore.answerRemoved.week == week.value && answersStore.answerRemoved.questionNumber == questionNumber.value) {
+                    input.value = ''
+                    // reset the watcher
+                    answersStore.answerRemoved = {week: null, questionNumber: null}
+                }
+            }
+        }
+    )
 })
 </script>

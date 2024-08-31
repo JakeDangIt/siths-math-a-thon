@@ -2,44 +2,21 @@ export const useAnswersStore = defineStore("answers", () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const toastStore = useToastStore();
-  const questionStore = useQuestionsStore();
+  const questionsStore = useQuestionsStore();
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
+  const answerRemoved = ref({week: null, questionNumber: null});
 
 
-  // set answer, called when you update an input or remove answer
-  function setAnswer(week, questionNumber, answer) {
-    // find the index of the answer in the array
-    const existingAnswerIndex = answerData.value.findIndex(
-      (item) => item.week === week && item.questionNumber === questionNumber
-    );
-
-    // if it exists, update it, otherwise add it
-    if (existingAnswerIndex !== -1) {
-      answerData.value[existingAnswerIndex].answer = answer;
-    } else {
-      answerData.value.push({ week, questionNumber, answer });
-    }
-  }
-
-  // remove answer, called when you delete an input or click the x
+  // remove answer
   function removeAnswer(week, questionNumber) {
-    const existingAnswerIndex = answerData.value.findIndex(
-      (item) => item.week === week && item.questionNumber === questionNumber
+    const index = answerData.value.findIndex(
+      (answer) => answer.week == week && answer.questionNumber == questionNumber
     );
 
-    if (existingAnswerIndex !== -1) {
-      answerData.value.splice(existingAnswerIndex, 1);
-    }
-  }
-
-  // get answer, called when you load the page and if youre logged in, inputs are prefilled
-  function getAnswer(week, questionNumber) {
-    const answerEntry = answerData.value.find(
-      (item) => item.week == week && item.questionNumber == questionNumber
-    );
-    return answerEntry ? answerEntry.answer : "";
+    answerData.value[index].answer = "";
+    answerRemoved.value = {week, questionNumber};
   }
 
 
@@ -49,7 +26,6 @@ export const useAnswersStore = defineStore("answers", () => {
       .from("saved-answers")
       .select("*")
       .eq("uid", user.value.id);
-
 
     // if you have an answer, update it, otherwise insert it
     if (data.length > 0) {
@@ -75,8 +51,8 @@ export const useAnswersStore = defineStore("answers", () => {
         toastStore.changeToast("Failed to update answers", updateError.message);
         return;
       }
-    } 
-    
+    }
+
     // insert the answers
     else {
       const { error: insertError } = await supabase
@@ -99,7 +75,6 @@ export const useAnswersStore = defineStore("answers", () => {
       .select("*")
       .eq("uid", user.value.id)
       .eq("week", week);
-
 
     // if you have an answer, update it, otherwise insert it
     if (data.length > 0) {
@@ -130,8 +105,8 @@ export const useAnswersStore = defineStore("answers", () => {
         toastStore.changeToast("Failed to update answers", updateError.message);
         return;
       }
-    } 
-    
+    }
+
     // insert the answers
     else {
       const { error: insertError } = await supabase
@@ -150,7 +125,6 @@ export const useAnswersStore = defineStore("answers", () => {
     );
   }
 
-
   // retrieve answers
   async function retrieveAnswers() {
     const { data, error } = await supabase
@@ -163,27 +137,37 @@ export const useAnswersStore = defineStore("answers", () => {
       return;
     }
 
-    // if you have answers, set them
-    if (data.length > 0) {
-      answerData.value = data[0].answers;
-    }
+    answerData.value = data[0].answers;
   }
 
-
   onMounted(async () => {
-    // if you're logged in, get the answers
-    if (user.value) {
-      await retrieveAnswers();
-      getAnswerLoading.value = false;
-    }
+    watch(
+      () => questionsStore.isLoading,
+      async (newIsLoading) => {
+        if (!newIsLoading) {
+          questionsStore.questionData.forEach((question) => {
+            answerData.value.push({
+              week: question.week,
+              questionNumber: question.question,
+              answer: "",
+            });
+          });
+
+          if (user.value) {
+            await retrieveAnswers();
+          }
+          getAnswerLoading.value = false;
+        }
+      },
+      { immediate: true }
+    );
   });
 
   return {
     answerData,
     getAnswerLoading,
-    setAnswer,
+    answerRemoved,
     removeAnswer,
-    getAnswer,
     saveAnswers,
     submitAnswers,
     retrieveAnswers,

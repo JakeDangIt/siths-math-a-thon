@@ -95,6 +95,7 @@
                             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
                                 class="grid grid-cols-2 lg:grid-cols-1">
 
+                                <!-- each answer, sorted, with a remove button -->
                                 <div v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.questionNumber - b.questionNumber)"
                                     class="px-2 flex justify-between hover:bg-slate-200 group">
                                     <p>
@@ -199,6 +200,7 @@ async function submitAnswers(week, answers) {
     submitLoading.value = false;
 }
 
+// function to remove an answer from the store (not the input, which is done in the QuestionCard component)
 function removeAnswer(week, questionNumber) {
     answersStore.removeAnswer(week, questionNumber)
 }

@@ -54,5 +54,5 @@ export const useQuestionsStore = defineStore("questions", () => {
     getMathJax();
   });
 
-  return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };
+  return { questionData, isLoading, getMathJax, rerenderMathJax };
 });

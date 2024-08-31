@@ -35,7 +35,9 @@ function changeAnswer() {
     answersStore.answerData[correspondingQuestionIndex].answer = input.value
 }
 
+// watch for changes in the store
 onMounted(() => {
+    // once the answers are loaded from the store, update the input value (really only for users logged in)
     watch(
         () => answersStore.getAnswerLoading,
         async (newIsLoading) => {
@@ -49,12 +51,15 @@ onMounted(() => {
         },
         { immediate: true }
     );
+
+    // if the answer is removed, clear the input
     watch(
         () => answersStore.answerRemoved,
         (newAnswerRemoved) => {
             if (newAnswerRemoved) {
                 if (answersStore.answerRemoved.week == week.value && answersStore.answerRemoved.questionNumber == questionNumber.value) {
                     input.value = ''
+                    // reset the watcher
                     answersStore.answerRemoved = {week: null, questionNumber: null}
                 }
             }

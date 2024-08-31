@@ -11,11 +11,14 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // remove answer
   function removeAnswer(week, questionNumber) {
+    // find the answer
     const index = answerData.value.findIndex(
       (answer) => answer.week == week && answer.questionNumber == questionNumber
     );
 
+    // remove the answer
     answerData.value[index].answer = "";
+    // trigger the watcher in QuestionCard.vue
     answerRemoved.value = {week, questionNumber};
   }
 
@@ -140,7 +143,10 @@ export const useAnswersStore = defineStore("answers", () => {
     answerData.value = data[0].answers;
   }
 
+
+  // on mount
   onMounted(async () => {
+    // wait for questions to load, then create the answer data
     watch(
       () => questionsStore.isLoading,
       async (newIsLoading) => {
@@ -153,6 +159,7 @@ export const useAnswersStore = defineStore("answers", () => {
             });
           });
 
+          // if the user is logged in, retrieve their answers and update the answer data
           if (user.value) {
             await retrieveAnswers();
           }

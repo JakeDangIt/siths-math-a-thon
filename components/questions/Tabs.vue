@@ -93,23 +93,32 @@
 
                             <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
                             <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
-                                class="mx-2 grid grid-cols-2 lg:grid-cols-1">
-                                <p
-                                    v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.questionNumber - b.questionNumber)">
-                                    {{ answer.questionNumber }}. {{ answer.answer }}
-                                </p>
+                                class="grid grid-cols-2 lg:grid-cols-1">
+
+                                <div v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.questionNumber - b.questionNumber)"
+                                    class="px-2 flex justify-between hover:bg-slate-200 group">
+                                    <p>
+                                        <span class="font-bold">Q{{ answer.questionNumber }}.</span> {{ answer.answer }}
+                                    </p>
+                                    <button @click="removeAnswer(weekNames[index], answer.questionNumber)"
+                                        class="flex items-center opacity-0 group-hover:opacity-100 transition-all">
+                                        <Icon name="gravity-ui:square-xmark"></Icon>
+                                    </button>
+                                </div>
 
                                 <!-- submit and save button -->
-                                <div class="space-x-2 mt-12 col-span-2 lg:col-auto">
+                                <div class="w-full mt-12 grid grid-cols-2 col-span-2 lg:col-auto gap-2 ">
+                                    <Button @click="saveAnswers()" variant="secondary"
+                                        :disabled="saveLoading || answersStore.answerData.length == 0"
+                                        class="w-full">Save
+                                        Answers</Button>
                                     <Button
                                         @click="submitAnswers(weekNames[index], answersStore.answerData.filter(answer => answer.week == weekNames[index]))"
-                                        :disabled="submitLoading || answersStore.answerData.filter(answer => answer.week == weekNames[index]).length == 0">
+                                        :disabled="submitLoading || answersStore.answerData.filter(answer => answer.week == weekNames[index]).length == 0"
+                                        class="w-full">
                                         Submit Week
                                         {{ weekNames[index] }}
                                     </Button>
-                                    <Button @click="saveAnswers()" variant="secondary"
-                                        :disabled="saveLoading || answersStore.answerData.length == 0">Save
-                                        Answers</Button>
                                 </div>
 
                             </TabsContent>
@@ -188,6 +197,10 @@ async function submitAnswers(week, answers) {
         await answersStore.submitAnswers(week, answers);
     }
     submitLoading.value = false;
+}
+
+function removeAnswer(week, questionNumber) {
+    answersStore.removeAnswer(week, questionNumber)
 }
 
 // function to check if the user has scrolled far enough down to put away the scroll and preview answer buttons

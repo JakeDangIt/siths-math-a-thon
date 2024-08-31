@@ -2,12 +2,13 @@ export const useAnswersStore = defineStore("answers", () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const toastStore = useToastStore();
+  const questionStore = useQuestionsStore();
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
 
 
-  // set answer, called when you update an input
+  // set answer, called when you update an input or remove answer
   function setAnswer(week, questionNumber, answer) {
     // find the index of the answer in the array
     const existingAnswerIndex = answerData.value.findIndex(
@@ -22,7 +23,7 @@ export const useAnswersStore = defineStore("answers", () => {
     }
   }
 
-  // remove answer, called when you delete an input
+  // remove answer, called when you delete an input or click the x
   function removeAnswer(week, questionNumber) {
     const existingAnswerIndex = answerData.value.findIndex(
       (item) => item.week === week && item.questionNumber === questionNumber
@@ -90,7 +91,6 @@ export const useAnswersStore = defineStore("answers", () => {
 
     toastStore.changeToast("Answers saved", "Your answers have been saved");
   }
-
 
   // submit answers
   async function submitAnswers(week, answers) {

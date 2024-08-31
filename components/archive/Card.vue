@@ -1,5 +1,5 @@
 <template>
-  <Card class="mx-4 lg:w-1/3 h-fit">
+  <Card class="lg:w-1/3 h-fit">
 
     <!-- card  -->
     <CardHeader>

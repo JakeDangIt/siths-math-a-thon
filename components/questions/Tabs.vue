@@ -9,7 +9,7 @@
         </div>
 
         <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-        <Tabs :default-value="1" class="mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
+        <Tabs :default-value="1" class="mx-2 lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
             @update:model-value="onTabChange">
 
             <!-- carousel for the tabs -->
@@ -32,7 +32,7 @@
             </Carousel>
 
             <!-- content for the tabs -->
-            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
+            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
 
                 <!-- week name and each question for that week -->
                 <h1 class="text-xl text-center font-bold my-2">Week {{ weekNames[index] }} Questions</h1>

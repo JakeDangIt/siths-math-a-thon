@@ -9,7 +9,7 @@
         </div>
 
         <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-        <Tabs :default-value="1" class="mx-2 lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
+        <Tabs :default-value="1" class="mx-2 lg:mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
             @update:model-value="onTabChange">
 
             <!-- carousel for the tabs -->

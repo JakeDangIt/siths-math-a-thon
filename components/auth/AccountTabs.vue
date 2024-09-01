@@ -255,15 +255,16 @@ async function handleLogin() {
             const { error: uploadError } = await supabase
                 .from('profiles')
                 .insert({
-                    uuid: user.value.id,
+                    uid: user.value.id,
                     name: user.value.user_metadata.name,
                     email: user.value.email,
                     osis: Number(user.value.user_metadata.osis),
                     teacher: user.value.user_metadata.teacher,
-                    grade: Number(user.value.user_metadata.grade),
+                    grade: user.value.user_metadata.grade,
                 })
             if (uploadError) {
                 toastStore.changeToast('Error uploading profile', uploadError.message)
+                return
             }
 
             const { error: updateError } = await supabase.auth.updateUser({

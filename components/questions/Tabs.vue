@@ -171,11 +171,9 @@ async function saveAnswers() {
     saveLoading.value = true;
     if (user.value === null) {
         toastStore.changeToast('You must be logged in to save answers');
-        return;
     }
-    if (answersStore.answerData.length == 0) {
+    else if (answersStore.answerData.length == 0) {
         toastStore.changeToast('You must answer at least one question to save');
-        return;
     }
     else {
         await answersStore.saveAnswers();
@@ -188,13 +186,12 @@ async function submitAnswers(week, answers) {
     submitLoading.value = true;
     if (user.value === null) {
         toastStore.changeToast('You must be logged in to submit answers');
-        return;
     }
-    if (answers.length == 0) {
+    else if (answers.every(answer => answer.answer === '')) {
         toastStore.changeToast('You must answer at least one question to submit');
-        return;
     }
     else {
+        await answersStore.saveAnswers();
         await answersStore.submitAnswers(week, answers);
     }
     submitLoading.value = false;

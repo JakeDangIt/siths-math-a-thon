@@ -6,8 +6,7 @@ export const useAnswersStore = defineStore("answers", () => {
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
-  const answerRemoved = ref({week: null, questionNumber: null});
-
+  const answerRemoved = ref({ week: null, questionNumber: null });
 
   // remove answer
   function removeAnswer(week, questionNumber) {
@@ -19,14 +18,13 @@ export const useAnswersStore = defineStore("answers", () => {
     // remove the answer
     answerData.value[index].answer = "";
     // trigger the watcher in QuestionCard.vue
-    answerRemoved.value = {week, questionNumber};
+    answerRemoved.value = { week, questionNumber };
   }
-
 
   // save answers
   async function saveAnswers() {
-    const { data, error } = await supabase
-      .from("saved-answers")
+    const { data } = await supabase
+      .from("saved_answers")
       .select("*")
       .eq("uid", user.value.id);
 
@@ -43,7 +41,7 @@ export const useAnswersStore = defineStore("answers", () => {
 
       // update the answers
       const { error: updateError } = await supabase
-        .from("saved-answers")
+        .from("saved_answers")
         .update({
           created_at: new Date().toISOString(),
           answers: answerData.value,
@@ -59,7 +57,7 @@ export const useAnswersStore = defineStore("answers", () => {
     // insert the answers
     else {
       const { error: insertError } = await supabase
-        .from("saved-answers")
+        .from("saved_answers")
         .insert({ answers: answerData.value });
 
       if (insertError) {
@@ -73,17 +71,17 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
-    const { data, error } = await supabase
-      .from("submitted-answers")
+    const { data: submittedData } = await supabase
+      .from("submitted_answers")
       .select("*")
       .eq("uid", user.value.id)
       .eq("week", week);
 
     // if you have an answer, update it, otherwise insert it
-    if (data.length > 0) {
+    if (submittedData.length > 0) {
       // can't submit more than once per hour
       if (
-        Date.now() - new Date(data[0].created_at).getTime() <
+        Date.now() - new Date(submittedData[0].created_at).getTime() <
         1000 * 60 * 60 * 1
       ) {
         toastStore.changeToast(
@@ -95,7 +93,7 @@ export const useAnswersStore = defineStore("answers", () => {
 
       // update the answers
       const { error: updateError } = await supabase
-        .from("submitted-answers")
+        .from("submitted_answers")
         .update({
           created_at: new Date().toISOString(),
           week: String(week),
@@ -113,7 +111,7 @@ export const useAnswersStore = defineStore("answers", () => {
     // insert the answers
     else {
       const { error: insertError } = await supabase
-        .from("submitted-answers")
+        .from("submitted_answers")
         .insert({ week: String(week), answers: answers });
 
       if (insertError) {
@@ -131,7 +129,7 @@ export const useAnswersStore = defineStore("answers", () => {
   // retrieve answers
   async function retrieveAnswers() {
     const { data, error } = await supabase
-      .from("saved-answers")
+      .from("saved_answers")
       .select("*")
       .eq("uid", user.value.id);
 
@@ -142,7 +140,6 @@ export const useAnswersStore = defineStore("answers", () => {
 
     answerData.value = data[0].answers;
   }
-
 
   // on mount
   onMounted(async () => {

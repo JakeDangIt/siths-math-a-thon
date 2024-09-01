@@ -75,11 +75,10 @@ export const useAnswersStore = defineStore("answers", () => {
       .from("submitted_answers")
       .select("*")
       .eq("uid", user.value.id)
-      .eq("week", week);
-
-    // if you have an answer, update it, otherwise insert it
+      .eq("submitted_week", week);
+  
     if (submittedData.length > 0) {
-      // can't submit more than once per hour
+      // Can't submit more than once per hour
       if (
         Date.now() - new Date(submittedData[0].created_at).getTime() <
         1000 * 60 * 60 * 1
@@ -90,41 +89,38 @@ export const useAnswersStore = defineStore("answers", () => {
         );
         return;
       }
-
-      // update the answers
+  
       const { error: updateError } = await supabase
         .from("submitted_answers")
         .update({
           created_at: new Date().toISOString(),
-          week: String(week),
+          submitted_week: week, // week is treated as text
           answers: answers,
         })
         .eq("uid", user.value.id)
-        .eq("week", week);
-
+        .eq("submitted_week", week);
+  
       if (updateError) {
         toastStore.changeToast("Failed to update answers", updateError.message);
         return;
       }
-    }
-
-    // insert the answers
-    else {
+    } else {
       const { error: insertError } = await supabase
         .from("submitted_answers")
-        .insert({ week: String(week), answers: answers });
-
+        .insert({ submitted_week: week, answers: answers, uid: user.value.id });
+  
       if (insertError) {
         toastStore.changeToast("Failed to insert answers", insertError.message);
         return;
       }
     }
-
+  
     toastStore.changeToast(
       "Answers submitted",
       "Thank you for submitting your answers"
     );
   }
+  
 
   // retrieve answers
   async function retrieveAnswers() {

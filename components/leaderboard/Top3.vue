@@ -1,8 +1,8 @@
 <template>
-    <div v-if="leaderboardStore.isLoading">
-        <Skeleton class="h-screen w-screen" />
+    <div>
+        <Skeleton v-if="leaderboardStore.isLoading || leaderboardStore.avatarLoading" class="mx-2 h-screen lg:w-2/3 lg:mx-auto"></Skeleton>
     </div>
-    <div v-else class="mx-2 lg:w-2/3 lg:mx-auto">
+    <div v-if="!leaderboardStore.isLoading || !leaderboardStore.avatarLoading" class="mx-2 lg:w-2/3 lg:mx-auto">
         <Card>
             <CardHeader class="text-center">
                 <CardTitle>Leaderboard</CardTitle>
@@ -20,7 +20,12 @@
 
                 <Card>
                     <CardContent>
-                        Card Content
+                        <div class="pt-2 lg:p-6 space-y-2">
+                            <div class="flex items-center bg-slate-200 rounded-lg" v-for="(user, index) in leaderboardStore.top10">
+                                <p class="text-lg lg:text-xl m-3 w-6 text-center">{{ index + 4 }}</p>
+                                <p><span class="lg:text-lg">{{ user.user_name }}</span> - {{ user.correct_answers }} points</p>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
             </CardContent>

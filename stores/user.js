@@ -6,7 +6,6 @@ export const useUserStore = defineStore("user", () => {
   const avatarPath = ref("");
   const avatarImage = ref(null);
 
-
   // refresh user data
   async function refreshUser() {
     const { data: updatedUser, error } = await supabase.auth.getUser();
@@ -16,7 +15,6 @@ export const useUserStore = defineStore("user", () => {
 
     return updatedUser.user;
   }
-
 
   // retrieve avatar
   async function retrieveAvatar() {
@@ -31,11 +29,10 @@ export const useUserStore = defineStore("user", () => {
     avatarImage.value = URL.createObjectURL(data);
   }
 
-
   // remove avatar
   async function removeAvatar() {
     // delete avatar from storage
-    
+
     const { data, error } = await supabase.storage
       .from("avatars")
       .remove([avatarPath.value]);
@@ -46,7 +43,7 @@ export const useUserStore = defineStore("user", () => {
     });
 
     if (updateError || error) {
-      return
+      return;
     }
 
     avatarPath.value = "";
@@ -59,7 +56,6 @@ export const useUserStore = defineStore("user", () => {
     return true;
   }
 
-  
   onMounted(async () => {
     // retrieve avatar from local storage, so you dont have to re-download it and saves time before it refreshes user
     avatarImage.value = localStorage.getItem("avatarImage");
@@ -70,6 +66,25 @@ export const useUserStore = defineStore("user", () => {
       await refreshUser();
       await retrieveAvatar();
     }
+
+    if (!user.value?.user_metadata?.avatar) {
+      avatarImage.value = null;
+    }
+
+    watch(
+      () => user.value,
+      async (newUser) => {
+        if (avatarPath.value !== newUser?.user_metadata?.avatar) {
+          await refreshUser();
+          await retrieveAvatar();
+        }
+
+        if (!newUser?.user_metadata?.avatar) {
+          avatarImage.value = null;
+        }
+      },
+      { immediate: true }
+    );
   });
 
   return { avatarPath, avatarImage, retrieveAvatar, refreshUser, removeAvatar };

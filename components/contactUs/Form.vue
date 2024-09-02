@@ -1,5 +1,5 @@
 <template>
-    <Card class="mx-2 lg:w-4/5 lg:mx-auto">
+    <Card class="mx-2 lg:w-4/5">
         <CardHeader>
             <CardTitle>Contact us</CardTitle>
             <CardDescription>Have any questions? Fill out your information and let us know!</CardDescription>

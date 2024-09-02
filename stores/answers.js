@@ -134,7 +134,9 @@ export const useAnswersStore = defineStore("answers", () => {
       return;
     }
 
-    answerData.value = data[0].answers;
+    if (data.length > 0) {
+      answerData.value = data[0].answers;
+    }
   }
 
   // on mount
@@ -157,6 +159,16 @@ export const useAnswersStore = defineStore("answers", () => {
             await retrieveAnswers();
           }
           getAnswerLoading.value = false;
+        }
+      },
+      { immediate: true }
+    );
+
+    watch(
+      () => user.value,
+      async (newUser) => {
+        if (newUser) {
+          await retrieveAnswers();
         }
       },
       { immediate: true }

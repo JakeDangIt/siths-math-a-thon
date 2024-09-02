@@ -37,7 +37,7 @@
                 <!-- week name and each question for that week -->
                 <h1 class="text-xl text-center font-bold my-2">Week {{ weekNames[index] }} Questions</h1>
                 <QuestionsQuestionCard
-                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index])"
+                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.question - b.question)"
                     :key="question.question" :questionNumber="question.question" :mathContent="question.tex_content"
                     :week="weekNames[index]" />
 

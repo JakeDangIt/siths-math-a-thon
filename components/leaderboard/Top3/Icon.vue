@@ -1,21 +1,38 @@
 <template>
-    <div class="w-1/3 flex items-center justify-center text-center rounded-t-2xl"
-        :style="{ height: `${computedHeight}px` }" :class="bgColor">
-        <div>
-            <h1 class="text-[60px] lg:text-[80px]">{{ index }}</h1>
-            <p class="lg:text-lg">{{ user.user_name }}</p>
-            <p class="text-sm">{{ user.correct_answers }} points</p>
+    <div class="w-1/3">
+        <div v-if="isLoading">
+            <Skeleton :style="{ height: `${width < 1024 ? 250 : 400}px` }" />
+        </div>
+        <div v-if="!isLoading" class="flex items-center justify-center text-center rounded-t-2xl"
+            :style="{ height: `${computedHeight}px` }" :class="bgColor">
+            <div>
+                <Avatar class="lg:h-20 lg:w-20">
+                    <AvatarImage v-if="userAvatar" :src="userAvatar" />
+                    <AvatarFallback class="text-[16px] lg:text-[24px]">{{ firstName[0] }}</AvatarFallback>
+                </Avatar>
+                <h1 class="text-[40px] lg:text-[60px]">{{ index }}</h1>
+                <p class="lg:text-lg">{{ user.user_name }}</p>
+                <p class="text-sm">{{ user.correct_answers }} points</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
+const supabase = useSupabaseClient()
 const props = defineProps(['user', 'index'])
 const leaderboardStore = useLeaderboardStore()
 
+const { width } = useWindowSize()
+const isLoading = ref(true)
+
 const user = ref(props.user)
 const index = ref(props.index + 1)
-const { width } = useWindowSize()
+const userAvatar = ref(null)
+const firstName = computed(() => {
+    const [first] = user.value.user_name.split(' ');
+    return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
+});
 
 const maxScore = computed(() => leaderboardStore.top3[0].correct_answers)
 const minScore = computed(() => leaderboardStore.top3[2].correct_answers)
@@ -38,5 +55,28 @@ const bgColor = computed(() => {
         default:
             return 'bg-white'
     }
+})
+
+async function getUserAvatar() {
+    // get names of all files in the bucket
+    const { data: files, error: filesError } = await supabase.storage.from('avatars').list()
+
+    if (files.length > 0) {
+        // check if the user has an avatar
+        const userAvatarFile = files.find(file => file.name === `${user.value.uid}.jpeg`)
+        if (userAvatarFile) {
+            const { data, error } = await supabase.storage.from('avatars').download(`${user.value.uid}.jpeg`)
+            if (error) {
+                return
+            } else {
+                userAvatar.value = URL.createObjectURL(data)
+            }
+        }
+    }
+}
+
+onMounted(async () => {
+    await getUserAvatar()
+    isLoading.value = false
 })
 </script>

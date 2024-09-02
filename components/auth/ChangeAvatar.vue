@@ -36,6 +36,7 @@ const emit = defineEmits(['avatarUploaded', 'avatarRemoval'])
 
 const userStore = useUserStore()
 const toastStore = useToastStore()
+const user = useSupabaseUser()
 
 // cropper for the cropper
 const cropper = ref(null)
@@ -71,7 +72,7 @@ function uploadAvatar() {
 
         // name/path of the file
         const fileExt = 'jpeg';
-        const fileName = `${window.crypto.randomUUID()}`;
+        const fileName = `${user.value.id}`;
         const filePath = `${fileName}.${fileExt}`;
 
         // create a new file of the blob of the cropped image

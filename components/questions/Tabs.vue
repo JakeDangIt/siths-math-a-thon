@@ -9,7 +9,7 @@
         </div>
 
         <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-        <Tabs :default-value="1" class="mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
+        <Tabs :default-value="1" class="mx-2 lg:mx-auto lg:w-2/3" :class="questionsStore.isLoading ? 'opacity-0' : ''"
             @update:model-value="onTabChange">
 
             <!-- carousel for the tabs -->
@@ -32,12 +32,12 @@
             </Carousel>
 
             <!-- content for the tabs -->
-            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="mx-2 space-y-2">
+            <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
 
                 <!-- week name and each question for that week -->
                 <h1 class="text-xl text-center font-bold my-2">Week {{ weekNames[index] }} Questions</h1>
                 <QuestionsQuestionCard
-                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index])"
+                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.question - b.question)"
                     :key="question.question" :questionNumber="question.question" :mathContent="question.tex_content"
                     :week="weekNames[index]" />
 
@@ -171,11 +171,9 @@ async function saveAnswers() {
     saveLoading.value = true;
     if (user.value === null) {
         toastStore.changeToast('You must be logged in to save answers');
-        return;
     }
-    if (answersStore.answerData.length == 0) {
+    else if (answersStore.answerData.length == 0) {
         toastStore.changeToast('You must answer at least one question to save');
-        return;
     }
     else {
         await answersStore.saveAnswers();
@@ -188,13 +186,12 @@ async function submitAnswers(week, answers) {
     submitLoading.value = true;
     if (user.value === null) {
         toastStore.changeToast('You must be logged in to submit answers');
-        return;
     }
-    if (answers.length == 0) {
+    else if (answers.every(answer => answer.answer === '')) {
         toastStore.changeToast('You must answer at least one question to submit');
-        return;
     }
     else {
+        await answersStore.saveAnswers();
         await answersStore.submitAnswers(week, answers);
     }
     submitLoading.value = false;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>this is the leaderboard</p>
+        <LeaderboardTop3 />
     </div>
 </template>
 

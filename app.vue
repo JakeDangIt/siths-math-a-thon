@@ -67,12 +67,14 @@ onMounted(async () => {
 
   </Head>
 
-  <!-- show skeleton when loading the layout -->
-  <Skeleton v-if="isLoading" class="h-[48px] w-full" />
-
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 
   so only render on client while loading (which should show nothing anyway)  -->
   <ClientOnly v-if="isLoading">
+    <!-- show skeleton when loading the layout -->
+    <div class="h-screen overflow-hidden">
+      <Skeleton class="h-[48px] w-full" />
+      <Skeleton class="h-screen mt-2 w-full" />
+    </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
       <NuxtPage />
     </NuxtLayout>
@@ -81,7 +83,7 @@ onMounted(async () => {
   <!-- show mobile if mobile screen, show default if larger -->
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage class="pt-12 pb-12" />
+    <NuxtPage class="py-4 lg:py-12" />
     <Toaster />
   </NuxtLayout>
 </template>

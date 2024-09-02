@@ -32,7 +32,7 @@ function changeAnswer() {
         (question) => question.week == week.value && question.questionNumber == questionNumber.value
     )
 
-    answersStore.answerData[correspondingQuestionIndex].answer = input.value
+    answersStore.answerData[correspondingQuestionIndex].answer = String(input.value)
 }
 
 // watch for changes in the store

@@ -17,10 +17,11 @@ const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS M
           <HeaderHamburgerIcon />
         </SheetTrigger>
 
-        <div class="bg-theme-dark-blue rounded-md h-10 m-2">
-          <!-- <Icon name="gravity-ui:math-operations" class="h-[32px] w-[32px]" /> -->
-          <img src="/math-a-thon-icon.webp" class="h-full">
-        </div>
+        <NuxtLink to="/">
+          <div class="bg-theme-dark-blue rounded-md h-10 m-2">
+            <img src="/math-a-thon-icon.webp" class="h-full">
+          </div>
+        </NuxtLink>
 
         <h1 class="text-lg">{{ currentRouteName }}</h1>
       </div>

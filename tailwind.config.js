@@ -59,6 +59,9 @@ module.exports = {
         'theme-dark-red': '#b6534d',
         'theme-blue': '#B1BAD1',
         'theme-dark-blue': '#8E95A7',
+        'bronze': '#D9A962',
+        'silver': '#DDDDDD',
+        'gold': '#E7D38A',
       },
       borderRadius: {
       	xl: "calc(var(--radius) + 4px)",

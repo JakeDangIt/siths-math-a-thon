@@ -23,12 +23,12 @@ const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS M
     <nav class="flex-1 gap-2 flex justify-center">
 
       <HeaderNavLink v-for='route in routes.slice(1, 3)' :route-path="route.routePath" :route-name="route.routeName"
-        variant="link" class="hover:bg-gray-500 hover:bg-opacity-20 text-lg"
+        variant="link" class="hover:bg-gray-500 hover:bg-opacity-20 text-lg flex justify-center"
         :class="{ 'font-bold': currentRoutePath == route.routePath }" />
 
       <DropdownMenu>
 
-        <DropdownMenuTrigger class="text-lg flex items-center gap-1 px-4">
+        <DropdownMenuTrigger class="text-lg flex flex-1 items-center gap-1 justify-center">
           Resources
           <Icon name="gravity-ui:caret-down"></Icon>
         </DropdownMenuTrigger>

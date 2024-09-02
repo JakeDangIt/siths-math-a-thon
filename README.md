@@ -36,8 +36,9 @@ Things got a little out of hand from there...
 ### Features
 - User registration and authentication
 - Automatic grading of Math-a-thon submissions
+- Leaderboard of top scorers
 - Real-time data display and updates
-- User profile management (including custom avatars)
+- User profile management (including custom avatars!)
 
 ### Goals
 - Advertise the competition and appeal to the student body
@@ -72,7 +73,7 @@ I wanted to buy a nice domain for the website, siths-mathathon.com, which, in hi
 
 - Authentication and Database: Supabase
 
-Supabase, the very *free* Firebase alternative, requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' submissions. No issues thus far with them.
+Supabase, the very *free* Firebase alternative, requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh). 
 
 - Spreadsheets: Google Sheets
 
@@ -92,6 +93,7 @@ Pinia stores are there to share data, usually data that has to be fetched, among
 Very simply, I set up the Supabase client in the Nuxt app using the [Nuxt + Supabase library](https://supabase.nuxtjs.org/). <br>
 For 2025 specifically, and for all future references to code unless I have redesigned the whole website again, in `math-a-thon-25\components\auth\AccountTabs.vue`, you basically just log in and sign up here. If you log in or click the link in your email after you sign up, you get redirected to your profile. <br>
 There is very necessary information to be kept about each user, so the dialog in the sign up process is crucial. <br>
+Profile data is uploaded too.
 
 ### Profile + Avatar
 
@@ -99,9 +101,29 @@ Unfortunately, I spent a long time figuring out this feature, but eventually I g
 To put it very briefly, you can update your user data and upload an avatar, of which you crop yourself. <br>
 Might be best to just leave this stuff alone since I'm not too confident in changing it. It was very hard adding the cropper library, converting the canvas to images, figuring out how to update it on the app and on the DB, etc.
 
+### Questions + Answers
+
+The questions will be written in LaTeX and be typeset by MathJax. MathJax will be inserted as a script when the questions page is mounted, alongside fetching the question data and making cards for each one. Once the content is loaded, it typesets. <br>
+You can also change weeks/bonuses on the carousel, with the questions just being filtered by week name. <br>
+Save every minute, submit every hour, just uploads the uid, time, and answers (as jsonb). <br>
+There's also a scroll down button and remove input buttons.
+
+### Leaderboard
+
+Top 3, top 10, and your own answers. <br>
+But, only top 3 deserves their avatar shown.
+
+### Staff
+
+Just all the people working on it, but it's just me rn.
+
 ### Archive
 
-I use a store to fetch the data only once, and then it just becomes links that opens up the .pdf files.
+Fetch the file data, and then it just becomes links that opens up the .pdf files.
+
+### Contact Us
+
+Form with name and email autofilled if you're logged in.
 
 ### Acknowledgments
 Special thanks to Mr. Whalen for indirectly teaching me the basics of Vue.js, and to the Math Team members and CS students (Bridget Feng and Andrea Guo) for helping with testing and designing the early versions of the app.

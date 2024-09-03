@@ -24,6 +24,7 @@ const leaderboardStore = useLeaderboardStore()
 
 const { width } = useWindowSize()
 
+const top3 = ref(leaderboardStore.top10.slice(0, 3))
 const user = ref(props.user)
 const index = ref(props.index + 1)
 const userAvatar = computed(() => leaderboardStore.top3Avatars[props.index])
@@ -32,8 +33,8 @@ const firstName = computed(() => {
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
 });
 
-const maxScore = computed(() => leaderboardStore.top3[0].correct_answers)
-const minScore = computed(() => leaderboardStore.top3[2].correct_answers)
+const maxScore = computed(() => top3.value[0].correct_answers)
+const minScore = computed(() => top3.value[2].correct_answers)
 const scoreRange = computed(() => maxScore.value - minScore.value)
 
 const computedHeight = computed(() => {

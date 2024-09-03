@@ -3,7 +3,6 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   const toastStore = useToastStore();
 
   const leaderboardData = ref([]);
-  const top3 = ref([]);
   const top10 = ref([]);
   const top3Avatars = ref([]);
 
@@ -17,12 +16,9 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       toastStore.changeToast("Failed to retrieve leaderboard", error.message);
     } else {
       leaderboardData.value = data;
-      top3.value = data
-        .sort((a, b) => b.correct_answers - a.correct_answers)
-        .slice(0, 3);
       top10.value = data
         .sort((a, b) => b.correct_answers - a.correct_answers)
-        .slice(3, 10);
+        .slice(0, 10);
     }
 
     isLoading.value = false;
@@ -38,7 +34,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       // check if the top 3 users have avatars
       const fileNames = files.map((file) => file.name.split(".jpeg")[0]);
 
-      top3.value.forEach(async (user) => {
+      top10.value.slice(0, 3).forEach(async (user) => {
         if (fileNames.includes(user.uid)) {
           const { data: avatar, error: avatarError } = await supabase.storage.from('avatars').download(`${user.uid}.jpeg`);
           if (avatar) {
@@ -56,5 +52,5 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     await getUserAvatars();
   });
 
-  return { leaderboardData, top3, top3Avatars, top10, isLoading, avatarLoading, retrieveLeaderboard };
+  return { leaderboardData, top3Avatars, top10, isLoading, avatarLoading, retrieveLeaderboard };
 });

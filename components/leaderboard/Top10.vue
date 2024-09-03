@@ -11,7 +11,7 @@
             </CardHeader>
             <CardContent class="flex flex-col">
                 <div class="flex items-end justify-center gap-2">
-                    <LeaderboardTop3Icon v-for="(user, index) in leaderboardStore.top3" :key="user.id" :user="user"
+                    <LeaderboardTop3Icon v-for="(user, index) in leaderboardStore.top10.slice(0,3)" :key="user.id" :user="user"
                         :index="index" :class="{
                             'order-2': index === 0,
                             'order-1': index === 1,
@@ -24,7 +24,7 @@
                         <div class="pt-2 lg:p-2 space-y-1">
                             <div class="flex items-center bg-slate-200 rounded-lg border-2"
                                 :class="user_id == user.uid ? 'border-slate-400' : ''"
-                                v-for="(user, index) in leaderboardStore.top10">
+                                v-for="(user, index) in leaderboardStore.top10.slice(3,10)">
 
                                 <p class="text-lg lg:text-2xl m-3 w-8 text-center">{{ index + 4 }}</p>
 

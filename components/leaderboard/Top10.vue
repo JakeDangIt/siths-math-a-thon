@@ -3,7 +3,7 @@
         <Skeleton v-if="leaderboardStore.isLoading || leaderboardStore.avatarLoading"
             class="mx-2 h-screen lg:w-1/2 lg:mx-auto"></Skeleton>
     </div>
-    <div v-if="!leaderboardStore.isLoading || !leaderboardStore.avatarLoading" class="mx-2 lg:w-1/2 lg:mx-auto">
+    <div v-if="!leaderboardStore.isLoading && !leaderboardStore.avatarLoading" class="mx-2 lg:w-1/2 lg:mx-auto">
         <Card>
             <CardHeader class="text-center">
                 <CardTitle>Leaderboard</CardTitle>

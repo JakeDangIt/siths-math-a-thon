@@ -1,9 +1,9 @@
 <template>
     <div class="w-1/3">
-        <div v-if="isLoading">
+        <div v-if="leaderboardStore.avatarLoading">
             <Skeleton :style="{ height: `${width < 1024 ? 250 : 400}px` }" />
         </div>
-        <div v-if="!isLoading" class="flex items-center justify-center text-center rounded-t-2xl"
+        <div v-if="!leaderboardStore.avatarLoading" class="flex items-center justify-center text-center rounded-t-2xl"
             :style="{ height: `${computedHeight}px` }" :class="bgColor">
             <div>
                 <Avatar class="lg:h-20 lg:w-20">
@@ -19,16 +19,14 @@
 </template>
 
 <script setup>
-const supabase = useSupabaseClient()
 const props = defineProps(['user', 'index'])
 const leaderboardStore = useLeaderboardStore()
 
 const { width } = useWindowSize()
-const isLoading = ref(true)
 
 const user = ref(props.user)
 const index = ref(props.index + 1)
-const userAvatar = ref(null)
+const userAvatar = computed(() => leaderboardStore.top3Avatars[props.index])
 const firstName = computed(() => {
     const [first] = user.value.user_name.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
@@ -52,31 +50,6 @@ const bgColor = computed(() => {
             return 'bg-silver'
         case 3:
             return 'bg-bronze'
-        default:
-            return 'bg-white'
     }
-})
-
-async function getUserAvatar() {
-    // get names of all files in the bucket
-    const { data: files, error: filesError } = await supabase.storage.from('avatars').list()
-
-    if (files.length > 0) {
-        // check if the user has an avatar
-        const userAvatarFile = files.find(file => file.name === `${user.value.uid}.jpeg`)
-        if (userAvatarFile) {
-            const { data, error } = await supabase.storage.from('avatars').download(`${user.value.uid}.jpeg`)
-            if (error) {
-                return
-            } else {
-                userAvatar.value = URL.createObjectURL(data)
-            }
-        }
-    }
-}
-
-onMounted(async () => {
-    await getUserAvatar()
-    isLoading.value = false
 })
 </script>

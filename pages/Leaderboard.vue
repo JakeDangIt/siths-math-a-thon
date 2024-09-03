@@ -1,6 +1,6 @@
 <template>
     <div>
-        <LeaderboardTop3 />
+        <LeaderboardTop10 />
     </div>
 </template>
 

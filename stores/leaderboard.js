@@ -1,10 +1,12 @@
 export const useLeaderboardStore = defineStore("leaderboard", () => {
   const supabase = useSupabaseClient();
+  const user = useSupabaseUser();
   const toastStore = useToastStore();
 
   const leaderboardData = ref([]);
   const top10 = ref([]);
   const top3Avatars = ref([]);
+  const userAnswers = ref([]);
 
   const isLoading = ref(true);
   const avatarLoading = ref(true);
@@ -36,9 +38,14 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
       top10.value.slice(0, 3).forEach(async (user) => {
         if (fileNames.includes(user.uid)) {
-          const { data: avatar, error: avatarError } = await supabase.storage.from('avatars').download(`${user.uid}.jpeg`);
+          const { data: avatar, error: avatarError } = await supabase.storage
+            .from("avatars")
+            .download(`${user.uid}.jpeg`);
           if (avatar) {
-            top3Avatars.value.push(URL.createObjectURL(avatar));
+            top3Avatars.value.push({
+              name: user.user_name,
+              image: URL.createObjectURL(avatar),
+            });
           }
         }
       });
@@ -47,10 +54,32 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     avatarLoading.value = false;
   }
 
+  async function getUserAnswers() {
+    const { data, error } = await supabase
+      .from("submitted_answers")
+      .select("correct_answers, uid")
+      .eq("uid", user.value.id);
+
+    if (error) {
+      toastStore.changeToast("Failed to retrieve user answers", error.message);
+    } else {
+      userAnswers.value = data
+    }
+  }
+
   onMounted(async () => {
     await retrieveLeaderboard();
     await getUserAvatars();
+    await getUserAnswers();
   });
 
-  return { leaderboardData, top3Avatars, top10, isLoading, avatarLoading, retrieveLeaderboard };
+  return {
+    leaderboardData,
+    top3Avatars,
+    top10,
+    userAnswers,
+    isLoading,
+    avatarLoading,
+    retrieveLeaderboard,
+  };
 });

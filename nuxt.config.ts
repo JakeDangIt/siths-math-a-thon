@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   },
   modules: [
     "@nuxt/image",
-    "@nuxt/content",
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@vueuse/nuxt",
@@ -36,7 +35,4 @@ export default defineNuxtConfig({
       exclude: [],
     }
   },
-  content: {
-    contentHead: false,
-  }
 })

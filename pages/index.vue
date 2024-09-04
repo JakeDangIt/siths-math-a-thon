@@ -1,7 +1,6 @@
 <template>
     <div>
         <p>hey im the page</p>
-        <ContentDoc />
     </div>
 </template>
 

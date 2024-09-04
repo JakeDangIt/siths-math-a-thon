@@ -3,27 +3,27 @@ export const routes = [
     {
         routePath: '/',
         routeName: 'Home',
-        iconName: 'house',
+        iconName: 'home',
     },
     {
         routePath: '/questions',
         routeName: 'Questions',
-        iconName: 'square-bars',
+        iconName: 'library-books-outline',
     },
     {
         routePath: '/leaderboard',
         routeName: 'Leaderboard',
-        iconName: 'chart-column',
+        iconName: 'leaderboard',
     },
     {
         routePath: '/staff',
         routeName: 'Staff',
-        iconName: 'persons',
+        iconName: 'group',
     },
     {
         routePath: '/contact',
         routeName: 'Contact Us',
-        iconName: 'envelope',
+        iconName: 'mail',
     },
     {
         routePath: '/archive',

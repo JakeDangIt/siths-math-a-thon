@@ -49,7 +49,7 @@
                         <div class="flex items-center gap-2 fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto transition-all"
                             :class="isFarDownEnough ? 'translate-x-[14rem] lg:translate-x-[-14rem]' : 'translate-x-0'">
                             <Button @click="scrollDown()">
-                                <Icon name="gravity-ui:arrow-down" class="w-6 h-full"></Icon>
+                                <Icon name="material-symbols:arrow-downward" class="w-6 h-full"></Icon>
                             </Button>
                             <!-- to save space, 'Answers' is omitted on mobile -->
                             <SheetTrigger><Button>Preview {{ width > 1024 ? 'Answers' : '' }}</Button></SheetTrigger>
@@ -103,7 +103,7 @@
                                     </p>
                                     <button @click="removeAnswer(weekNames[index], answer.questionNumber)"
                                         class="flex items-center opacity-0 group-hover:opacity-100 transition-all">
-                                        <Icon name="gravity-ui:square-xmark"></Icon>
+                                        <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
                                     </button>
                                 </div>
 

@@ -1,11 +1,12 @@
 export const useLeaderboardStore = defineStore("leaderboard", () => {
   const supabase = useSupabaseClient();
+  const user = useSupabaseUser();
   const toastStore = useToastStore();
 
   const leaderboardData = ref([]);
-  const top3 = ref([]);
   const top10 = ref([]);
   const top3Avatars = ref([]);
+  const userAnswers = ref([]);
 
   const isLoading = ref(true);
   const avatarLoading = ref(true);
@@ -17,12 +18,9 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       toastStore.changeToast("Failed to retrieve leaderboard", error.message);
     } else {
       leaderboardData.value = data;
-      top3.value = data
-        .sort((a, b) => b.correct_answers - a.correct_answers)
-        .slice(0, 3);
       top10.value = data
         .sort((a, b) => b.correct_answers - a.correct_answers)
-        .slice(3, 10);
+        .slice(0, 10);
     }
 
     isLoading.value = false;
@@ -38,11 +36,16 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       // check if the top 3 users have avatars
       const fileNames = files.map((file) => file.name.split(".jpeg")[0]);
 
-      top3.value.forEach(async (user) => {
+      top10.value.slice(0, 3).forEach(async (user) => {
         if (fileNames.includes(user.uid)) {
-          const { data: avatar, error: avatarError } = await supabase.storage.from('avatars').download(`${user.uid}.jpeg`);
+          const { data: avatar, error: avatarError } = await supabase.storage
+            .from("avatars")
+            .download(`${user.uid}.jpeg`);
           if (avatar) {
-            top3Avatars.value.push(URL.createObjectURL(avatar));
+            top3Avatars.value.push({
+              name: user.user_name,
+              image: URL.createObjectURL(avatar),
+            });
           }
         }
       });
@@ -51,10 +54,32 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     avatarLoading.value = false;
   }
 
+  async function getUserAnswers() {
+    const { data, error } = await supabase
+      .from("submitted_answers")
+      .select("correct_answers, uid")
+      .eq("uid", user.value.id);
+
+    if (error) {
+      toastStore.changeToast("Failed to retrieve user answers", error.message);
+    } else {
+      userAnswers.value = data
+    }
+  }
+
   onMounted(async () => {
     await retrieveLeaderboard();
     await getUserAvatars();
+    await getUserAnswers();
   });
 
-  return { leaderboardData, top3, top3Avatars, top10, isLoading, avatarLoading, retrieveLeaderboard };
+  return {
+    leaderboardData,
+    top3Avatars,
+    top10,
+    userAnswers,
+    isLoading,
+    avatarLoading,
+    retrieveLeaderboard,
+  };
 });

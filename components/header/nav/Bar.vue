@@ -30,7 +30,7 @@ const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS M
 
         <DropdownMenuTrigger class="text-lg flex flex-1 items-center gap-1 justify-center">
           Resources
-          <Icon name="gravity-ui:caret-down"></Icon>
+          <Icon name="material-symbols:arrow-drop-down"></Icon>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>

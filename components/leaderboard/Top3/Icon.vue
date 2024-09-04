@@ -9,8 +9,8 @@
             <div class="flex p-2 relative bottom-6 bg-theme-red border-slate-400 border-2">
                 <Icon :name="iconName" class="bg-white h-8 w-8" />
             </div>
-            <div class="mt-8">
-                <Avatar class="lg:h-16 lg:w-16">
+            <div class="mt-4">
+                <Avatar class="lg:h-20 lg:w-20">
                     <AvatarImage v-if="userAvatar" :src="userAvatar" />
                     <AvatarFallback class="text-[16px] lg:text-[24px]">{{ firstName[0] }}</AvatarFallback>
                 </Avatar>

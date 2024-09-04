@@ -67,7 +67,7 @@ const iconName = computed(() => {
         case 2:
             return 'material-symbols:workspace-premium-outline'
         case 3:
-            return 'material-symbols:kid-star'
+            return 'material-symbols:workspace-premium-outline'
     }
 })
 </script>

@@ -73,6 +73,10 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     if (error) {
       toastStore.changeToast("Failed to retrieve user answers", error.message);
     } else {
+      if (data.length === 0) {
+        userAnswers.value = [null];
+        return;
+      }
       userAnswers.value = data;
     }
   }
@@ -89,6 +93,11 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       async (newUser) => {
         if (newUser) {
           await getUserAnswers();
+          const userId = user.value.id;
+          const userIndex = top10.value.findIndex(
+            (user) => user.uid == userId
+          );
+          userPlace.value = userIndex + 1;
         }
       },
       { immediate: true }

@@ -1,4 +1,4 @@
-export const useUserStore = defineStore("user", () => {
+export const useAvatarStore = defineStore("avatar", () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 

@@ -1,18 +1,23 @@
 <template>
 
-    <div class="mx-2 mt-2 lg:w-1/3 space-y-2">
+    <div v-if="hasSubmitted" class="mx-2 mt-2 lg:w-1/3 space-y-2">
         <div>
             <Card>
                 <CardHeader>
                     <CardTitle>Total Statistics</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p>{{ ordinalPlace(leaderboardStore.userPlace) }}/{{ leaderboardStore.leaderboardData.length }}
-                        contestants</p>
-                    
-                    <Skeleton v-if="leaderboardStore.userAnswers.length == 0" class="w-1/2 h-6"></Skeleton>
-                    <p v-else>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect }}/{{
-                        numberOfAnswered }} correct answers</p>
+                    <div v-if="leaderboardStore.userAnswers.length == 0" class="space-y-1">
+                        <Skeleton class="w-1/2 h-6"></Skeleton>
+                        <Skeleton class="w-1/2 h-6"></Skeleton>
+                    </div>
+                    <div v-else>
+                        <p>{{ ordinalPlace(leaderboardStore.userPlace) }}/{{ leaderboardStore.leaderboardData.length }}
+                            contestants</p>
+                        <p>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect
+                            }}/{{
+                                numberOfAnswered }} correct answers</p>
+                    </div>
                 </CardContent>
             </Card>
         </div>
@@ -71,12 +76,25 @@
             </TabsContent>
         </Tabs>
     </div>
+
+    <div v-else class="mx-2 mt-2 lg:w-1/3">
+        <Card>
+            <CardHeader>
+                <CardTitle>Total Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p>You have not submitted any answers yet</p>
+            </CardContent>
+        </Card>
+    </div>
 </template>
 
 <script setup>
 const questionsStore = useQuestionsStore()
 const leaderboardStore = useLeaderboardStore()
 const user = useSupabaseUser()
+
+const hasSubmitted = computed(() => leaderboardStore.userAnswers[0] != null)
 
 const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus']
 const groupedWeekNames = [[1, '1 Bonus'], [2, '2 Bonus'], [3, '3 Bonus']]

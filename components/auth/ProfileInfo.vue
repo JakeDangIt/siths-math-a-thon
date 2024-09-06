@@ -11,7 +11,7 @@
                     </div>
 
                     <Avatar v-if="showAvatar" class="h-16 w-16">
-                        <AvatarImage :src="avatarImage || userStore.avatarImage" draggable="false" />
+                        <AvatarImage :src="avatarImage || avatarStore.avatarImage" draggable="false" />
                     </Avatar>
                     <Avatar v-else class="h-16 w-16">
                         <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
@@ -107,7 +107,7 @@
 import { teachers } from '../../utils/teachers.js'
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
-const userStore = useUserStore()
+const avatarStore = useAvatarStore()
 const toastStore = useToastStore()
 
 // user info
@@ -133,7 +133,7 @@ const emailValid = computed(() => newEmail.value.includes('@nycstudents.net'))
 const osisValid = computed(() => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value)))
 
 // avatar info
-const showAvatar = computed(() => userStore.avatarImage !== null || avatarImage.value !== '')
+const showAvatar = computed(() => avatarStore.avatarImage !== null || avatarImage.value !== '')
 const avatarFile = ref(null)
 const avatarPath = ref('')
 const avatarImage = ref('')
@@ -189,11 +189,11 @@ async function updateUser() {
         // if avatar changed, update the avatar path and upload file of the avatar (cropped image)
         if (avatarFile.value) {
             // remove the old avatar
-            await userStore.removeAvatar()
+            await avatarStore.removeAvatar()
 
             // set the avatar image and path
-            userStore.avatarImage = avatarImage.value;
-            userStore.avatarPath = avatarPath.value;
+            avatarStore.avatarImage = avatarImage.value;
+            avatarStore.avatarPath = avatarPath.value;
 
             // and also store it
             localStorage.setItem("avatarImage", avatarImage.value);

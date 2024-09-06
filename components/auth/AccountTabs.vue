@@ -181,7 +181,8 @@ import { teachers } from '../../utils/teachers'
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const toastStore = useToastStore()
-const userStore = useUserStore()
+const avatarStore = useAvatarStore()
+const router = useRouter()
 
 const isLoading = ref(true)
 
@@ -279,11 +280,11 @@ async function handleLogin() {
         }
         toastStore.changeToast('Success', 'You have successfully logged in.')
 
-        await userStore.refreshUser()
-        await userStore.retrieveAvatar()
+        await avatarStore.refreshUser()
+        await avatarStore.retrieveAvatar()
 
-        // redirect to home 
-        await navigateTo('/')
+        // redirect to last page 
+        router.back()
     }
     loginLoading.value = false
 }

@@ -34,7 +34,7 @@ import 'cropperjs/dist/cropper.css'
 
 const emit = defineEmits(['avatarUploaded', 'avatarRemoval'])
 
-const userStore = useUserStore()
+const avatarStore = useAvatarStore()
 const toastStore = useToastStore()
 const user = useSupabaseUser()
 
@@ -88,7 +88,7 @@ function uploadAvatar() {
 // remove avatar
 async function handleAvatarRemove() {
     toastStore.changeToast("Removing avatar", "Please wait...");
-    const success = await userStore.removeAvatar()
+    const success = await avatarStore.removeAvatar()
     emit('avatarRemoval')
     if (success) {
         setTimeout(() => {

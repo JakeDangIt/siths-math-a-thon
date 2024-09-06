@@ -70,7 +70,9 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   onMounted(async () => {
     await retrieveLeaderboard();
     await getUserAvatars();
-    await getUserAnswers();
+    if (user.value) {
+      await getUserAnswers();
+    }
   });
 
   return {

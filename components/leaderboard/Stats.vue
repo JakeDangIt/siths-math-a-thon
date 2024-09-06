@@ -1,5 +1,5 @@
 <template>
-    <div class="w-1/4">
+    <div class="w-1/4 space-y-2">
         <Card>
             <CardHeader>
                 <CardTitle>Total Statistics</CardTitle>
@@ -8,9 +8,6 @@
             <CardContent>
                 Card Content
             </CardContent>
-            <CardFooter>
-                Card Footer
-            </CardFooter>
         </Card>
         <Card v-for="week in leaderboardStore.userAnswers">
             <CardHeader>

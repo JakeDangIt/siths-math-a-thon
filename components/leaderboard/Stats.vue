@@ -1,6 +1,6 @@
 <template>
-    
-    <div v-if="leaderboardStore.userAnswers.length > 0" class="mx-2 mt-2 lg:w-1/3 space-y-2">
+
+    <div class="mx-2 mt-2 lg:w-1/3 space-y-2">
         <div>
             <Card>
                 <CardHeader>
@@ -9,13 +9,19 @@
                 <CardContent>
                     <p>{{ ordinalPlace(leaderboardStore.userPlace) }}/{{ leaderboardStore.leaderboardData.length }}
                         contestants</p>
-                    <p>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect }}/{{
+                    
+                    <Skeleton v-if="leaderboardStore.userAnswers.length == 0" class="w-1/2 h-6"></Skeleton>
+                    <p v-else>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect }}/{{
                         numberOfAnswered }} correct answers</p>
                 </CardContent>
             </Card>
         </div>
 
-        <Tabs :default-value="1" class="mx-auto my-4">
+        <div v-if="leaderboardStore.userAnswers.length == 0" class="space-y-2">
+            <Skeleton class="w-full h-9"></Skeleton>
+            <Skeleton class="w-full h-screen"></Skeleton>
+        </div>
+        <Tabs v-else :default-value="1" class="mx-auto my-4">
             <TabsList class="w-full mb-4">
                 <Carousel class="relative w-4/5 mx-auto">
                     <CarouselContent>

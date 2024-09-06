@@ -6,7 +6,9 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   const leaderboardData = ref([]);
   const top10 = ref([]);
   const top3Avatars = ref([]);
+
   const userAnswers = ref([]);
+  const userPlace = ref(0);
 
   const isLoading = ref(true);
   const avatarLoading = ref(true);
@@ -21,6 +23,14 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       top10.value = data
         .sort((a, b) => b.correct_answers - a.correct_answers)
         .slice(0, 10);
+
+      if (user.value) {
+        const userId = user.value.id;
+        const userIndex = top10.value.findIndex(
+          (user) => user.uid == userId
+        );
+        userPlace.value = userIndex + 1;
+      }
     }
 
     isLoading.value = false;
@@ -63,14 +73,26 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     if (error) {
       toastStore.changeToast("Failed to retrieve user answers", error.message);
     } else {
-      userAnswers.value = data
+      userAnswers.value = data;
     }
   }
 
   onMounted(async () => {
     await retrieveLeaderboard();
     await getUserAvatars();
-    await getUserAnswers();
+    if (user.value) {
+      await getUserAnswers();
+    }
+
+    watch(
+      () => user.value,
+      async (newUser) => {
+        if (newUser) {
+          await getUserAnswers();
+        }
+      },
+      { immediate: true }
+    );
   });
 
   return {
@@ -78,6 +100,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     top3Avatars,
     top10,
     userAnswers,
+    userPlace,
     isLoading,
     avatarLoading,
     retrieveLeaderboard,

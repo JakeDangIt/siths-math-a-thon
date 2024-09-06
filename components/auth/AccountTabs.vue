@@ -1,9 +1,9 @@
 <template>
-    <Skeleton v-if="isLoading" class="mx-auto h-[400px] w-[600px]" />
+    <Skeleton v-if="isLoading" class="mx-2 h-[400px] lg:w-[600px] lg:mx-auto" />
 
     <!-- tabs -->
     <div v-if="!isLoading" class="w-full flex justify-center">
-        <Tabs :default-value="default" class="mx-8 w-[600px]">
+        <Tabs :default-value="default" class="mx-2 lg:w-[600px]">
 
             <!-- triggers on the top -->
             <TabsList class="grid w-full grid-cols-2">
@@ -148,7 +148,7 @@
                         <CardHeader>
                             <CardTitle>Login</CardTitle>
                             <CardDescription>
-                                Welcome back! Please enter your information.
+                                Welcome back! Please enter your information to log in.
                             </CardDescription>
                         </CardHeader>
 

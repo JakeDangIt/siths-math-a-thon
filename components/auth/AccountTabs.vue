@@ -148,7 +148,7 @@
                         <CardHeader>
                             <CardTitle>Login</CardTitle>
                             <CardDescription>
-                                Welcome back! Please enter your information.
+                                Welcome back! Please enter your information to log in.
                             </CardDescription>
                         </CardHeader>
 

@@ -1,8 +1,8 @@
 <script setup>
-import { useToastStore } from '@/stores/toast'
 import { useToast } from '@/components/ui/toast/use-toast'
 
 const toastStore = useToastStore()
+const routesStore = useRoutesStore()
 const { toast } = useToast()
 
 // reactive vars

@@ -8,7 +8,7 @@
 
         <div v-if="!leaderboardStore.isLoading && !leaderboardStore.avatarLoading"
             class="flex flex-col lg:flex-row justify-evenly">
-            <LeaderboardTop10 v-if="(user && leaderboardStore.userAnswers.length > 0) || (!user)" />
+            <LeaderboardTop10 />
             <LeaderboardStats v-if="user" />
         </div>
     </div>

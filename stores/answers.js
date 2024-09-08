@@ -30,14 +30,6 @@ export const useAnswersStore = defineStore("answers", () => {
 
     // if you have an answer, update it, otherwise insert it
     if (data.length > 0) {
-      // can't save more than once per minute
-      if (Date.now() - new Date(data[0].created_at).getTime() < 1000 * 60 * 1) {
-        toastStore.changeToast(
-          "You can only save once per minute",
-          "Please wait before saving again"
-        );
-        return;
-      }
 
       // update the answers
       const { error: updateError } = await supabase
@@ -71,6 +63,8 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
+    await saveAnswers()
+
     const { data: submittedData } = await supabase
       .from("submitted_answers")
       .select("*")
@@ -141,6 +135,9 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // on mount
   onMounted(async () => {
+    if (user.value) {
+      await retrieveAnswers();
+    }
     // wait for questions to load, then create the answer data
     watch(
       () => questionsStore.isLoading,
@@ -164,11 +161,14 @@ export const useAnswersStore = defineStore("answers", () => {
       { immediate: true }
     );
 
+    // watch for when the user logs in and out, then retrieve their answers
     watch(
       () => user.value,
       async (newUser) => {
         if (newUser) {
           await retrieveAnswers();
+        } else {
+          answerData.value = [];
         }
       },
       { immediate: true }

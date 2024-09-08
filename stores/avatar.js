@@ -27,6 +27,10 @@ export const useAvatarStore = defineStore("avatar", () => {
 
     // create object url of the avatar, used in Avatar.vue and ChangeAvatar.vue
     avatarImage.value = URL.createObjectURL(data);
+
+    // save avatar to local storage
+    localStorage.setItem("avatarImage", avatarImage.value);
+    localStorage.setItem("avatarPath", avatarPath.value);
   }
 
   // remove avatar

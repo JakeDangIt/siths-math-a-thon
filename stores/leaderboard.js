@@ -92,8 +92,10 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       async (newUser) => {
         if (newUser) {
           await getUserAnswers();
-          const userId = user.value.id;
-          const userIndex = top10.value.findIndex((user) => user.uid == userId);
+          const userId = user.value?.id;
+          const userIndex = top10.value.findIndex(
+            (user) => user.uid == userId
+          );
           userPlace.value = userIndex + 1;
         }
       },

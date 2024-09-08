@@ -182,7 +182,7 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const toastStore = useToastStore()
 const avatarStore = useAvatarStore()
-const router = useRouter()
+const routesStore = useRoutesStore()
 
 const isLoading = ref(true)
 
@@ -283,8 +283,8 @@ async function handleLogin() {
         await avatarStore.refreshUser()
         await avatarStore.retrieveAvatar()
 
-        // redirect to last page 
-        router.back()
+        // redirect to last page that wasnt login or signup
+        await routesStore.redirectToLast()
     }
     loginLoading.value = false
 }

@@ -71,6 +71,8 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
+    await saveAnswers()
+
     const { data: submittedData } = await supabase
       .from("submitted_answers")
       .select("*")
@@ -141,6 +143,9 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // on mount
   onMounted(async () => {
+    if (user.value) {
+      await retrieveAnswers();
+    }
     // wait for questions to load, then create the answer data
     watch(
       () => questionsStore.isLoading,
@@ -164,11 +169,14 @@ export const useAnswersStore = defineStore("answers", () => {
       { immediate: true }
     );
 
+    // watch for when the user logs in and out, then retrieve their answers
     watch(
       () => user.value,
       async (newUser) => {
         if (newUser) {
           await retrieveAnswers();
+        } else {
+          answerData.value = [];
         }
       },
       { immediate: true }

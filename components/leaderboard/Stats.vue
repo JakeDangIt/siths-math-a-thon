@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="hasSubmitted" class="mx-2 mt-2 lg:w-1/3 space-y-2">
+    <div v-if="hasSubmitted" class="mx-2 mt-2 lg:mt-0 lg:w-1/3 space-y-2">
         <div>
             <Card>
                 <CardHeader>
@@ -41,6 +41,7 @@
                                 </TabsTrigger>
                             </TabsList>
                         </CarouselItem>
+                        
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />
@@ -107,7 +108,7 @@ const presentWeekNames = computed(() => {
 })
 
 const user_id = computed(() => user.value?.id)
-const numberOfCorrect = computed(() => leaderboardStore.leaderboardData.find((user) => user.uid == user_id.value).correct_answers)
+const numberOfCorrect = computed(() => leaderboardStore.leaderboardData.find((user) => user.uid == user_id.value)?.correct_answers)
 const numberOfAnswered = computed(() => leaderboardStore.userAnswers.reduce((sum, week) => sum + week.correct_answers.length, 0));
 
 function weeksAnswers(weekName) {

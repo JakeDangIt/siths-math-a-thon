@@ -1,6 +1,5 @@
 <template>
-
-    <div v-if="hasSubmitted" class="mx-2 mt-2 lg:mt-0 lg:w-1/3 space-y-2">
+    <div v-if="hasSubmitted && answersHaveBeenChecked" class="mx-2 mt-2 lg:mt-0 lg:w-1/3 space-y-2">
         <div>
             <Card>
                 <CardHeader>
@@ -41,7 +40,7 @@
                                 </TabsTrigger>
                             </TabsList>
                         </CarouselItem>
-                        
+
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />
@@ -78,13 +77,17 @@
         </Tabs>
     </div>
 
-    <div v-else class="mx-2 mt-2 lg:w-1/3">
+    <div v-else class="mx-2 mt-2 lg:mt-0 lg:w-1/3 space-y-2">
         <Card>
             <CardHeader>
                 <CardTitle>Total Statistics</CardTitle>
             </CardHeader>
-            <CardContent>
-                <p>You have not submitted any answers yet</p>
+            <CardContent v-if="!leaderboardStore.answersLoading">
+                <p v-if="!hasSubmitted">You have not submitted any answers yet.</p>
+                <p v-else-if="!answersHaveBeenChecked">Please wait until your answers have been checked.</p>
+            </CardContent>
+            <CardContent v-else>
+                <Skeleton class="w-1/2 h-6"></Skeleton>
             </CardContent>
         </Card>
     </div>
@@ -96,6 +99,7 @@ const leaderboardStore = useLeaderboardStore()
 const user = useSupabaseUser()
 
 const hasSubmitted = computed(() => leaderboardStore.userAnswers[0] != null)
+const answersHaveBeenChecked = computed(() => leaderboardStore.userAnswers.some(week => week?.correct_answers !== null))
 
 const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus']
 const groupedWeekNames = [[1, '1 Bonus'], [2, '2 Bonus'], [3, '3 Bonus']]

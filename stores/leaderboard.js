@@ -12,6 +12,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
   const isLoading = ref(true);
   const avatarLoading = ref(true);
+  const answersLoading = ref(true);
 
   async function retrieveLeaderboard() {
     const { data, error } = await supabase.from("leaderboard").select("*");
@@ -26,9 +27,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
       if (user.value) {
         const userId = user.value.id;
-        const userIndex = top10.value.findIndex(
-          (user) => user.uid == userId
-        );
+        const userIndex = top10.value.findIndex((user) => user.uid == userId);
         userPlace.value = userIndex + 1;
       }
     }
@@ -72,13 +71,13 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
     if (error) {
       toastStore.changeToast("Failed to retrieve user answers", error.message);
-    } else {
-      if (data.length === 0) {
-        userAnswers.value = [null];
-        return;
-      }
-      userAnswers.value = data;
+      return
     }
+    if (data.length === 0) {
+      userAnswers.value = [null];
+    }
+    userAnswers.value = data;
+    answersLoading.value = false;
   }
 
   onMounted(async () => {
@@ -94,9 +93,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
         if (newUser) {
           await getUserAnswers();
           const userId = user.value.id;
-          const userIndex = top10.value.findIndex(
-            (user) => user.uid == userId
-          );
+          const userIndex = top10.value.findIndex((user) => user.uid == userId);
           userPlace.value = userIndex + 1;
         }
       },
@@ -112,6 +109,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     userPlace,
     isLoading,
     avatarLoading,
+    answersLoading,
     retrieveLeaderboard,
   };
 });

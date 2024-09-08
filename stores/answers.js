@@ -30,14 +30,6 @@ export const useAnswersStore = defineStore("answers", () => {
 
     // if you have an answer, update it, otherwise insert it
     if (data.length > 0) {
-      // can't save more than once per minute
-      if (Date.now() - new Date(data[0].created_at).getTime() < 1000 * 60 * 1) {
-        toastStore.changeToast(
-          "You can only save once per minute",
-          "Please wait before saving again"
-        );
-        return;
-      }
 
       // update the answers
       const { error: updateError } = await supabase

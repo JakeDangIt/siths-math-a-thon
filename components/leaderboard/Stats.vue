@@ -12,6 +12,7 @@
                         <Skeleton class="w-1/2 h-6"></Skeleton>
                     </div>
                     <div v-else>
+                        <LeaderboardStatsBarGraph />
                         <p>{{ ordinalPlace(leaderboardStore.userPlace) }}/{{ leaderboardStore.leaderboardData.length }}
                             contestants</p>
                         <p>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect
@@ -64,8 +65,7 @@
                         <TableRow v-if="weeksAnswers(weekNames[index])"
                             v-for="question in weeksAnswers(weekNames[index])">
                             <TableCell>{{ question.questionNumber }}</TableCell>
-                            <TableCell>{{ question.submittedAnswer == '' ? 'Omitted' :
-                                question.isCorrect ? 'Correct' : 'Incorrect' }}</TableCell>
+                            <TableCell>{{ formattedResponse(question.submittedAnswer, question.isCorrect) }}</TableCell>
                             <TableCell>{{ question.submittedAnswer }}</TableCell>
                         </TableRow>
                         <TableRow v-else>
@@ -111,9 +111,24 @@ const numberOfCorrect = computed(() => leaderboardStore.leaderboardData.find((us
 const numberOfAnswered = computed(() => leaderboardStore.userAnswers.reduce((sum, week) => sum + week.correct_answers.length, 0));
 
 function weeksAnswers(weekName) {
-    return leaderboardStore.userAnswers
+    const weekAnsweredQuestions = leaderboardStore.userAnswers
         .find((week) => week.correct_answers[0].week == weekName)?.correct_answers
         .sort((a, b) => a.questionNumber - b.questionNumber)
+    const totalCorrect = { questionNumber: 'Total', submittedAnswer: weekAnsweredQuestions.filter((question) => question.isCorrect).length, isCorrect: '' }
+
+    return [...weekAnsweredQuestions, totalCorrect]
+}
+
+function formattedResponse(submittedAnswer, isCorrect) {
+    if (submittedAnswer == '') {
+        return 'Omitted'
+    } else if (isCorrect) {
+        return 'Correct'
+    } else if (isCorrect == '') {
+        return ''
+    } else {
+        return 'Incorrect'
+    }
 }
 
 // function to get the ordinal place, if 11th, 12th, or 13th, return the number with th

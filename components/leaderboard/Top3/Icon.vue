@@ -9,7 +9,7 @@
             <div class="flex p-2 relative bottom-6 bg-theme-red border-slate-400 border-2">
                 <Icon :name="iconName" class="bg-white h-8 w-8" />
             </div>
-            <div class="lg:mt-4">
+            <div class="flex flex-col items-center justify-center mt-4 lg:mt-10">
                 <Avatar class="lg:h-20 lg:w-20">
                     <AvatarImage v-if="userAvatar" :src="userAvatar" />
                     <AvatarFallback class="text-[16px] lg:text-[24px]">{{ firstName[0] }}</AvatarFallback>
@@ -25,8 +25,7 @@
 <script setup>
 const props = defineProps(['user', 'index'])
 const leaderboardStore = useLeaderboardStore()
-const supabaseUser = useSupabaseUser()
-const user_id = computed(() => supabaseUser.value?.id)
+const user_id = computed(() => useSupabaseUser().value?.id)
 
 const { width } = useWindowSize()
 

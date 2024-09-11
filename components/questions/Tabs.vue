@@ -54,6 +54,12 @@
                             <!-- to save space, 'Answers' is omitted on mobile -->
                             <SheetTrigger><Button>Preview {{ width > 1024 ? 'Answers' : '' }}</Button></SheetTrigger>
                         </div>
+                        <div class="flex items-center gap-2 fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto transition-all"
+                            :class="isFarDownEnough ? 'translate-x-0' : 'translate-x-[14rem] lg:translate-x-[-14rem]'">
+                            <Button @click="scrollUp()">
+                                <Icon name="material-symbols:arrow-upward" class="w-6 h-full"></Icon>
+                            </Button>
+                        </div>
                     </div>
 
                     <!-- another preview button -->
@@ -211,6 +217,14 @@ function checkIsFarDownEnough() {
 function scrollDown() {
     window.scrollTo({
         top: document.body.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
+// function to scroll up to the top of the page
+function scrollUp() {
+    window.scrollTo({
+        top: 0,
         behavior: 'smooth'
     });
 }

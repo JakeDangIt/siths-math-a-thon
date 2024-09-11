@@ -1,4 +1,5 @@
 <script setup>
+await preloadComponents('Icon')
 import { useToast } from '@/components/ui/toast/use-toast'
 
 const toastStore = useToastStore()

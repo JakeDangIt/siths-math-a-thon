@@ -13,9 +13,9 @@
                     <div v-else>
                         <p>{{ ordinalPlace(leaderboardStore.userPlace) }}/{{ leaderboardStore.leaderboardData.length }}
                             contestants</p>
-                        <p>{{ (numberOfCorrect / numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ numberOfCorrect
+                        <p>{{ (leaderboardStore.numberOfCorrect / leaderboardStore.numberOfAnswered * 100).toFixed(2) }}% accuracy - {{ leaderboardStore.numberOfCorrect
                             }}/{{
-                                numberOfAnswered }} correct answers</p>
+                                leaderboardStore.numberOfAnswered }} correct answers</p>
                     </div>
                 </CardContent>
             </Card>
@@ -96,7 +96,6 @@
 <script setup>
 const questionsStore = useQuestionsStore()
 const leaderboardStore = useLeaderboardStore()
-const user = useSupabaseUser()
 
 const hasSubmitted = computed(() => leaderboardStore.userAnswers[0] != null)
 const answersHaveBeenChecked = computed(() => leaderboardStore.userAnswers.some(week => week?.correct_answers !== null))
@@ -110,10 +109,6 @@ const presentWeekNames = computed(() => {
         return questionsStore.questionData.some((question) => question.week == pair[0])
     })
 })
-
-const user_id = computed(() => user.value?.id)
-const numberOfCorrect = computed(() => leaderboardStore.leaderboardData.find((user) => user.uid == user_id.value)?.correct_answers)
-const numberOfAnswered = computed(() => leaderboardStore.userAnswers.reduce((sum, week) => sum + week.correct_answers.length, 0));
 
 function weeksAnswers(weekName) {
     return leaderboardStore.userAnswers

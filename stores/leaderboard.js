@@ -14,6 +14,10 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   const avatarLoading = ref(true);
   const answersLoading = ref(true);
 
+  const user_id = computed(() => user.value?.id)
+  const numberOfCorrect = computed(() => leaderboardData.value.find((user) => user.uid == user_id.value)?.correct_answers)
+  const numberOfAnswered = computed(() => userAnswers.value.reduce((sum, week) => sum + week.correct_answers.length, 0));
+
   async function retrieveLeaderboard() {
     const { data, error } = await supabase.from("leaderboard").select("*");
 
@@ -112,6 +116,8 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
     isLoading,
     avatarLoading,
     answersLoading,
+    numberOfCorrect,
+    numberOfAnswered,
     retrieveLeaderboard,
   };
 });

@@ -19,10 +19,10 @@
                     <div v-for="(avatar, index) in leaderboardStore.top3Avatars" class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <Avatar>
-                                <AvatarImage :src="avatar" draggable="false"></AvatarImage>
+                                <AvatarImage :src="avatar.image" draggable="false"></AvatarImage>
                                 <AvatarFallback class="text-lg">{{ firstName[0] }}</AvatarFallback>
                             </Avatar>
-                            <span>{{leaderboardStore.top10[index].user_name}}</span>
+                            <span>{{avatar.name}}</span>
                         </div>
                         <span>{{leaderboardStore.top10[index].correct_answers}} pts</span>
                     </div>

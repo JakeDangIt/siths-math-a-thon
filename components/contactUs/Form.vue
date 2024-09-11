@@ -4,30 +4,30 @@
             <CardTitle>Contact us</CardTitle>
             <CardDescription>Have any questions? Fill out your information and let us know!</CardDescription>
         </CardHeader>
-        <CardContent class="space-y-4">
-            <form>
+        <CardContent>
+            <form class="space-y-2">
                 <!-- autofilled and disabled with name + email if logged in -->
                 <div>
-                    <Label for="name">Full Name</Label>
+                    <Label class="text-md" for="name">Full Name</Label>
                     <Input v-model="formName" type="text" :disabled="name || timeDisableForm"
-                        :placeholder="name || 'Full Name'" id="name"></Input>
+                        :placeholder="name || ''" id="name"></Input>
                 </div>
 
                 <div>
-                    <Label for="email" :class="{ 'text-theme-red': !emailValid && formEmail.length > 0 }">
+                    <Label class="text-md" for="email" :class="{ 'text-theme-red': !emailValid && formEmail.length > 0 }">
                         {{ !emailValid && formEmail.length > 0
                             ? 'Please enter a valid NYCDOE email' : 'Email (NYCDOE)' }} </Label>
                     <Input v-model="formEmail" type="email" :disabled="email || timeDisableForm"
-                        :placeholder="email || 'Email (NYCDOE)'" id="email"></Input>
+                        :placeholder="email || ''" id="email"></Input>
                 </div>
 
                 <div>
-                    <Label for="subject">Subject</Label>
+                    <Label class="text-md" for="subject">Subject</Label>
                     <Input v-model="formSubject" type="text" :disabled="timeDisableForm" id="subject"></Input>
                 </div>
 
                 <div>
-                    <Label for="body">Body</Label>
+                    <Label class="text-md" for="body">Body</Label>
                     <Textarea v-model="formBody" type="textarea" :disabled="timeDisableForm" id="body"></Textarea>
                 </div>
             </form>
@@ -104,4 +104,3 @@ onMounted(() => {
     }
 })
 </script>
-

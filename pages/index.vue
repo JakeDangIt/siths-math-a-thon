@@ -1,16 +1,13 @@
-<script setup lang="ts">
-import WeekStatsLeaderboard from '~/components/home/WeekStatsLeaderboard.vue';
-
-</script>
-
 <template>
     <div class="flex flex-col items-center w-full">
-        <div class="lg:w-3/5 space-y-6">
+        <div class="lg:w-3/5 space-y-6 mx-2">
             <HomeBanner />
-            <!-- <HomeWeekStats class="lg:w-1/5" /> -->
-            <div class="w-full grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <HomeDirections class="col-span-3" />
-                <HomeWeekStatsLeaderboard />
+            <div class="w-full grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <HomeDirections class="col-span-full" />
+                <HomeWeekStatsLeaderboard class="md:col-span-2 lg:col-span-1 lg:row-span-2 w-full h-full" />
+                <HomeActivity />
+                <HomeFeaturedProblem />
+                <HomeProfileSummary />
             </div>
         </div>
     </div>

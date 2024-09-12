@@ -14,9 +14,18 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   const avatarLoading = ref(true);
   const answersLoading = ref(true);
 
-  const user_id = computed(() => user.value?.id)
-  const numberOfCorrect = computed(() => leaderboardData.value.find((user) => user.uid == user_id.value)?.correct_answers)
-  const numberOfAnswered = computed(() => userAnswers.value.reduce((sum, week) => sum + week.correct_answers.length, 0));
+  const user_id = computed(() => user.value?.id);
+  const numberOfCorrect = computed(
+    () =>
+      leaderboardData.value.find((user) => user.uid == user_id.value)
+        ?.correct_answers
+  );
+  const numberOfAnswered = computed(() =>
+    userAnswers.value.reduce(
+      (sum, week) => sum + week.correct_answers.length,
+      0
+    )
+  );
 
   async function retrieveLeaderboard() {
     const { data, error } = await supabase.from("leaderboard").select("*");
@@ -52,17 +61,22 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       top10.value.slice(0, 3).forEach(async (user, index) => {
         if (fileNames.includes(user.uid)) {
           const { data: avatar, error: avatarError } = await supabase.storage
-          .from("avatars")
-          .download(`${user.uid}.jpeg`);
-        if (avatar) {
+            .from("avatars")
+            .download(`${user.uid}.jpeg`);
+          if (avatar) {
+            top3Avatars.value[index] = {
+              name: user.user_name,
+              image: URL.createObjectURL(avatar),
+            };
+          }
+        } else {
           top3Avatars.value[index] = {
             name: user.user_name,
-            image: URL.createObjectURL(avatar),
+            image: null,
           };
         }
-      }
-    });
-  }
+      });
+    }
 
     avatarLoading.value = false;
   }
@@ -75,7 +89,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
     if (error) {
       toastStore.changeToast("Failed to retrieve user answers", error.message);
-      return
+      return;
     }
     if (data.length === 0) {
       userAnswers.value = [null];
@@ -97,9 +111,7 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
         if (newUser) {
           await getUserAnswers();
           const userId = user.value?.id;
-          const userIndex = top10.value.findIndex(
-            (user) => user.uid == userId
-          );
+          const userIndex = top10.value.findIndex((user) => user.uid == userId);
           userPlace.value = userIndex + 1;
         }
       },

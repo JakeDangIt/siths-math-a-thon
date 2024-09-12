@@ -22,7 +22,7 @@
                         <div class="flex items-center space-x-2">
                             <Avatar>
                                 <AvatarImage v-if="avatar?.image" :src="avatar?.image" draggable="false"></AvatarImage>
-                                <AvatarFallback class="text-lg">{{ firstName(avatar?.name ?? '') }}</AvatarFallback>
+                                <AvatarFallback class="text-lg">{{ firstName(avatar?.name ?? ' ')[0] }}</AvatarFallback>
                             </Avatar>
                             <span>{{ avatar?.name ?? '' }}</span>
                         </div>

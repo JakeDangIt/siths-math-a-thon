@@ -1,13 +1,29 @@
 <template>
     <div>
-        <Card>
+        <Card class="h-full">
             <CardHeader>
                 <CardTitle>Featured Problem</CardTitle>
             </CardHeader>
-            <CardContent>
-                <p className="mb-4">What is the value of x in the equation: 2x + 5 = 13?</p>
+            <CardContent v-if="!questionsStore.questionData.length != 0">
+                <p className="mb-4">{{questionsStore.questionData[0]?.tex_content}}</p>
                 <Button>Solve Now</Button>
+            </CardContent>
+            <CardContent v-else>
+                <Skeleton class="h-6" />
             </CardContent>
         </Card>
     </div>
 </template>
+
+<script setup>
+const questionsStore = useQuestionsStore()
+
+onMounted(() => {
+    // rerender mathjax when the questions are loaded
+    if (questionsStore.questionData.length !== 0) {
+        nextTick(() => {
+            questionsStore.rerenderMathJax();
+        });
+    }
+})
+</script>

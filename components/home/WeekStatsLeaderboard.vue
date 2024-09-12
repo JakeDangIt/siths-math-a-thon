@@ -1,6 +1,6 @@
 <template>
-    <div class="h-full w-full">
-        <Card v-if="!user && leaderboardStore.userPlace && leaderboardStore.top3Avatars.length == 3">
+    <div class="w-full h-full">
+        <Card class="h-full" v-if="leaderboardStore.top3Avatars.length == 3">
             <CardHeader>
                 <CardTitle class="text-center"><span v-if="user && leaderboardStore.userPlace">Your Stats &
                     </span>Leaderboard</CardTitle>
@@ -22,7 +22,7 @@
                         <div class="flex items-center space-x-2">
                             <Avatar>
                                 <AvatarImage v-if="avatar?.image" :src="avatar?.image" draggable="false"></AvatarImage>
-                                <AvatarFallback class="text-lg">{{ firstName[0] }}</AvatarFallback>
+                                <AvatarFallback class="text-lg">{{ firstName(avatar?.name) }}</AvatarFallback>
                             </Avatar>
                             <span>{{ avatar?.name }}</span>
                         </div>
@@ -31,7 +31,7 @@
                 </div>
             </CardContent>
         </Card>
-        <div v-else class="flex">
+        <div v-else class="flex w-full h-full">
             <Skeleton class="h-full w-full" />
         </div>
     </div>
@@ -39,13 +39,10 @@
 
 <script setup>
 const leaderboardStore = useLeaderboardStore()
-const user = useSupabaseUser()
-
-const name = computed(() => user.value?.user_metadata?.name || '')
-const firstName = computed(() => {
-    const [first] = name.value.split(' ');
+const firstName = (user) => {
+    const [first] = user.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
-});
+};
 
 function ordinalPlace(place) {
     const onesDigit = place % 10,

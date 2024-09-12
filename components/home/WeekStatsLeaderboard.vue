@@ -2,8 +2,9 @@
     <div class="w-full h-full">
         <Card class="h-full" v-if="leaderboardStore.top3Avatars.length == 3">
             <CardHeader>
-                <CardTitle class="text-center"><span v-if="user && leaderboardStore.userPlace">Your Stats &
-                    </span>Leaderboard</CardTitle>
+                <CardTitle class="text-center">
+                    <span v-if="user && leaderboardStore.userPlace">Your Stats & </span>Leaderboard
+                </CardTitle>
             </CardHeader>
             <CardContent>
                 <div v-if="user && leaderboardStore.userPlace" class="mb-6 flex justify-evenly">
@@ -17,16 +18,15 @@
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <div v-for="(avatar, index) in leaderboardStore.top3Avatars"
-                        class="flex items-center justify-between">
+                    <div v-for="(avatar, index) in leaderboardStore.top3Avatars" :key="index" class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <Avatar>
                                 <AvatarImage v-if="avatar?.image" :src="avatar?.image" draggable="false"></AvatarImage>
-                                <AvatarFallback class="text-lg">{{ firstName(avatar?.name) }}</AvatarFallback>
+                                <AvatarFallback class="text-lg">{{ firstName(avatar?.name ?? '') }}</AvatarFallback>
                             </Avatar>
-                            <span>{{ avatar?.name }}</span>
+                            <span>{{ avatar?.name ?? '' }}</span>
                         </div>
-                        <span>{{ leaderboardStore.top10[index].correct_answers }} pts</span>
+                        <span>{{ leaderboardStore.top10[index]?.correct_answers ?? 0 }} pts</span>
                     </div>
                 </div>
             </CardContent>
@@ -38,7 +38,8 @@
 </template>
 
 <script setup>
-const leaderboardStore = useLeaderboardStore()
+const leaderboardStore = useLeaderboardStore();
+
 const firstName = (user) => {
     const [first] = user.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';
@@ -60,12 +61,12 @@ function ordinalPlace(place) {
 }
 
 onMounted(() => {
-    console.log(leaderboardStore.top3Avatars.length)
+    console.log(leaderboardStore.top3Avatars.length);
     watch(() => leaderboardStore.top3Avatars.length, (length) => {
         if (length > 0) {
-            console.log(leaderboardStore.top3Avatars)
-            leaderboardStore.top3Avatars.every((user) => user.name != '')
+            console.log(leaderboardStore.top3Avatars);
+            leaderboardStore.top3Avatars.every((user) => user.name != '');
         }
-    })
-})
+    });
+});
 </script>

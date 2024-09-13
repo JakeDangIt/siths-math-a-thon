@@ -32,7 +32,7 @@ const { width } = useWindowSize()
 const top3 = ref(leaderboardStore.top10.slice(0, 3))
 const user = ref(props.user)
 const index = ref(props.index + 1)
-const userAvatar = computed(() => leaderboardStore.top3Avatars.find((avatar) => avatar.name === user.value.user_name)?.image)
+const userAvatar = computed(() => leaderboardStore.top3Avatars[props.index]?.image)
 const firstName = computed(() => {
     const [first] = user.value.user_name.split(' ');
     return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : '';

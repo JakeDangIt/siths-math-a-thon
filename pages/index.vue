@@ -15,4 +15,4 @@
 
 <script setup>
 	const user = useSupabaseUser()
-</setup>
+</script>

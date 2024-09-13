@@ -39,6 +39,7 @@
 
 <script setup>
 const leaderboardStore = useLeaderboardStore();
+const user = useSupabaseUser()
 
 const firstName = (user) => {
     const [first] = user.split(' ');
@@ -59,14 +60,4 @@ function ordinalPlace(place) {
     }
     return place + "th";
 }
-
-onMounted(() => {
-    console.log(leaderboardStore.top3Avatars.length);
-    watch(() => leaderboardStore.top3Avatars.length, (length) => {
-        if (length > 0) {
-            console.log(leaderboardStore.top3Avatars);
-            leaderboardStore.top3Avatars.every((user) => user.name != '');
-        }
-    });
-});
 </script>

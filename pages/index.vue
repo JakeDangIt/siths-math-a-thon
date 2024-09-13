@@ -7,7 +7,7 @@
                 <HomeWeekStatsLeaderboard class="md:col-span-2 lg:col-span-1 lg:row-span-2 w-full h-full" />
                 <HomeActivity />
                 <HomeFeaturedProblem />
-                <HomeProfileSummary />
+                <HomeProfileSummary class="md:col-span-2 lg:col-span-2"/>
             </div>
         </div>
     </div>

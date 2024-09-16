@@ -185,6 +185,8 @@ async function saveAnswers() {
         await answersStore.saveAnswers();
     }
     saveLoading.value = false;
+
+    toastStore.changeToast("Answers saved", "Your answers have been saved");
 }
 
 // function to submit answers, checks if user is logged in

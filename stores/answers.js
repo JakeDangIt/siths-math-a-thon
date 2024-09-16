@@ -57,8 +57,6 @@ export const useAnswersStore = defineStore("answers", () => {
         return;
       }
     }
-
-    toastStore.changeToast("Answers saved", "Your answers have been saved");
   }
 
   // submit answers

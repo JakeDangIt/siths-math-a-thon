@@ -18,7 +18,8 @@
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <div v-for="(avatar, index) in leaderboardStore.top3Avatars" :key="index" class="flex items-center justify-between">
+                    <div v-for="(avatar, index) in leaderboardStore.top3Avatars" :key="index"
+                        class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <Avatar>
                                 <AvatarImage v-if="avatar?.image" :src="avatar?.image" draggable="false"></AvatarImage>
@@ -31,9 +32,9 @@
                 </div>
             </CardContent>
         </Card>
-        <div v-else class="flex w-full h-full">
+        <Card v-else class="flex w-full h-56 lg:h-full">
             <Skeleton class="h-full w-full" />
-        </div>
+        </Card>
     </div>
 </template>
 

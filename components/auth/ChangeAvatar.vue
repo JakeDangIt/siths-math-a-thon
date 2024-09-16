@@ -1,20 +1,23 @@
 <template>
-    <div class="flex flex-col items-center">
-        <div>
-            <Label class="my-1 mr-4">Upload your avatar</Label>
-            <Button class="my-1" @click="handleAvatarRemove()" variant="secondary">Remove Avatar</Button>
-        </div>
+    <div class="flex flex-row items-center">
 
         <!-- image file input for avatar -->
-        <Input id="uploadAvatar" type="file" accept="image/*" @change="setImage" />
+        <div>
+            <Label for="uploadAvatar" >Upload your avatar</Label>
+            <div class="flex items-center gap-2">
+                <Input id="uploadAvatar" type="file" accept="image/*" @change="setImage" />
+                <Button class="my-1" @click="handleAvatarRemove()" variant="secondary">Remove Avatar</Button>
+            </div>
+        </div>
 
         <!-- dialog for cropping the image -->
         <Dialog v-model:open="isDialogOpen">
-            <DialogContent>
+            <DialogContent class="h-fit"> <!-- Changed the height here -->
                 <DialogHeader>
                     <DialogTitle>Crop your avatar</DialogTitle>
                     <DialogDescription>
-                        <vue-cropper ref="cropper" :src="imageUrl" :aspect-ratio="1" :viewMode="2" />
+                        <vue-cropper ref="cropper" :src="imageUrl" :aspect-ratio="1" :viewMode="1"
+                            :img-style="{ height: '65vh' }" dragMode="move" class="h-full" />
                     </DialogDescription>
                 </DialogHeader>
 

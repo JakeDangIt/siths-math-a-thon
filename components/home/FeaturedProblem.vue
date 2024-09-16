@@ -11,7 +11,8 @@
                 <nuxt-link to="/questions"><Button class="w-full">Solve Now</Button></nuxt-link>
             </CardContent>
             <CardContent v-else>
-                <Skeleton class="h-6" />
+                <Skeleton class="h-6 mb-4" />
+                <Skeleton class="w-20 h-10" />
             </CardContent>
         </Card>
     </div>

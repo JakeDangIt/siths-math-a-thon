@@ -15,6 +15,7 @@
                     <DialogTitle>Crop your avatar</DialogTitle>
                     <DialogDescription>
                         <vue-cropper
+                            ref="cropper"
                             :src="imageUrl"
                             :aspect-ratio="1"
                             :viewMode="1"

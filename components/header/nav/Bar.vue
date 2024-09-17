@@ -4,7 +4,7 @@ const user = useSupabaseUser()
 // for current route and matching
 const route = useRoute()
 const currentRoutePath = computed(() => route.path)
-const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS Math-a-Thon' : routes.find(route => route.routePath == currentRoutePath.value).routeName)
+const currentRouteName = computed(() => currentRoutePath.value == '/' ? 'SITHS Math-a-Thon' : routes.find(route => route?.routePath == currentRoutePath.value)?.routeName)
 </script>
 
 <template>

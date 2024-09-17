@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@formkit/auto-animate",
     "@nuxtjs/supabase",
     "@pinia/nuxt",
+    "@nuxtjs/sanity",
   ],
   app: {
     head: {

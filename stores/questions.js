@@ -4,8 +4,8 @@ export const useQuestionsStore = defineStore("questions", () => {
 
   // question data and loading state
   const questionData = ref([]);
+  const sanityQuestionData = ref([]);
   const isLoading = ref(true);
-
 
   // get questions
   async function getQuestions() {
@@ -15,9 +15,12 @@ export const useQuestionsStore = defineStore("questions", () => {
       toastStore.changeToast("Error retrieving questions", error.message);
       return;
     }
-    questionData.value = data;
-  }
 
+    const POSTS_QUERY = groq`*[_type == "questions"]{ _id, number, content, author }`;
+    const { data: posts } = await useSanityQuery(POSTS_QUERY);
+    questionData.value = data;
+    sanityQuestionData.value = posts;
+  }
 
   // rerender MathJax, really for route changes or if you flip through the tabs
   function rerenderMathJax() {
@@ -27,7 +30,6 @@ export const useQuestionsStore = defineStore("questions", () => {
       });
     }
   }
-
 
   // put the MathJax script in the head
   function getMathJax() {
@@ -40,13 +42,15 @@ export const useQuestionsStore = defineStore("questions", () => {
       rerenderMathJax();
       isLoading.value = false;
     };
-    
+
     script.onerror = () => {
-      toastStore.changeToast("Error loading MathJax", "Please refresh the page");
+      toastStore.changeToast(
+        "Error loading MathJax",
+        "Please refresh the page"
+      );
       isLoading.value = false;
     };
   }
-
 
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
@@ -54,5 +58,5 @@ export const useQuestionsStore = defineStore("questions", () => {
     getMathJax();
   });
 
-  return { questionData, isLoading, getMathJax, rerenderMathJax };
+  return { questionData, sanityQuestionData, isLoading, getMathJax, rerenderMathJax };
 });

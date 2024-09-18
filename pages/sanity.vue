@@ -1,9 +1,6 @@
-<script setup lang="ts">
-import type { SanityDocument } from "@sanity/client";
-
-const POSTS_QUERY = groq`*[_type == "questions"]{ _id, number, content }`;
-
-const { data: posts } = await useSanityQuery<SanityDocument[]>(POSTS_QUERY);
+<script setup>
+const POSTS_QUERY = groq`*[_type == "questions"]{ _id, number, content, author }`;
+const { data: posts } = await useSanityQuery(POSTS_QUERY);
 </script>
 
 <template>

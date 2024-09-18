@@ -17,5 +17,9 @@ export const questionsType = defineType({
       name: 'author',
       type: 'string',
     }),
+    defineField({
+      name: 'week',
+      type: 'string',
+    }),
   ],
 })

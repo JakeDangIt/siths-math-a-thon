@@ -16,10 +16,10 @@ export const useQuestionsStore = defineStore("questions", () => {
       return;
     }
 
-    const POSTS_QUERY = groq`*[_type == "questions"]{ _id, number, content, author }`;
+    const POSTS_QUERY = groq`*[_type == "questions"]`;
     const { data: posts } = await useSanityQuery(POSTS_QUERY);
     questionData.value = data;
-    sanityQuestionData.value = posts;
+    sanityQuestionData.value = posts.value;
   }
 
   // rerender MathJax, really for route changes or if you flip through the tabs
@@ -40,7 +40,9 @@ export const useQuestionsStore = defineStore("questions", () => {
 
     script.onload = () => {
       rerenderMathJax();
-      isLoading.value = false;
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 1000);
     };
 
     script.onerror = () => {

@@ -37,8 +37,8 @@
                 <!-- week name and each question for that week -->
                 <h1 class="text-xl text-center font-bold my-2">Week {{ weekNames[index] }} Questions</h1>
                 <QuestionsQuestionCard
-                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.question - b.question)"
-                    :key="question.question" :questionNumber="question.question" :mathContent="question.tex_content"
+                    v-for="question in questionsStore.sanityQuestionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.number - b.number)"
+                    :key="question.number" :questionNumber="question.number" :mathContent="question.content"
                     :week="weekNames[index]" />
 
                 <!-- preview answer -->
@@ -161,7 +161,7 @@ const groupedWeekNames = [[1, '1 Bonus'], [2, '2 Bonus'], [3, '3 Bonus']]
 // present week names, also for the tabs, just that it filters out the weeks that don't have any questions
 const presentWeekNames = computed(() => {
     return groupedWeekNames.filter((pair) => {
-        return questionsStore.questionData.some((question) => question.week == pair[0])
+        return questionsStore.sanityQuestionData.some((question) => question.week == pair[0])
     })
 })
 
@@ -175,7 +175,7 @@ function onTabChange() {
 // function to save answers, checks if user is logged in
 async function saveAnswers() {
     saveLoading.value = true;
-    if (user.value === null) {
+    if (user.value == null) {
         toastStore.changeToast('You must be logged in to save answers');
     }
     else if (answersStore.answerData.length == 0) {
@@ -183,10 +183,9 @@ async function saveAnswers() {
     }
     else {
         await answersStore.saveAnswers();
+        toastStore.changeToast("Answers saved", "Your answers have been saved");
     }
     saveLoading.value = false;
-
-    toastStore.changeToast("Answers saved", "Your answers have been saved");
 }
 
 // function to submit answers, checks if user is logged in
@@ -234,7 +233,7 @@ function scrollUp() {
 
 onMounted(() => {
     // rerender mathjax when the questions are loaded
-    if (questionsStore.questionData.length !== 0) {
+    if (questionsStore.sanityQuestionData.length !== 0) {
         nextTick(() => {
             questionsStore.rerenderMathJax();
         });

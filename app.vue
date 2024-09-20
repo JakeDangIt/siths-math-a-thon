@@ -4,6 +4,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 
 const toastStore = useToastStore()
 const routesStore = useRoutesStore()
+const roleStore = useRoleStore()
 const { toast } = useToast()
 
 // reactive vars

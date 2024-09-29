@@ -213,6 +213,7 @@ async function updateUser() {
             email: newEmail.value ? newEmail.value : email.value,
             data: updates
         })
+        const { error: updateError } = await supabase.from('profiles').update(updates).eq('uid', user.value.id)
         if (error) {
             toastStore.changeToast('Error updating user', error.message)
         } else {

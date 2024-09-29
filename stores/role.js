@@ -1,4 +1,4 @@
-export const useRoleStore = defineStore('role', async () => {
+export const useRoleStore = defineStore('role', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
@@ -8,22 +8,26 @@ export const useRoleStore = defineStore('role', async () => {
     if (user.value) {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('role')
         .eq('uid', user.value.id);
-      role.value = data[0].role;
-      console.log(role.value);
+
+      if (data && data.length > 0) {
+        role.value = data[0].role;
+      } else {
+        console.error('Error fetching role:', error);
+      }
+    } else {
+      role.value = 'member';
     }
   }
 
-  onMounted(() => {
-    watch(
-      user,
-      () => {
-        getRole();
-      },
-      { immediate: true }
-    );
-  });
+  watch(
+    user,
+    async () => {
+      await getRole();
+    },
+    { immediate: true }
+  );
 
-  return { role };
+  return { role, getRole };
 });

@@ -39,5 +39,7 @@ export default defineNuxtConfig({
   sanity: {
     projectId: 'ferer2d9',
     dataset: 'production',
+    token: import.meta.env.SANITY_TOKEN,
+    ignoreBrowserTokenWarning: true,
   },
 });

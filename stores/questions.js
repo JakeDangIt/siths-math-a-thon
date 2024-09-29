@@ -7,10 +7,10 @@ export const useQuestionsStore = defineStore('questions', () => {
 
   // get questions
   async function getQuestions() {
-    const POSTS_QUERY = groq`*[_type == "questions"]`;
-    const { data: posts } = await useSanityQuery(POSTS_QUERY);
+    const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
+    const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
-    questionData.value = posts.value;
+    questionData.value = questions.value;
   }
 
   // rerender MathJax, really for route changes or if you flip through the tabs
@@ -51,5 +51,5 @@ export const useQuestionsStore = defineStore('questions', () => {
     getMathJax();
   });
 
-  return { questionData, isLoading, getMathJax, rerenderMathJax };
+  return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };
 });

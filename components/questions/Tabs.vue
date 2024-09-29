@@ -59,10 +59,10 @@
           <!-- scroll down button and preview answer button -->
           <div>
             <div
-              class="fixed bottom-8 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="
                 isFarDownEnough
-                  ? 'translate-x-[14rem] lg:translate-x-[-14rem]'
+                  ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
                   : 'translate-x-0'
               "
             >
@@ -72,7 +72,7 @@
                   class="h-full w-6"
                 ></Icon>
               </Button>
-              <QuestionsAddQuestion :week="weekNames[index]" />
+              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
               <!-- to save space, 'Answers' is omitted on mobile -->
               <SheetTrigger
                 ><Button
@@ -80,6 +80,7 @@
                 ></SheetTrigger
               >
             </div>
+
             <div
               class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="
@@ -94,7 +95,7 @@
                   class="h-full w-6"
                 ></Icon>
               </Button>
-              <QuestionsAddQuestion :week="weekNames[index]" />
+              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
             </div>
           </div>
 
@@ -199,7 +200,6 @@
                 </div>
               </TabsContent>
             </Tabs>
-            <SheetFooter> </SheetFooter>
           </SheetContent>
         </Sheet>
       </TabsContent>
@@ -208,11 +208,10 @@
 </template>
 
 <script setup>
-import AddQuestion from './AddQuestion.vue';
-
 const answersStore = useAnswersStore();
 const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
+const roleStore = useRoleStore();
 
 const user = useSupabaseUser();
 
@@ -283,8 +282,7 @@ function removeAnswer(week, question) {
 
 // function to check if the user has scrolled far enough down to put away the scroll and preview answer buttons
 function checkIsFarDownEnough() {
-  isFarDownEnough.value =
-    y.value > document.body.scrollHeight - window.innerHeight * 2;
+  isFarDownEnough.value = y.value > document.body.scrollHeight - window.innerHeight * 2;
 }
 
 // function to scroll down to the bottom of the page

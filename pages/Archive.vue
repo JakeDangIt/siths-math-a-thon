@@ -1,5 +1,5 @@
 <template>
-    <div>
-        <ArchiveCards />
-    </div>
+  <div>
+    <ArchiveCards />
+  </div>
 </template>

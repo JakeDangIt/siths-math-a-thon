@@ -1,6 +1,5 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
-    <AuthProfileInfo />
+  <AuthProfileInfo />
 </template>

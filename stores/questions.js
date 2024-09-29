@@ -1,4 +1,4 @@
-export const useQuestionsStore = defineStore("questions", () => {
+export const useQuestionsStore = defineStore('questions', () => {
   const toastStore = useToastStore();
 
   // question data and loading state
@@ -9,7 +9,7 @@ export const useQuestionsStore = defineStore("questions", () => {
   async function getQuestions() {
     const POSTS_QUERY = groq`*[_type == "questions"]`;
     const { data: posts } = await useSanityQuery(POSTS_QUERY);
-    
+
     questionData.value = posts.value;
   }
 
@@ -24,8 +24,8 @@ export const useQuestionsStore = defineStore("questions", () => {
 
   // put the MathJax script in the head
   function getMathJax() {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
     script.async = true;
     document.head.appendChild(script);
 
@@ -38,8 +38,8 @@ export const useQuestionsStore = defineStore("questions", () => {
 
     script.onerror = () => {
       toastStore.changeToast(
-        "Error loading MathJax",
-        "Please refresh the page"
+        'Error loading MathJax',
+        'Please refresh the page'
       );
       isLoading.value = false;
     };

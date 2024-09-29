@@ -1,4 +1,4 @@
-export const useLeaderboardStore = defineStore("leaderboard", () => {
+export const useLeaderboardStore = defineStore('leaderboard', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const toastStore = useToastStore();
@@ -28,10 +28,10 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   );
 
   async function retrieveLeaderboard() {
-    const { data, error } = await supabase.from("leaderboard").select("*");
+    const { data, error } = await supabase.from('leaderboard').select('*');
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve leaderboard", error.message);
+      toastStore.changeToast('Failed to retrieve leaderboard', error.message);
     } else {
       leaderboardData.value = data;
       top10.value = data
@@ -51,17 +51,17 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   async function getUserAvatars() {
     // get names of all files in the bucket
     const { data: files, error: filesError } = await supabase.storage
-      .from("avatars")
+      .from('avatars')
       .list();
 
     if (files.length > 0) {
       // check if the top 3 users have avatars
-      const fileNames = files.map((file) => file.name.split(".jpeg")[0]);
+      const fileNames = files.map((file) => file.name.split('.jpeg')[0]);
 
       top10.value.slice(0, 3).forEach(async (user, index) => {
         if (fileNames.includes(user.uid)) {
           const { data: avatar, error: avatarError } = await supabase.storage
-            .from("avatars")
+            .from('avatars')
             .download(`${user.uid}.jpeg`);
           if (avatar) {
             top3Avatars.value[index] = {
@@ -83,12 +83,12 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
   async function getUserAnswers() {
     const { data, error } = await supabase
-      .from("submitted_answers")
-      .select("correct_answers, uid")
-      .eq("uid", user.value.id);
+      .from('submitted_answers')
+      .select('correct_answers, uid')
+      .eq('uid', user.value.id);
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve user answers", error.message);
+      toastStore.changeToast('Failed to retrieve user answers', error.message);
       return;
     }
     if (data.length === 0) {

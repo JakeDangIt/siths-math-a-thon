@@ -1,2 +1,2 @@
-import { questionsType } from "./questions"
+import {questionsType} from './questions'
 export const schemaTypes = [questionsType]

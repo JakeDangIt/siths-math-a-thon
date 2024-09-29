@@ -1,4 +1,4 @@
-export const useArchiveStore = defineStore("archive", () => {
+export const useArchiveStore = defineStore('archive', () => {
   const toastStore = useToastStore();
   const supabase = useSupabaseClient();
 
@@ -6,18 +6,17 @@ export const useArchiveStore = defineStore("archive", () => {
   const files2023 = ref([]);
   const files2024 = ref([]);
   const isLoading = ref(true);
-  
 
   onMounted(async () => {
     // get archive files
     const { data: archive, error } = await supabase.storage
-      .from("archive")
+      .from('archive')
       .list();
 
-    files2023.value = archive.filter((file) => file.name.startsWith("2023"));
-    files2024.value = archive.filter((file) => file.name.startsWith("2024"));
+    files2023.value = archive.filter((file) => file.name.startsWith('2023'));
+    files2024.value = archive.filter((file) => file.name.startsWith('2024'));
     if (error) {
-      toastStore.changeToast("Error getting archive", error.message);
+      toastStore.changeToast('Error getting archive', error.message);
     } else {
       isLoading.value = false;
     }

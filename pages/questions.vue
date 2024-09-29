@@ -1,5 +1,5 @@
 <template>
-    <div >
-        <QuestionsTabs/>
-    </div>
+  <div>
+    <QuestionsTabs />
+  </div>
 </template>

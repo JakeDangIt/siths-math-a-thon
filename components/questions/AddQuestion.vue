@@ -13,14 +13,14 @@
           {{ week }}.
 
           <div>
-            <Accordion type="multiple" collapsible class="grid grid-cols-2">
+            <Accordion type="multiple" collapsible class="grid grid-cols-2 gap-x-8">
               <AccordionItem
                 v-for="index in 20"
                 :key="index"
                 :value="'item-' + index"
               >
                 <AccordionTrigger
-                  >Is it accessible? {{ index }}</AccordionTrigger
+                  >Question {{ index }}</AccordionTrigger
                 >
                 <AccordionContent>
                   Yes. It adheres to the WAI-ARIA design pattern.

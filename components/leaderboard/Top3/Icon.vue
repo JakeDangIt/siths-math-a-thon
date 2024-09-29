@@ -40,8 +40,8 @@ const user_id = computed(() => useSupabaseUser().value?.id);
 const { width } = useWindowSize();
 
 const top3 = ref(leaderboardStore.top10.slice(0, 3));
-const user = props.user
-const index = props.index + 1
+const user = ref(props.user);
+const index = ref(props.index + 1);
 const userAvatar = computed(
   () => leaderboardStore.top3Avatars[props.index]?.image
 );

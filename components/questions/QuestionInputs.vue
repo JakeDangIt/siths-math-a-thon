@@ -19,7 +19,7 @@
 
 <script setup>
 const props = defineProps(['questionInfo']);
-const questionInfo = props.questionInfo
+const questionInfo = ref(props.questionInfo);
 
 const toastStore = useToastStore();
 const questionsStore = useQuestionsStore();
@@ -51,14 +51,12 @@ async function createOrUpdateQuestion() {
                     author: changes.value.author
                 })
                 .commit();
-
-            const questionIndex = questionsStore.questionData.findIndex(question => question.week == questionInfo.value.week && question.number == questionInfo.value.number);
-            questionsStore.questionData[questionIndex] = { ...changes.value };
         } else {
             await sanity.client.create(changes.value);
-
-            questionsStore.questionData.push(changes.value);
         }
+
+        await questionsStore.getQuestions();
+        questionInfo.value = { ...changes.value };
 
         // clear the inputs
         content.value = '';

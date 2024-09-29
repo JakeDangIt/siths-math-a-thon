@@ -35,5 +35,5 @@
 <script setup>
 const questionsStore = useQuestionsStore();
 const props = defineProps(['week']);
-const week = ref(props.week);
+const week = props.week 
 </script>

@@ -19,9 +19,6 @@
 const answersStore = useAnswersStore();
 
 const props = defineProps(['question', 'week', 'mathContent']);
-const mathContent = ref(props.mathContent);
-const question = ref(props.question);
-const week = ref(props.week);
 
 // question input
 const input = ref();
@@ -29,7 +26,7 @@ const input = ref();
 // if the answer is changed, update the answer in the store
 function changeAnswer() {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
-        (answer) => answer.week == week.value && answer.question == question.value
+        (answer) => answer.week == props.week && answer.question == props.question
     );
 
     answersStore.answerData[correspondingQuestionIndex].answer = String(
@@ -46,7 +43,7 @@ onMounted(() => {
             if (!newIsLoading) {
                 const correspondingQuestionIndex = answersStore.answerData.findIndex(
                     (answer) =>
-                        answer.week == week.value && answer.question == question.value
+                        answer.week == props.week && answer.question == props.question
                 );
 
                 input.value =
@@ -62,8 +59,8 @@ onMounted(() => {
         (newAnswerRemoved) => {
             if (newAnswerRemoved) {
                 if (
-                    answersStore.answerRemoved.week == week.value &&
-                    answersStore.answerRemoved.question == question.value
+                    answersStore.answerRemoved.week == props.week &&
+                    answersStore.answerRemoved.question == props.question
                 ) {
                     input.value = '';
                     // reset the watcher

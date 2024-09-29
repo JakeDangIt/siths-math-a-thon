@@ -282,7 +282,7 @@ function removeAnswer(week, question) {
 
 // function to check if the user has scrolled far enough down to put away the scroll and preview answer buttons
 function checkIsFarDownEnough() {
-  isFarDownEnough.value = y.value > document.body.scrollHeight - window.innerHeight * 2;
+  isFarDownEnough.value = y.value > document.body.scrollHeight - window.innerHeight * 1.5;
 }
 
 // function to scroll down to the bottom of the page

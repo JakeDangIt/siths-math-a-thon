@@ -1,24 +1,18 @@
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>Question {{ question }}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div v-html="mathContent"></div>
-      </CardContent>
-      <CardFooter>
-        <Input
-          id="input"
-          type="number"
-          v-model="input"
-          :placeholder="'Question ' + question"
-          @change="changeAnswer"
-          :disabled="answersStore.getAnswerLoading"
-        ></Input>
-      </CardFooter>
-    </Card>
-  </div>
+    <div>
+        <Card>
+            <CardHeader>
+                <CardTitle>Question {{ question }}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div v-html="mathContent"></div>
+            </CardContent>
+            <CardFooter>
+                <Input id="input" type="number" v-model="input" :placeholder="'Question ' + question"
+                    @change="changeAnswer" :disabled="answersStore.getAnswerLoading"></Input>
+            </CardFooter>
+        </Card>
+    </div>
 </template>
 
 <script setup>
@@ -34,49 +28,49 @@ const input = ref();
 
 // if the answer is changed, update the answer in the store
 function changeAnswer() {
-  const correspondingQuestionIndex = answersStore.answerData.findIndex(
-    (answer) => answer.week == week.value && answer.question == question.value
-  );
+    const correspondingQuestionIndex = answersStore.answerData.findIndex(
+        (answer) => answer.week == week.value && answer.question == question.value
+    );
 
-  answersStore.answerData[correspondingQuestionIndex].answer = String(
-    input.value
-  );
+    answersStore.answerData[correspondingQuestionIndex].answer = String(
+        input.value
+    );
 }
 
 // watch for changes in the store
 onMounted(() => {
-  // once the answers are loaded from the store, update the input value (really only for users logged in)
-  watch(
-    () => answersStore.getAnswerLoading,
-    async (newIsLoading) => {
-      if (!newIsLoading) {
-        const correspondingQuestionIndex = answersStore.answerData.findIndex(
-          (answer) =>
-            answer.week == week.value && answer.question == question.value
-        );
+    // once the answers are loaded from the store, update the input value (really only for users logged in)
+    watch(
+        () => answersStore.getAnswerLoading,
+        async (newIsLoading) => {
+            if (!newIsLoading) {
+                const correspondingQuestionIndex = answersStore.answerData.findIndex(
+                    (answer) =>
+                        answer.week == week.value && answer.question == question.value
+                );
 
-        input.value =
-          answersStore.answerData[correspondingQuestionIndex]?.answer;
-      }
-    },
-    { immediate: true }
-  );
+                input.value =
+                    answersStore.answerData[correspondingQuestionIndex]?.answer;
+            }
+        },
+        { immediate: true }
+    );
 
-  // if the answer is removed, clear the input
-  watch(
-    () => answersStore.answerRemoved,
-    (newAnswerRemoved) => {
-      if (newAnswerRemoved) {
-        if (
-          answersStore.answerRemoved.week == week.value &&
-          answersStore.answerRemoved.question == question.value
-        ) {
-          input.value = '';
-          // reset the watcher
-          answersStore.answerRemoved = { week: null, question: null };
+    // if the answer is removed, clear the input
+    watch(
+        () => answersStore.answerRemoved,
+        (newAnswerRemoved) => {
+            if (newAnswerRemoved) {
+                if (
+                    answersStore.answerRemoved.week == week.value &&
+                    answersStore.answerRemoved.question == question.value
+                ) {
+                    input.value = '';
+                    // reset the watcher
+                    answersStore.answerRemoved = { week: null, question: null };
+                }
+            }
         }
-      }
-    }
-  );
+    );
 });
 </script>

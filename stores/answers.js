@@ -126,6 +126,22 @@ export const useAnswersStore = defineStore('answers', () => {
 
     if (data.length > 0) {
       answerData.value = data[0].answers;
+      // if the number of questions has changed, make blank answers for the new questions
+      if (answerData.value.length != questionsStore.questionData.length) {
+        questionsStore.questionData.forEach((question) => {
+          const index = answerData.value.findIndex(
+            (answer) => answer.week == question.week && answer.question == question.number
+          );
+
+          if (index == -1) {
+            answerData.value.push({
+              week: question.week,
+              question: question.number,
+              answer: '',
+            });
+          }
+        });
+      }
     }
   }
 

@@ -14,8 +14,6 @@
         </div>
         <Button :disabled="author == '' || content == '' || createLoading" @click="createOrUpdateQuestion">Confirm
             Changes</Button>
-
-            {{ questionInfo }}
     </div>
 </template>
 
@@ -59,7 +57,11 @@ async function createOrUpdateQuestion() {
 
         await questionsStore.getQuestions();
         questionInfo.value = { ...changes.value };
-        
+
+        // clear the inputs
+        content.value = '';
+        author.value = '';
+
         toastStore.changeToast('Question changed successfully', `Question ${changes.value.number} for week ${changes.value.week} has been changed successfully`);
         createLoading.value = false;
     } catch (error) {

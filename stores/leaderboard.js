@@ -28,55 +28,58 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
   );
 
   async function retrieveLeaderboard() {
-    const { data, error } = await supabase.from("leaderboard").select("*");
+    const { data: top10Data, error } = await supabase
+      .from("leaderboard")
+      .select("*")
+      .order("correct_answers", { ascending: false })
+      .limit(10);
 
     if (error) {
       toastStore.changeToast("Failed to retrieve leaderboard", error.message);
     } else {
-      leaderboardData.value = data;
-      top10.value = data
-        .sort((a, b) => b.correct_answers - a.correct_answers)
-        .slice(0, 10);
-
-      if (user.value) {
-        const userId = user.value.id;
-        const userIndex = top10.value.findIndex((user) => user.uid == userId);
-        userPlace.value = userIndex + 1;
-      }
+      top10.value = top10Data;
     }
 
     isLoading.value = false;
   }
 
-  async function getUserAvatars() {
-    // get names of all files in the bucket
-    const { data: files, error: filesError } = await supabase.storage
-      .from("avatars")
-      .list();
+  async function getUserPlace() {
+    const { data, error } = await supabase
+      .from("leaderboard")
+      .select("uid, correct_answers")
+      .order("correct_answers", { ascending: false });
 
-    if (files.length > 0) {
-      // check if the top 3 users have avatars
-      const fileNames = files.map((file) => file.name.split(".jpeg")[0]);
+    if (error) {
+      toastStore.changeToast("Failed to retrieve leaderboard", error.message);
+    } else {
+      leaderboardData.value = data;
 
-      top10.value.slice(0, 3).forEach(async (user, index) => {
-        if (fileNames.includes(user.uid)) {
-          const { data: avatar, error: avatarError } = await supabase.storage
-            .from("avatars")
-            .download(`${user.uid}.jpeg`);
-          if (avatar) {
-            top3Avatars.value[index] = {
-              name: user.user_name,
-              image: URL.createObjectURL(avatar),
-            };
-          }
-        } else {
-          top3Avatars.value[index] = {
-            name: user.user_name,
-            image: null,
-          };
-        }
-      });
+      const userIndex = data.findIndex((user) => user.uid == user_id.value);
+      userPlace.value = userIndex;
     }
+  }
+
+  async function getTop3UserAvatars() {
+    top10.value.slice(0, 3).forEach(async (user, index) => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar, name")
+        .eq("uid", user.uid);
+
+      if (data[0].avatar) {
+        const { data: avatarData, error: avatarError } = await supabase.storage.from("avatars").download(data[0].avatar);
+        top3Avatars.value[index] = {
+          name: data[0].name,
+          image: URL.createObjectURL(avatarData)
+        };
+      }
+      else {
+        top3Avatars.value[index] = {
+          name: data[0].name,
+          image: null,
+        };
+      }
+    });
 
     avatarLoading.value = false;
   }
@@ -100,8 +103,10 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
   onMounted(async () => {
     await retrieveLeaderboard();
-    await getUserAvatars();
+    await getTop3UserAvatars();
+
     if (user.value) {
+      await getUserPlace();
       await getUserAnswers();
     }
 

@@ -6,19 +6,19 @@ export const useAnswersStore = defineStore("answers", () => {
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
-  const answerRemoved = ref({ week: null, questionNumber: null });
+  const answerRemoved = ref({ week: null, question: null });
 
   // remove answer
-  function removeAnswer(week, questionNumber) {
+  function removeAnswer(week, question) {
     // find the answer
     const index = answerData.value.findIndex(
-      (answer) => answer.week == week && answer.questionNumber == questionNumber
+      (answer) => answer.week == week && answer.question == question
     );
 
     // remove the answer
     answerData.value[index].answer = "";
     // trigger the watcher in QuestionCard.vue
-    answerRemoved.value = { week, questionNumber };
+    answerRemoved.value = { week, question };
   }
 
   // save answers
@@ -144,7 +144,7 @@ export const useAnswersStore = defineStore("answers", () => {
           questionsStore.questionData.forEach((question) => {
             answerData.value.push({
               week: question.week,
-              questionNumber: question.question,
+              question: question.number,
               answer: "",
             });
           });

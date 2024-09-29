@@ -1,25 +1,16 @@
 export const useQuestionsStore = defineStore("questions", () => {
-  const supabase = useSupabaseClient();
   const toastStore = useToastStore();
 
   // question data and loading state
   const questionData = ref([]);
-  const sanityQuestionData = ref([]);
   const isLoading = ref(true);
 
   // get questions
   async function getQuestions() {
-    const { data, error } = await supabase.from("questions").select("*");
-
-    if (error) {
-      toastStore.changeToast("Error retrieving questions", error.message);
-      return;
-    }
-
     const POSTS_QUERY = groq`*[_type == "questions"]`;
     const { data: posts } = await useSanityQuery(POSTS_QUERY);
-    questionData.value = data;
-    sanityQuestionData.value = posts.value;
+    
+    questionData.value = posts.value;
   }
 
   // rerender MathJax, really for route changes or if you flip through the tabs
@@ -60,5 +51,5 @@ export const useQuestionsStore = defineStore("questions", () => {
     getMathJax();
   });
 
-  return { questionData, sanityQuestionData, isLoading, getMathJax, rerenderMathJax };
+  return { questionData, isLoading, getMathJax, rerenderMathJax };
 });

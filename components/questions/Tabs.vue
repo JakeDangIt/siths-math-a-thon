@@ -37,8 +37,8 @@
                 <!-- week name and each question for that week -->
                 <h1 class="text-xl text-center font-bold my-2">Week {{ weekNames[index] }} Questions</h1>
                 <QuestionsQuestionCard
-                    v-for="question in questionsStore.sanityQuestionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.number - b.number)"
-                    :key="question.number" :questionNumber="question.number" :mathContent="question.content"
+                    v-for="question in questionsStore.questionData.filter((question) => question.week == weekNames[index]).sort((a, b) => a.number - b.number)"
+                    :key="question.number" :question="question.number" :mathContent="question.content"
                     :week="weekNames[index]" />
 
                 <!-- preview answer -->
@@ -102,12 +102,12 @@
                                 class="grid grid-cols-2 lg:grid-cols-1">
 
                                 <!-- each answer, sorted, with a remove button -->
-                                <div v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.questionNumber - b.questionNumber)"
+                                <div v-for="answer in answersStore.answerData.filter(answer => answer.week == weekNames[index]).sort((a, b) => a.question - b.question)"
                                     class="px-2 flex justify-between hover:bg-slate-200 group">
                                     <p>
-                                        <span class="font-bold">Q{{ answer.questionNumber }}.</span> {{ answer.answer }}
+                                        <span class="font-bold">Q{{ answer.question }}.</span> {{ answer.answer }}
                                     </p>
-                                    <button @click="removeAnswer(weekNames[index], answer.questionNumber)"
+                                    <button @click="removeAnswer(weekNames[index], answer.question)"
                                         class="flex items-center opacity-0 group-hover:opacity-100 transition-all">
                                         <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
                                     </button>
@@ -161,7 +161,7 @@ const groupedWeekNames = [[1, '1 Bonus'], [2, '2 Bonus'], [3, '3 Bonus']]
 // present week names, also for the tabs, just that it filters out the weeks that don't have any questions
 const presentWeekNames = computed(() => {
     return groupedWeekNames.filter((pair) => {
-        return questionsStore.sanityQuestionData.some((question) => question.week == pair[0])
+        return questionsStore.questionData.some((question) => question.week == pair[0])
     })
 })
 
@@ -205,8 +205,8 @@ async function submitAnswers(week, answers) {
 }
 
 // function to remove an answer from the store (not the input, which is done in the QuestionCard component)
-function removeAnswer(week, questionNumber) {
-    answersStore.removeAnswer(week, questionNumber)
+function removeAnswer(week, question) {
+    answersStore.removeAnswer(week, question)
 }
 
 // function to check if the user has scrolled far enough down to put away the scroll and preview answer buttons
@@ -233,7 +233,7 @@ function scrollUp() {
 
 onMounted(() => {
     // rerender mathjax when the questions are loaded
-    if (questionsStore.sanityQuestionData.length !== 0) {
+    if (questionsStore.questionData.length !== 0) {
         nextTick(() => {
             questionsStore.rerenderMathJax();
         });

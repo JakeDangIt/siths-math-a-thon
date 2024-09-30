@@ -46,20 +46,20 @@ async function createOrUpdateQuestion() {
             await sanity.client
                 .patch(existingQuestion._id)
                 .set({
-                    title: changes.value.title,
+                    title: changes.value.title.value,
                     content: changes.value.content,
-                    author: changes.value.author
+                    author: changes.value.author.value
                 })
                 .commit();
 
             const questionIndex = questionsStore.questionData.findIndex(question => question.week == questionInfo.value.week && question.number == questionInfo.value.number);
+
             questionsStore.questionData[questionIndex] = { ...changes.value };
         } else {
             await sanity.client.create(changes.value);
             questionsStore.questionData.push(changes.value);
         }
 
-        await questionsStore.getQuestions();
         questionInfo.value = { ...changes.value };
 
         // clear the inputs

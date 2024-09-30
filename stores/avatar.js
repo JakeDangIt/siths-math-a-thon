@@ -18,7 +18,11 @@ export const useAvatarStore = defineStore('avatar', () => {
 
   // retrieve avatar
   async function retrieveAvatar() {
-    if (!avatarPath.value) return;
+    avatarPath.value = user.value?.user_metadata?.avatar;
+    if (!avatarPath.value) {
+      avatarImage.value = null;
+      return
+    };
 
     // download avatar
     const { data, error } = await supabase.storage
@@ -27,10 +31,6 @@ export const useAvatarStore = defineStore('avatar', () => {
 
     // create object url of the avatar, used in Avatar.vue and ChangeAvatar.vue
     avatarImage.value = URL.createObjectURL(data);
-
-    // save avatar to local storage
-    localStorage.setItem('avatarImage', avatarImage.value);
-    localStorage.setItem('avatarPath', avatarPath.value);
   }
 
   // remove avatar
@@ -46,6 +46,10 @@ export const useAvatarStore = defineStore('avatar', () => {
       data: { avatar: null },
     });
 
+    const { error: profileError } = await supabase.from('profiles').update({
+      avatar: null,
+    }).eq('uid', user.value.id);
+
     if (updateError || error) {
       return;
     }
@@ -53,27 +57,11 @@ export const useAvatarStore = defineStore('avatar', () => {
     avatarPath.value = '';
     avatarImage.value = null;
 
-    // remove avatar from local storage
-    localStorage.removeItem('avatarImage');
-    localStorage.removeItem('avatarPath');
-
     return true;
   }
 
   onMounted(async () => {
-    // retrieve avatar from local storage, so you dont have to re-download it and saves time before it refreshes user
-    avatarImage.value = localStorage.getItem('avatarImage');
-    avatarPath.value = localStorage.getItem('avatarPath');
-
-    // refresh user data then retrieve avatar if it has changed
-    if (avatarPath.value !== user.value?.user_metadata?.avatar) {
-      await refreshUser();
-      await retrieveAvatar();
-    }
-
-    if (!user.value?.user_metadata?.avatar) {
-      avatarImage.value = null;
-    }
+    await retrieveAvatar();
 
     watch(
       () => user.value,

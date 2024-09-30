@@ -3,7 +3,7 @@
     <!-- image file input for avatar -->
     <div>
       <Label for="uploadAvatar">Upload your avatar</Label>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center gap-2">
         <Input
           id="uploadAvatar"
           type="file"

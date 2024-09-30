@@ -5,7 +5,7 @@
                 <CardTitle>Question {{ question }}</CardTitle>
             </CardHeader>
             <CardContent>
-                <div v-html="mathContent"></div>
+                <div v-html="props.mathContent"></div>
             </CardContent>
             <CardFooter>
                 <Input id="input" type="number" v-model="input" :placeholder="'Question ' + question"
@@ -19,7 +19,6 @@
 const answersStore = useAnswersStore();
 
 const props = defineProps(['question', 'week', 'mathContent']);
-const mathContent = ref(props.mathContent);
 const question = ref(props.question);
 const week = ref(props.week);
 

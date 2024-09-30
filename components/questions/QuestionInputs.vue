@@ -61,6 +61,9 @@ async function createOrUpdateQuestion() {
         }
 
         questionInfo.value = { ...changes.value };
+        setTimeout(() => {
+            questionsStore.rerenderMathJax();
+        }, 1000);
 
         // clear the inputs
         content.value = '';

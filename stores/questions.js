@@ -1,23 +1,17 @@
-export const useQuestionsStore = defineStore("questions", () => {
-  const supabase = useSupabaseClient();
+export const useQuestionsStore = defineStore('questions', () => {
   const toastStore = useToastStore();
 
   // question data and loading state
   const questionData = ref([]);
   const isLoading = ref(true);
 
-
   // get questions
   async function getQuestions() {
-    const { data, error } = await supabase.from("questions").select("*");
+    const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
+    const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
-    if (error) {
-      toastStore.changeToast("Error retrieving questions", error.message);
-      return;
-    }
-    questionData.value = data;
+    questionData.value = questions.value;
   }
-
 
   // rerender MathJax, really for route changes or if you flip through the tabs
   function rerenderMathJax() {
@@ -28,25 +22,28 @@ export const useQuestionsStore = defineStore("questions", () => {
     }
   }
 
-
   // put the MathJax script in the head
   function getMathJax() {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
     script.async = true;
     document.head.appendChild(script);
 
     script.onload = () => {
       rerenderMathJax();
-      isLoading.value = false;
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 1000);
     };
-    
+
     script.onerror = () => {
-      toastStore.changeToast("Error loading MathJax", "Please refresh the page");
+      toastStore.changeToast(
+        'Error loading MathJax',
+        'Please refresh the page'
+      );
       isLoading.value = false;
     };
   }
-
 
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
@@ -54,5 +51,5 @@ export const useQuestionsStore = defineStore("questions", () => {
     getMathJax();
   });
 
-  return { questionData, isLoading, getMathJax, rerenderMathJax };
+  return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };
 });

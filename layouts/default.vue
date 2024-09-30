@@ -1,9 +1,9 @@
 <script setup>
-defineProps(['isLoading'])
+defineProps(['isLoading']);
 </script>
 
 <template>
-  <div class="h-[100dvh] flex flex-col">
+  <div class="flex h-[100dvh] flex-col">
     <Body class="flex-1">
       <HeaderNavBar v-if="!isLoading" />
       <slot />

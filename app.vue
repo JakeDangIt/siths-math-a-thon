@@ -1,14 +1,15 @@
 <script setup>
-await preloadComponents('Icon')
-import { useToast } from '@/components/ui/toast/use-toast'
+await preloadComponents('Icon');
+import { useToast } from '@/components/ui/toast/use-toast';
 
-const toastStore = useToastStore()
-const routesStore = useRoutesStore()
-const { toast } = useToast()
+const toastStore = useToastStore();
+const routesStore = useRoutesStore();
+const roleStore = useRoleStore();
+const { toast } = useToast();
 
 // reactive vars
 const { width, height } = useWindowSize();
-const layout = ref("default");
+const layout = ref('default');
 const isLoading = ref(true);
 
 // mobile screen is width less than 1024px
@@ -19,10 +20,10 @@ onMounted(async () => {
   watch(
     isMobile,
     (newValue) => {
-      layout.value = newValue ? "mobile" : "default";
+      layout.value = newValue ? 'mobile' : 'default';
     },
     { immediate: true }
-  )
+  );
 
   watch(
     () => [toastStore.toastID],
@@ -30,27 +31,29 @@ onMounted(async () => {
       toast({
         title: toastStore.titleMessage,
         description: toastStore.descriptionMessage,
-      })
+      });
     }
-  )
+  );
 
-  isLoading.value = false
-})
+  isLoading.value = false;
+});
 </script>
 
 <template>
-
   <Head>
-
     <Title>SITHS Math-a-Thon</Title>
 
     <!-- <Base href="https://siths-mathathon.com" /> -->
 
     <Meta name="application-name" content="SITHS Math-a-Thon" />
-    <Meta name="description"
-      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
-    <Meta name="keywords"
-      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School" />
+    <Meta
+      name="description"
+      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity"
+    />
+    <Meta
+      name="keywords"
+      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School"
+    />
     <Meta name="author" content="SITHS" />
     <Meta name="robots" content="index, follow" />
     <Meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -64,8 +67,8 @@ onMounted(async () => {
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet" />
-
+      rel="stylesheet"
+    />
   </Head>
 
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 
@@ -74,7 +77,7 @@ onMounted(async () => {
     <!-- show skeleton when loading the layout -->
     <div class="h-screen overflow-hidden">
       <Skeleton class="h-[48px] w-full" />
-      <Skeleton class="h-screen mt-2 w-full" />
+      <Skeleton class="mt-2 h-screen w-full" />
     </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
       <NuxtPage />

@@ -9,23 +9,24 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    "@nuxt/image",
-    "@nuxtjs/tailwindcss",
-    "shadcn-nuxt",
-    "@vueuse/nuxt",
-    "@nuxt/icon",
-    "@formkit/auto-animate",
+    '@nuxt/image',
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    '@vueuse/nuxt',
+    '@nuxt/icon',
+    '@formkit/auto-animate',
     '@nuxtjs/supabase',
-    "@pinia/nuxt",
+    '@pinia/nuxt',
+    '@nuxtjs/sanity',
   ],
   app: {
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/math-a-thon-icon.webp' }
+        { rel: 'icon', type: 'image/x-icon', href: '/math-a-thon-icon.webp' },
       ],
-    }
+    },
   },
   supabase: {
     redirectOptions: {
@@ -33,6 +34,12 @@ export default defineNuxtConfig({
       callback: '/',
       include: ['/auth/profile'],
       exclude: [],
-    }
+    },
   },
-})
+  sanity: {
+    projectId: 'ferer2d9',
+    dataset: 'production',
+    token: import.meta.env.SANITY_TOKEN,
+    ignoreBrowserTokenWarning: true,
+  },
+});

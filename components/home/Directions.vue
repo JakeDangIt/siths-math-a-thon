@@ -16,8 +16,7 @@
           </li>
           <li>
             <span class="font-bold">Choose Questions:</span>
-            Select the math questions for the week from the provided
-            list.
+            Select the math questions for the week from the provided list.
           </li>
           <li>
             <span class="font-bold">Solve:</span>
@@ -25,8 +24,7 @@
           </li>
           <li>
             <span class="font-bold">Save & Submit:</span>
-            Save your progress and submit your answers before the
-            deadline.
+            Save your progress and submit your answers before the deadline.
           </li>
         </ol>
       </CardContent>
@@ -34,6 +32,4 @@
   </div>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>

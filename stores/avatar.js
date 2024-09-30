@@ -1,9 +1,9 @@
-export const useAvatarStore = defineStore("avatar", () => {
+export const useAvatarStore = defineStore('avatar', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
   // avatar file info
-  const avatarPath = ref("");
+  const avatarPath = ref('');
   const avatarImage = ref(null);
 
   // refresh user data
@@ -22,15 +22,15 @@ export const useAvatarStore = defineStore("avatar", () => {
 
     // download avatar
     const { data, error } = await supabase.storage
-      .from("avatars")
+      .from('avatars')
       .download(avatarPath.value);
 
     // create object url of the avatar, used in Avatar.vue and ChangeAvatar.vue
     avatarImage.value = URL.createObjectURL(data);
 
     // save avatar to local storage
-    localStorage.setItem("avatarImage", avatarImage.value);
-    localStorage.setItem("avatarPath", avatarPath.value);
+    localStorage.setItem('avatarImage', avatarImage.value);
+    localStorage.setItem('avatarPath', avatarPath.value);
   }
 
   // remove avatar
@@ -38,7 +38,7 @@ export const useAvatarStore = defineStore("avatar", () => {
     // delete avatar from storage
 
     const { data, error } = await supabase.storage
-      .from("avatars")
+      .from('avatars')
       .remove([avatarPath.value]);
 
     // update user metadata
@@ -50,20 +50,20 @@ export const useAvatarStore = defineStore("avatar", () => {
       return;
     }
 
-    avatarPath.value = "";
+    avatarPath.value = '';
     avatarImage.value = null;
 
     // remove avatar from local storage
-    localStorage.removeItem("avatarImage");
-    localStorage.removeItem("avatarPath");
+    localStorage.removeItem('avatarImage');
+    localStorage.removeItem('avatarPath');
 
     return true;
   }
 
   onMounted(async () => {
     // retrieve avatar from local storage, so you dont have to re-download it and saves time before it refreshes user
-    avatarImage.value = localStorage.getItem("avatarImage");
-    avatarPath.value = localStorage.getItem("avatarPath");
+    avatarImage.value = localStorage.getItem('avatarImage');
+    avatarPath.value = localStorage.getItem('avatarPath');
 
     // refresh user data then retrieve avatar if it has changed
     if (avatarPath.value !== user.value?.user_metadata?.avatar) {

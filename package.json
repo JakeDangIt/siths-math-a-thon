@@ -7,10 +7,13 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@nuxt/image": "^1.7.0",
+    "@nuxtjs/sanity": "^1.12.1",
+    "@sanity/image-url": "^1.0.2",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.0",
     "@vee-validate/zod": "^4.13.2",
@@ -38,12 +41,14 @@
     "@formkit/auto-animate": "^0.8.2",
     "@iconify-json/material-symbols": "^1.2.0",
     "@nuxt/icon": "^1.3.1",
-    "@nuxtjs/supabase": "^1.3.5",
+    "@nuxtjs/supabase": "^1.4.0",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.2",
     "@vueuse/nuxt": "^10.11.0",
     "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39"
+    "postcss": "^8.4.39",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.6.1"

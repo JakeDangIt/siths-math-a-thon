@@ -1,12 +1,9 @@
 <template>
-    <div>
-        <AuthAccountTabs :default="'login'"/>
-    </div>
+  <div>
+    <AuthAccountTabs :default="'login'" />
+  </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

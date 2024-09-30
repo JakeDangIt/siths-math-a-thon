@@ -1,5 +1,5 @@
-import { routes } from "../utils/routes.js";
-export const useRoutesStore = defineStore("routes", () => {
+import { routes } from '../utils/routes.js';
+export const useRoutesStore = defineStore('routes', () => {
   const router = useRouter();
 
   const visitedRoutes = ref([]);
@@ -9,7 +9,11 @@ export const useRoutesStore = defineStore("routes", () => {
   }
 
   async function redirectToLast() {
-    await navigateTo(visitedRoutes.value.filter((route) => route !== '/auth/login' && route !== '/auth/signup').at(-1))
+    await navigateTo(
+      visitedRoutes.value
+        .filter((route) => route !== '/auth/login' && route !== '/auth/signup')
+        .at(-1)
+    );
   }
 
   onMounted(() => {

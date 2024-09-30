@@ -1,5 +1,5 @@
 <script setup>
-defineProps(['isLoading'])
+defineProps(['isLoading']);
 </script>
 
 <template>

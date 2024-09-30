@@ -1,4 +1,4 @@
-export const useAnswersStore = defineStore("answers", () => {
+export const useAnswersStore = defineStore('answers', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const toastStore = useToastStore();
@@ -6,42 +6,41 @@ export const useAnswersStore = defineStore("answers", () => {
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
-  const answerRemoved = ref({ week: null, questionNumber: null });
+  const answerRemoved = ref({ week: null, question: null });
 
   // remove answer
-  function removeAnswer(week, questionNumber) {
+  function removeAnswer(week, question) {
     // find the answer
     const index = answerData.value.findIndex(
-      (answer) => answer.week == week && answer.questionNumber == questionNumber
+      (answer) => answer.week == week && answer.question == question
     );
 
     // remove the answer
-    answerData.value[index].answer = "";
+    answerData.value[index].answer = '';
     // trigger the watcher in QuestionCard.vue
-    answerRemoved.value = { week, questionNumber };
+    answerRemoved.value = { week, question };
   }
 
   // save answers
   async function saveAnswers() {
     const { data } = await supabase
-      .from("saved_answers")
-      .select("*")
-      .eq("uid", user.value.id);
+      .from('saved_answers')
+      .select('*')
+      .eq('uid', user.value.id);
 
     // if you have an answer, update it, otherwise insert it
     if (data.length > 0) {
-
       // update the answers
       const { error: updateError } = await supabase
-        .from("saved_answers")
+        .from('saved_answers')
         .update({
           created_at: new Date().toISOString(),
           answers: answerData.value,
         })
-        .eq("uid", user.value.id);
+        .eq('uid', user.value.id);
 
       if (updateError) {
-        toastStore.changeToast("Failed to update answers", updateError.message);
+        toastStore.changeToast('Failed to update answers', updateError.message);
         return;
       }
     }
@@ -49,11 +48,11 @@ export const useAnswersStore = defineStore("answers", () => {
     // insert the answers
     else {
       const { error: insertError } = await supabase
-        .from("saved_answers")
+        .from('saved_answers')
         .insert({ answers: answerData.value });
 
       if (insertError) {
-        toastStore.changeToast("Failed to insert answers", insertError.message);
+        toastStore.changeToast('Failed to insert answers', insertError.message);
         return;
       }
     }
@@ -61,14 +60,14 @@ export const useAnswersStore = defineStore("answers", () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
-    await saveAnswers()
+    await saveAnswers();
 
     const { data: submittedData } = await supabase
-      .from("submitted_answers")
-      .select("*")
-      .eq("uid", user.value.id)
-      .eq("submitted_week", week);
-  
+      .from('submitted_answers')
+      .select('*')
+      .eq('uid', user.value.id)
+      .eq('submitted_week', week);
+
     if (submittedData.length > 0) {
       // Can't submit more than once per hour
       if (
@@ -76,58 +75,73 @@ export const useAnswersStore = defineStore("answers", () => {
         1000 * 60 * 60 * 1
       ) {
         toastStore.changeToast(
-          "You can only submit once per hour",
-          "Please wait before submitting again"
+          'You can only submit once per hour',
+          'Please wait before submitting again'
         );
         return;
       }
-  
+
       const { error: updateError } = await supabase
-        .from("submitted_answers")
+        .from('submitted_answers')
         .update({
           created_at: new Date().toISOString(),
           submitted_week: week, // week is treated as text
           answers: answers,
         })
-        .eq("uid", user.value.id)
-        .eq("submitted_week", week);
-  
+        .eq('uid', user.value.id)
+        .eq('submitted_week', week);
+
       if (updateError) {
-        toastStore.changeToast("Failed to update answers", updateError.message);
+        toastStore.changeToast('Failed to update answers', updateError.message);
         return;
       }
     } else {
       const { error: insertError } = await supabase
-        .from("submitted_answers")
+        .from('submitted_answers')
         .insert({ submitted_week: week, answers: answers, uid: user.value.id });
-  
+
       if (insertError) {
-        toastStore.changeToast("Failed to insert answers", insertError.message);
+        toastStore.changeToast('Failed to insert answers', insertError.message);
         return;
       }
     }
-  
+
     toastStore.changeToast(
-      "Answers submitted",
-      "Thank you for submitting your answers"
+      'Answers submitted',
+      'Thank you for submitting your answers'
     );
   }
-  
 
   // retrieve answers
   async function retrieveAnswers() {
     const { data, error } = await supabase
-      .from("saved_answers")
-      .select("*")
-      .eq("uid", user.value.id);
+      .from('saved_answers')
+      .select('*')
+      .eq('uid', user.value.id);
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve answers", error.message);
+      toastStore.changeToast('Failed to retrieve answers', error.message);
       return;
     }
 
     if (data.length > 0) {
       answerData.value = data[0].answers;
+      // if the number of questions has changed, make blank answers for the new questions
+      if (answerData.value.length != questionsStore.questionData.length) {
+        questionsStore.questionData.forEach((question) => {
+          const index = answerData.value.findIndex(
+            (answer) => answer.week == question.week && answer.question == question.number
+          );
+
+          if (index == -1) {
+            answerData.value.push({
+              week: question.week,
+              question: question.number,
+              answer: '',
+            });
+          }
+        });
+      }
     }
   }
 
@@ -144,8 +158,8 @@ export const useAnswersStore = defineStore("answers", () => {
           questionsStore.questionData.forEach((question) => {
             answerData.value.push({
               week: question.week,
-              questionNumber: question.question,
-              answer: "",
+              question: question.number,
+              answer: '',
             });
           });
 

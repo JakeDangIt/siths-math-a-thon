@@ -2,13 +2,13 @@
     <div>
         <Card>
             <CardHeader>
-                <CardTitle>Question {{ questionNumber }}</CardTitle>
+                <CardTitle>Question {{ question }}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div v-html="mathContent"></div>
             </CardContent>
             <CardFooter>
-                <Input id="input" type="number" v-model="input" :placeholder="'Question ' + questionNumber"
+                <Input id="input" type="number" v-model="input" :placeholder="'Question ' + question"
                     @change="changeAnswer" :disabled="answersStore.getAnswerLoading"></Input>
             </CardFooter>
         </Card>
@@ -16,23 +16,25 @@
 </template>
 
 <script setup>
-const answersStore = useAnswersStore()
+const answersStore = useAnswersStore();
 
-const props = defineProps(['questionNumber', 'week', 'mathContent'])
-const mathContent = ref(props.mathContent)
-const questionNumber = ref(props.questionNumber)
-const week = ref(props.week)
+const props = defineProps(['question', 'week', 'mathContent']);
+const mathContent = ref(props.mathContent);
+const question = ref(props.question);
+const week = ref(props.week);
 
 // question input
-const input = ref()
+const input = ref();
 
 // if the answer is changed, update the answer in the store
 function changeAnswer() {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
-        (question) => question.week == week.value && question.questionNumber == questionNumber.value
-    )
+        (answer) => answer.week == week.value && answer.question == question.value
+    );
 
-    answersStore.answerData[correspondingQuestionIndex].answer = String(input.value)
+    answersStore.answerData[correspondingQuestionIndex].answer = String(
+        input.value
+    );
 }
 
 // watch for changes in the store
@@ -43,10 +45,12 @@ onMounted(() => {
         async (newIsLoading) => {
             if (!newIsLoading) {
                 const correspondingQuestionIndex = answersStore.answerData.findIndex(
-                    (question) => question.week == week.value && question.questionNumber == questionNumber.value
-                )
+                    (answer) =>
+                        answer.week == week.value && answer.question == question.value
+                );
 
-                input.value = answersStore.answerData[correspondingQuestionIndex].answer
+                input.value =
+                    answersStore.answerData[correspondingQuestionIndex]?.answer;
             }
         },
         { immediate: true }
@@ -57,13 +61,16 @@ onMounted(() => {
         () => answersStore.answerRemoved,
         (newAnswerRemoved) => {
             if (newAnswerRemoved) {
-                if (answersStore.answerRemoved.week == week.value && answersStore.answerRemoved.questionNumber == questionNumber.value) {
-                    input.value = ''
+                if (
+                    answersStore.answerRemoved.week == week.value &&
+                    answersStore.answerRemoved.question == question.value
+                ) {
+                    input.value = '';
                     // reset the watcher
-                    answersStore.answerRemoved = {week: null, questionNumber: null}
+                    answersStore.answerRemoved = { week: null, question: null };
                 }
             }
         }
-    )
-})
+    );
+});
 </script>

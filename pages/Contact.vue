@@ -1,5 +1,5 @@
 <template>
-    <div>
-        <ContactUsForm />
-    </div>
+  <div>
+    <ContactUsForm />
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <div>
-        <StaffList />
-    </div>
+  <div>
+    <StaffList />
+  </div>
 </template>

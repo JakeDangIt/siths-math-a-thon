@@ -15,7 +15,6 @@ If you're reading this, you're in a very niche intersection of fields:
 
 Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! I hope this README allows you to more easily understand the code I've written. But for some context, the Math-a-thon is a school-wide math competition where more questions right means more points and more points means closer to winning. Every week, 20 questions are released, alongside 12 bonus questions, increasing in difficulty as you go until the last 3rd week. This website aims to digitize the whole process, making it easier on the Math Team and the competition's participants and hopefully gaining more users.
 
-
 ## Creator + Maintainer: [Jake J. Deng](https://github.com/JakeDangIt), class of 2025
 
 - Email: <jakejdeng@gmail.com>
@@ -34,6 +33,7 @@ Things got a little out of hand from there...
 ![Demo of Profile Page](https://cdn.discordapp.com/attachments/895126354549440512/1274866650285477971/demo_1.png?ex=66c3cf97&is=66c27e17&hm=9e3a2e1fef277684a961bae63ecacecd22a304e3f67753394ce74b22794acc18&)
 
 ### Features
+
 - User registration and authentication
 - Automatic grading of Math-a-thon submissions
 - Leaderboard of top scorers
@@ -41,6 +41,7 @@ Things got a little out of hand from there...
 - User profile management (including custom avatars!)
 
 ### Goals
+
 - Advertise the competition and appeal to the student body
 - Organize and streamline student participation
 
@@ -48,15 +49,19 @@ Things got a little out of hand from there...
 
 1. Open the repo in your IDE
 2. Set up Supabase project and create .env file with your key and url.
+
 ```
 SUPABASE_URL = <insert_url>
 SUPABASE_KEY = <insert_key>
 ```
+
 3. Install dependencies and run development server
+
 ```
 > npm i
 > npm run dev
 ```
+
 4. Commit and create a pull request.
 5. Wait for it to be pushed.
 
@@ -73,7 +78,7 @@ I wanted to buy a nice domain for the website, siths-mathathon.com, which, in hi
 
 - Authentication and Database: Supabase
 
-Supabase, the very *free* Firebase alternative, requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh). 
+Supabase, the very _free_ Firebase alternative, requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh).
 
 - Spreadsheets: Google Sheets
 
@@ -126,6 +131,7 @@ Fetch the file data, and then it just becomes links that opens up the .pdf files
 Form with name and email autofilled if you're logged in.
 
 ### Acknowledgments
+
 Special thanks to Mr. Whalen for indirectly teaching me the basics of Vue.js, and to the Math Team members and CS students (Bridget Feng and Andrea Guo) for helping with testing and designing the early versions of the app.
 
 ## Contributing
@@ -134,6 +140,7 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

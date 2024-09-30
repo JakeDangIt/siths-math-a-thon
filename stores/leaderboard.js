@@ -1,4 +1,4 @@
-export const useLeaderboardStore = defineStore("leaderboard", () => {
+export const useLeaderboardStore = defineStore('leaderboard', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const toastStore = useToastStore();
@@ -35,14 +35,14 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
       .limit(10);
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve leaderboard", error.message);
+      toastStore.changeToast('Failed to retrieve leaderboard', error.message);
     } else {
       top10.value = top10Data;
     }
 
     isLoading.value = false;
   }
-
+  
   async function getUserPlace() {
     const { data, error } = await supabase
       .from("leaderboard")
@@ -86,12 +86,12 @@ export const useLeaderboardStore = defineStore("leaderboard", () => {
 
   async function getUserAnswers() {
     const { data, error } = await supabase
-      .from("submitted_answers")
-      .select("correct_answers, uid")
-      .eq("uid", user.value.id);
+      .from('submitted_answers')
+      .select('correct_answers, uid')
+      .eq('uid', user.value.id);
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve user answers", error.message);
+      toastStore.changeToast('Failed to retrieve user answers', error.message);
       return;
     }
     if (data.length === 0) {

@@ -4,12 +4,12 @@
       <CardHeader>
         <CardTitle>Featured Problem</CardTitle>
       </CardHeader>
-      <CardContent v-if="randomQuestion" class="flex h-full flex-col justify-between">
+      <CardContent v-if="!questionsStore.isLoading" class="flex h-full flex-col justify-between">
         <div class="flex flex-col gap-2 mb-4">
-          <p v-show="!questionsStore.isLoading">
-            {{ randomQuestion.title }}.
+          <p class="font-semibold text-lg">
+            {{ randomQuestion?.title }}.
           </p>
-          <span>{{ randomQuestion.content }}</span>
+          <span>{{ randomQuestion?.content }}</span>
         </div>
 
         <nuxt-link to="/questions"><Button class="w-full">Solve Now</Button></nuxt-link>
@@ -26,20 +26,17 @@
 <script setup>
 import { rand } from '@vueuse/core';
 const questionsStore = useQuestionsStore();
-const randomQuestion = ref({});
+const randomQuestion = computed(() => questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)]);
 
 
 onMounted(async () => {
   watch(() => questionsStore.questionData, () => {
     if (questionsStore.questionData.length !== 0) {
       nextTick(() => {
-        // get random question out of the questions list
-        randomQuestion.value = questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)];
-
         // rerender mathjax when the questions are loaded
         questionsStore.rerenderMathJax();
       });
     }
-  });
+  }, { immediate: true });
 });
 </script>

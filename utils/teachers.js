@@ -1,7 +1,13 @@
 // all math teachers for the select dropdown
 export const teachers = [
   {
+    name: 'Ms. Amoroso',
+  },
+  {
     name: 'Ms. Asher',
+  },
+  {
+    name: 'Ms. Aurelia',
   },
   {
     name: 'Mr. Chester',
@@ -10,16 +16,13 @@ export const teachers = [
     name: 'Ms. Chu',
   },
   {
+    name: 'Ms. Dellagrazie',
+  },
+  {
     name: 'Ms. Franks',
   },
   {
-    name: 'Ms. Koutsovasilis',
-  },
-  {
     name: 'Ms. Lang',
-  },
-  {
-    name: 'Ms. Liu',
   },
   {
     name: 'Ms. Partnow',

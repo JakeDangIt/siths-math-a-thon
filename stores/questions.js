@@ -49,6 +49,11 @@ export const useQuestionsStore = defineStore('questions', () => {
   onMounted(async () => {
     await getQuestions();
     getMathJax();
+
+    watch(questionData.value, () => {
+      rerenderMathJax();
+      console.log(questionData.value);
+    });
   });
 
   return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };

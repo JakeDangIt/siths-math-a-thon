@@ -258,7 +258,6 @@ onMounted(() => {
   // check if far down enough when the user scrolls
   watch(y, () => {
     checkIsFarDownEnough();
-    console.log(y.value, document.body.scrollHeight - window.innerHeight * 1.5)
   });
 });
 </script>

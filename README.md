@@ -71,18 +71,24 @@ SUPABASE_KEY = <insert_key>
 
 I started off using vanilla Vue and eventually switched to Nuxt for the SSR and better SEO and autoimports.
 
-- Domain Name and Website Hosting: Namecheap, Vercel
+- Domain Name and Website Hosting: Namecheap, Vercel, MailerSend
 
-I host the website on Vercel, which has not been too hurtful. Just make sure that you have the environment variables.
-I wanted to buy a nice domain for the website, siths-mathathon.com, which, in hindsight, isn't the most prettiest name, and I bought it for like **$6** on Namecheap for 2 years. I also bought the email service **(like $11)** that comes along with it, called PrivateEmail, and allows me to use it for SMTP purposes, which brings me to the next point. <br>
+I host the website on Vercel. Just make sure that you have the environment variables.
+I wanted to buy a nice domain for the website, siths-mathathon.com, which, in hindsight, isn't the most prettiest name, and I bought it for like **$6** on Namecheap for 2 years. <br>
+I also bought the email service for a free trial that comes along with it, called PrivateEmail, and allows me to use it for SMTP purposes, which brings me to the next point. <br>
+I now am using a free one since I really don't need that much of a rate limit, MailerSend.
 
 - Authentication and Database: Supabase
 
-Supabase, the very _free_ Firebase alternative, requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh).
+Supabase requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh). <br>
+
+- Questions: Sanity CMS
+
+I host the questions on Sanity, which allows me to implement an add question feature on the website itself, instead of me inputting the questions manually. Taking the user uid and matching it to the profile allows me to check their role and allow them to have the add question button.
 
 - Spreadsheets: Google Sheets
 
-Unfortunately, the general-ness of the Math Team does not use software like Supabase, instead opting for the more basic Google Sheets to handle the data. Previously, that's how it's always been done, with papers being graded and then inputed on the spreadsheet. But now, I'm here! <br>
+Unfortunately, the general-ness of the Math Team does not use software like Supabase, instead opting for the more basic Google Sheets to handle the data. Previously, that's how it's always been done, with papers being graded and then inputed on the spreadsheet. <br>
 In 2024, instead of sending the data to Supabase, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
 It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supabase auth) and have them resubmit. <br>
 Hopefully for 2025, I am sticking to Supabase, and if they need the data, I'll send it to them or input it myself on the sheet.
@@ -110,8 +116,9 @@ Might be best to just leave this stuff alone since I'm not too confident in chan
 
 The questions will be written in LaTeX and be typeset by MathJax. MathJax will be inserted as a script when the questions page is mounted, alongside fetching the question data and making cards for each one. Once the content is loaded, it typesets. <br>
 You can also change weeks/bonuses on the carousel, with the questions just being filtered by week name. <br>
-Save every minute, submit every hour, just uploads the uid, time, and answers (as jsonb). <br>
-There's also a scroll down button and remove input buttons.
+Save whenever, submit every hour, just uploads the uid, time, and answers (as jsonb). <br>
+There's also a scroll down button and remove input buttons. <br>
+If you have the appropriate role, you can add/edit the questions.
 
 ### Leaderboard
 

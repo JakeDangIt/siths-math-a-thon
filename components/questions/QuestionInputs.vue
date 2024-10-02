@@ -37,6 +37,8 @@ async function createOrUpdateQuestion() {
     try {
         createLoading.value = true;
 
+        const confirmedChanges = { ...changes.value, content: content.value, author: author.value, title: title.value };
+
         const QUESTIONS_QUERY = groq`*[_type == "questions" && week == '${questionInfo.value.week}' && number == '${questionInfo.value.number}'][0]`;
         const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
@@ -55,9 +57,10 @@ async function createOrUpdateQuestion() {
             const questionIndex = questionsStore.questionData.findIndex(question => question.week == questionInfo.value.week && question.number == questionInfo.value.number);
 
             questionsStore.questionData[questionIndex] = { ...changes.value };
+
         } else {
             await sanity.client.create(changes.value);
-            questionsStore.questionData.push(changes.value);
+            questionsStore.questionData.push(confirmedChanges);
         }
 
         questionInfo.value = { ...changes.value };

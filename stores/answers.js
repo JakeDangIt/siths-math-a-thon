@@ -147,9 +147,6 @@ export const useAnswersStore = defineStore('answers', () => {
 
   // on mount
   onMounted(async () => {
-    if (user.value) {
-      await retrieveAnswers();
-    }
     // wait for questions to load, then create the answer data
     watch(
       () => questionsStore.isLoading,
@@ -182,8 +179,7 @@ export const useAnswersStore = defineStore('answers', () => {
         } else {
           answerData.value = [];
         }
-      },
-      { immediate: true }
+      }
     );
   });
 

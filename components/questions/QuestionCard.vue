@@ -9,7 +9,7 @@
             </CardContent>
             <CardFooter>
                 <Input id="input" type="number" v-model="input" :placeholder="'Question ' + question"
-                    @change="changeAnswer" :disabled="answersStore.getAnswerLoading"></Input>
+                    @input="changeAnswer" :disabled="answersStore.getAnswerLoading"></Input>
             </CardFooter>
         </Card>
     </div>

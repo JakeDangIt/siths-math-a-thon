@@ -47,8 +47,8 @@
           <div>
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="isFarDownEnough
-                  ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-                  : 'translate-x-0'
+                ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
+                : 'translate-x-0'
                 ">
               <Button @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
@@ -60,8 +60,8 @@
 
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="isFarDownEnough
-                  ? 'translate-x-0'
-                  : 'translate-x-[14rem] lg:translate-x-[-14rem]'
+                ? 'translate-x-0'
+                : 'translate-x-[14rem] lg:translate-x-[-14rem]'
                 ">
               <Button @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
@@ -110,8 +110,7 @@
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)"
-                  class="group flex justify-between px-2 hover:bg-slate-200">
+                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
@@ -124,8 +123,10 @@
 
                 <!-- submit and save button -->
                 <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button @click="saveAnswers()" variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
-                    " class="w-full">Save Answers</Button>
+                  <Button @click="saveAnswers()" variant="secondary"
+                    :disabled="saveLoading || answersStore.answerData.length == 0 || !hasAnswersChanged" class="w-full">
+                    Save Answers
+                  </Button>
                   <Button @click="
                     submitAnswers(
                       weekNames[index],
@@ -158,6 +159,11 @@ const toastStore = useToastStore();
 const roleStore = useRoleStore();
 
 const user = useSupabaseUser();
+
+const initialAnswers = ref([]);
+const hasAnswersChanged = computed(() => {
+  return JSON.stringify(answersStore.answerData) !== JSON.stringify(initialAnswers.value);
+});
 
 // window scroll and window size, used for scrolling down and checking if far down enough to put away the scroll and preview answer buttons
 const { y } = useWindowScroll();
@@ -200,6 +206,7 @@ async function saveAnswers() {
     toastStore.changeToast('You must answer at least one question to save');
   } else {
     await answersStore.saveAnswers();
+    initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
     toastStore.changeToast('Answers saved', 'Your answers have been saved');
   }
   saveLoading.value = false;
@@ -247,6 +254,13 @@ function scrollUp() {
   });
 }
 
+function handleBeforeUnload(event) {
+  if (hasAnswersChanged.value) {
+    event.preventDefault();
+    event.returnValue = ''; // This triggers the confirmation dialog
+  }
+}
+
 onMounted(() => {
   // rerender mathjax when the questions are loaded
   if (questionsStore.questionData.length !== 0) {
@@ -259,5 +273,22 @@ onMounted(() => {
   watch(y, () => {
     checkIsFarDownEnough();
   });
+
+  watch(
+    () => answersStore.getAnswerLoading,
+    () => {
+      if (answersStore.answerData.length !== 0) {
+        initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
+      }
+    },
+    { immediate: true }
+  );
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  // Remove the event listener to avoid memory leaks
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 </script>

@@ -119,8 +119,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
           const userIndex = top10.value.findIndex((user) => user.uid == userId);
           userPlace.value = userIndex + 1;
         }
-      },
-      { immediate: true }
+      }
     );
   });
 

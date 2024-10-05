@@ -254,6 +254,13 @@ function scrollUp() {
   });
 }
 
+function handleBeforeUnload(event) {
+  if (hasAnswersChanged.value) {
+    event.preventDefault();
+    event.returnValue = ''; // This triggers the confirmation dialog
+  }
+}
+
 onMounted(() => {
   // rerender mathjax when the questions are loaded
   if (questionsStore.questionData.length !== 0) {
@@ -276,5 +283,12 @@ onMounted(() => {
     },
     { immediate: true }
   );
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  // Remove the event listener to avoid memory leaks
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 </script>

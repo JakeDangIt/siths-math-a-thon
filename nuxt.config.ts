@@ -28,6 +28,30 @@ export default defineNuxtConfig({
       ],
     },
   },
+  icon: {
+    serverBundle: {
+      collections: ['material-symbols'] // <!--- this
+    },
+    clientBundle: {
+      // list of icons to include in the client bundle
+      icons: [
+        'material-symbols:copyright-outline',
+        'material-symbols:arrow-drop-down',
+        'material-symbols:trophy',
+        'material-symbols:workspace-premium-outline',
+        'material-symbols:add',
+        'material-symbols:arrow-downward',
+        'material-symbols:arrow-upward',
+        'material-symbols:cancel-outline',
+        'material-symbols:home',
+        'material-symbols:library-books-outline',
+        'material-symbols:leaderboard',
+        'material-symbols:group',
+        'material-symbols:mail',
+        'material-symbols:folder',
+      ],
+    },
+  },
   supabase: {
     redirectOptions: {
       login: '/auth/login',

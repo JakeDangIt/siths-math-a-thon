@@ -50,7 +50,7 @@
                 >
                   {{
                     !passwordValid && userPassword.length > 0
-                      ? 'Please enter a password longer than 6 characters'
+                      ? 'Please enter a password longer than 8 characters'
                       : 'Password'
                   }}
                 </Label>

@@ -49,9 +49,7 @@ watch(lastActivity, () => {
 });
 
 onMounted(async () => {
-
-  // Set up activity listeners to track user activity
-  setupActivityListeners();
+  let intervalId;
 
   const CHECK_INTERVAL = 30 * 1000; // 30 seconds
   const checkSessionExpiration = async () => {
@@ -61,13 +59,20 @@ onMounted(async () => {
       if (lastActivityTime && Date.now() - parseInt(lastActivityTime) > ONE_HOUR) {
         console.log('Session expired. Logging out.');
         await logoutUser();
-        clearInterval(intervalId);
+
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
       }
     }
   };
 
+  // Set up activity listeners to track user activity
+  setupActivityListeners();
+  await checkSessionExpiration();
+
   // Periodically check for session expiration every 30 seconds
-  const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+  intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
 
   // Set layout based on screen size and watch for changes in width
   watch(
@@ -88,7 +93,7 @@ onMounted(async () => {
     }
   );
 
-    // watch if user logs in, set the interval to check for session expiration
+  // watch if user logs in, set the interval to check for session expiration
   watch(user, (newValue) => {
     if (newValue) {
       // Set up activity listeners to track user activity

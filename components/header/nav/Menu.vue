@@ -36,6 +36,10 @@ const currentRouteName = computed(() =>
         <HeaderNavButtonSignUp />
         <HeaderNavButtonLogIn class="md:block sm:hidden" />
       </div>
+			<div v-else class="flex justify-end">
+        <HeaderAvatar class="md:block sm:hidden" />
+				<HeaderNavButtonLogOut class="md:block sm:hidden" />
+      </div>
     </header>
 
     <!-- sheet nav content -->

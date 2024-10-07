@@ -13,6 +13,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   const isLoading = ref(true);
   const avatarLoading = ref(true);
   const answersLoading = ref(true);
+  const placeLoading = ref(true);
 
   const user_id = computed(() => user.value?.id);
   const numberOfCorrect = computed(
@@ -55,7 +56,8 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
       leaderboardData.value = data;
 
       const userIndex = data.findIndex((user) => user.uid == user_id.value);
-      userPlace.value = userIndex;
+      userPlace.value = userIndex + 1;
+      placeLoading.value = false;
     }
   }
 
@@ -106,8 +108,8 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     await getTop3UserAvatars();
 
     if (user.value) {
-      await getUserPlace();
       await getUserAnswers();
+      await getUserPlace();
     }
 
     watch(
@@ -115,9 +117,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
       async (newUser) => {
         if (newUser) {
           await getUserAnswers();
-          const userId = user.value?.id;
-          const userIndex = top10.value.findIndex((user) => user.uid == userId);
-          userPlace.value = userIndex + 1;
+          await getUserPlace();
         }
       }
     );
@@ -131,6 +131,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     userPlace,
     isLoading,
     avatarLoading,
+    placeLoading,
     answersLoading,
     numberOfCorrect,
     numberOfAnswered,

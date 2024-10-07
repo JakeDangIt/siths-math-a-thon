@@ -1,4 +1,3 @@
-import { routes } from '../utils/routes.js';
 export const useRoutesStore = defineStore('routes', () => {
   const router = useRouter();
 

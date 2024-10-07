@@ -1,23 +1,81 @@
 <script setup>
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 await preloadComponents('Icon');
 import { useToast } from '@/components/ui/toast/use-toast';
 
 const toastStore = useToastStore();
+// initialize routes and role store on app load (DO NOT REMOVE EVEN THOUGH NOT USED)
 const questionsStore = useQuestionsStore();
 const routesStore = useRoutesStore();
 const roleStore = useRoleStore();
 const { toast } = useToast();
 
 // reactive vars
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 const layout = ref('default');
 const isLoading = ref(true);
 
 // mobile screen is width less than 1024px
 const isMobile = computed(() => width.value < 1024);
 
+const ONE_HOUR = 60 * 60 * 1000; // 1 hour in milliseconds
+const LAST_ACTIVITY_KEY = 'lastActivity'; // localStorage key for tracking activity
+
+const lastActivity = ref(Date.now());
+
+// Track activity (mouse, keyboard, etc.)
+const updateLastActivity = () => {
+  const now = Date.now();
+  localStorage.setItem(LAST_ACTIVITY_KEY, now.toString());
+  lastActivity.value = now;
+};
+
+const logoutUser = async () => {
+  await supabase.auth.signOut(); // Log out from Supabase
+  toastStore.changeToast('Session expired', 'You have been logged out due to inactivity');
+  await navigateTo('/auth/login');
+};
+
+// Event listeners for user activity
+const setupActivityListeners = () => {
+  window.addEventListener('mousemove', updateLastActivity);
+  window.addEventListener('keypress', updateLastActivity);
+  window.addEventListener('scroll', updateLastActivity);
+};
+
+watch(lastActivity, () => {
+  // Store last activity on each interaction
+  updateLastActivity();
+});
+
 onMounted(async () => {
-  // set layout based on screen size and watches change in widths
+  let intervalId;
+
+  const CHECK_INTERVAL = 30 * 1000; // 30 seconds
+  const checkSessionExpiration = async () => {
+    const lastActivityTime = localStorage.getItem(LAST_ACTIVITY_KEY);
+    if (user.value) {
+      // If user is logged in and no activity for 1 hour, log out
+      if (lastActivityTime && Date.now() - parseInt(lastActivityTime) > ONE_HOUR) {
+        console.log('Session expired. Logging out.');
+        await logoutUser();
+
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+      }
+    }
+  };
+
+  // Set up activity listeners to track user activity
+  setupActivityListeners();
+  await checkSessionExpiration();
+
+  // Periodically check for session expiration every 30 seconds
+  intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+
+  // Set layout based on screen size and watch for changes in width
   watch(
     isMobile,
     (newValue) => {
@@ -28,7 +86,7 @@ onMounted(async () => {
 
   watch(
     () => [toastStore.toastID],
-    ([newID]) => {
+    () => {
       toast({
         title: toastStore.titleMessage,
         description: toastStore.descriptionMessage,
@@ -36,25 +94,40 @@ onMounted(async () => {
     }
   );
 
+  // watch if user logs in, set the interval to check for session expiration
+  watch(user, (newValue) => {
+    if (newValue) {
+      // Set up activity listeners to track user activity
+      setupActivityListeners();
+      // Periodically check for session expiration every 30 seconds
+      const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+    }
+  });
+
   isLoading.value = false;
+});
+
+onUnmounted(() => {
+  // Remove activity listeners when component unmounts
+  window.removeEventListener('mousemove', updateLastActivity);
+  window.removeEventListener('keypress', updateLastActivity);
+  window.removeEventListener('scroll', updateLastActivity);
 });
 </script>
 
+
 <template>
+
   <Head>
     <Title>SITHS Math-a-Thon</Title>
 
     <!-- <Base href="https://siths-mathathon.com" /> -->
 
     <Meta name="application-name" content="SITHS Math-a-Thon" />
-    <Meta
-      name="description"
-      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity"
-    />
-    <Meta
-      name="keywords"
-      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School"
-    />
+    <Meta name="description"
+      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
+    <Meta name="keywords"
+      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School" />
     <Meta name="author" content="SITHS" />
     <Meta name="robots" content="index, follow" />
     <Meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -68,8 +141,7 @@ onMounted(async () => {
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </Head>
 
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 

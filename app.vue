@@ -3,6 +3,7 @@ await preloadComponents('Icon');
 import { useToast } from '@/components/ui/toast/use-toast';
 
 const toastStore = useToastStore();
+const questionsStore = useQuestionsStore();
 const routesStore = useRoutesStore();
 const roleStore = useRoleStore();
 const { toast } = useToast();

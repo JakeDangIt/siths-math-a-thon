@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/toast/use-toast';
 
 const toastStore = useToastStore();
 // initialize routes and role store on app load (DO NOT REMOVE EVEN THOUGH NOT USED)
+const questionsStore = useQuestionsStore();
 const routesStore = useRoutesStore();
 const roleStore = useRoleStore();
 const { toast } = useToast();

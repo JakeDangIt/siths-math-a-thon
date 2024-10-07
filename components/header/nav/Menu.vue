@@ -34,6 +34,7 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
+        <HeaderNavButtonLogIn class="md:block sm:hidden" />
       </div>
     </header>
 

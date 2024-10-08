@@ -66,16 +66,11 @@ onMounted(async () => {
     const lastActivityTime = localStorage.getItem(LAST_ACTIVITY_KEY);
 
     if (user.value) {
-<<<<<<< Updated upstream
-      // if user is logged in and no activity for 1 hour, log out
-      if (lastActivityTime && Date.now() - parseInt(lastActivityTime) > ONE_HOUR) {
-=======
       // If user is logged in and no activity for 1 hour, log out
       if (
         lastActivityTime &&
         Date.now() - parseInt(lastActivityTime) > ONE_HOUR
       ) {
->>>>>>> Stashed changes
         console.log('Session expired. Logging out.');
         await logoutUser();
 

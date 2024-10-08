@@ -38,7 +38,7 @@
 
       <!-- button -->
       <CardFooter class="flex justify-between">
-        <Button @click="changePassword" :disabled="changePasswordLoading"
+        <Button @click="changePassword" :disabled="changePasswordLoading || password !== confirmPassword || confirmPassword.length > 0"
           >Update</Button
         >
       </CardFooter>
@@ -73,11 +73,6 @@ const confirmPassword = ref('');
 
 async function changePassword() {
   changePasswordLoading.value = true;
-
-  // check if passwords match
-  if (password.value !== confirmPassword.value) {
-    toastStore.changeToast('Error', 'Your passwords do not match');
-  }
 
   // update the user's password
   const { data, error } = await supabase.auth.updateUser({

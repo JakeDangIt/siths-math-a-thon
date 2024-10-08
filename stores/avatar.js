@@ -21,8 +21,8 @@ export const useAvatarStore = defineStore('avatar', () => {
     avatarPath.value = user.value?.user_metadata?.avatar;
     if (!avatarPath.value) {
       avatarImage.value = null;
-      return
-    };
+      return;
+    }
 
     // download avatar
     const { data, error } = await supabase.storage
@@ -46,9 +46,12 @@ export const useAvatarStore = defineStore('avatar', () => {
       data: { avatar: null },
     });
 
-    const { error: profileError } = await supabase.from('profiles').update({
-      avatar: null,
-    }).eq('uid', user.value.id);
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        avatar: null,
+      })
+      .eq('uid', user.value.id);
 
     if (updateError || error) {
       return;

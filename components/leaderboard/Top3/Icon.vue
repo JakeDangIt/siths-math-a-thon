@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-1/3 rounded-t-2xl"
-    :class="user_id == user.uid ? 'border-2 border-slate-400' : '', bgColor"
+    :class="(user_id == user.uid ? 'border-2 border-slate-400' : '', bgColor)"
   >
     <div v-if="leaderboardStore.avatarLoading">
       <Skeleton :style="{ height: `${width < 1024 ? 250 : 400}px` }" />

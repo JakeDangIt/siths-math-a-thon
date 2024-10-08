@@ -130,7 +130,8 @@ export const useAnswersStore = defineStore('answers', () => {
       if (answerData.value.length != questionsStore.questionData.length) {
         questionsStore.questionData.forEach((question) => {
           const index = answerData.value.findIndex(
-            (answer) => answer.week == question.week && answer.question == question.number
+            (answer) =>
+              answer.week == question.week && answer.question == question.number
           );
 
           if (index == -1) {

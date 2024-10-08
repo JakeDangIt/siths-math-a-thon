@@ -14,6 +14,7 @@
 const avatarStore = useAvatarStore();
 const user = useSupabaseUser();
 
+// first name
 const name = computed(() => user.value?.user_metadata?.name || '');
 const firstName = computed(() => {
   const [first] = name.value.split(' ');

@@ -30,9 +30,9 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   async function retrieveLeaderboard() {
     const { data: top10Data, error } = await supabase
-      .from("leaderboard")
-      .select("*")
-      .order("correct_answers", { ascending: false })
+      .from('leaderboard')
+      .select('*')
+      .order('correct_answers', { ascending: false })
       .limit(10);
 
     if (error) {
@@ -43,15 +43,15 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
     isLoading.value = false;
   }
-  
+
   async function getUserPlace() {
     const { data, error } = await supabase
-      .from("leaderboard")
-      .select("uid, correct_answers")
-      .order("correct_answers", { ascending: false });
+      .from('leaderboard')
+      .select('uid, correct_answers')
+      .order('correct_answers', { ascending: false });
 
     if (error) {
-      toastStore.changeToast("Failed to retrieve leaderboard", error.message);
+      toastStore.changeToast('Failed to retrieve leaderboard', error.message);
     } else {
       leaderboardData.value = data;
 
@@ -64,18 +64,19 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   async function getTop3UserAvatars() {
     top10.value.slice(0, 3).forEach(async (user, index) => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("avatar, name")
-        .eq("uid", user.uid);
+        .from('profiles')
+        .select('avatar, name')
+        .eq('uid', user.uid);
 
       if (data[0].avatar) {
-        const { data: avatarData, error: avatarError } = await supabase.storage.from("avatars").download(data[0].avatar);
+        const { data: avatarData, error: avatarError } = await supabase.storage
+          .from('avatars')
+          .download(data[0].avatar);
         top3Avatars.value[index] = {
           name: data[0].name,
-          image: URL.createObjectURL(avatarData)
+          image: URL.createObjectURL(avatarData),
         };
-      }
-      else {
+      } else {
         top3Avatars.value[index] = {
           name: data[0].name,
           image: null,

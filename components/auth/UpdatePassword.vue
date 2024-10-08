@@ -38,7 +38,7 @@
 
       <!-- button -->
       <CardFooter class="flex justify-between">
-        <Button @click="changePassword" :disabled="changePasswordLoading || password !== confirmPassword || confirmPassword.length > 0"
+        <Button @click="changePassword" :disabled="changePasswordLoading || password !== confirmPassword || password.length < 8 || confirmPassword.length < 8"
           >Update</Button
         >
       </CardFooter>

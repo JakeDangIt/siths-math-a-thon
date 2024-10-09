@@ -1,8 +1,6 @@
 <template>
-  <Skeleton v-if="isLoading" class="mx-2 h-[400px] lg:mx-auto lg:w-[600px]" />
-
   <!-- tabs -->
-  <div v-if="!isLoading" class="flex w-full justify-center">
+  <div class="flex w-full justify-center">
     <Tabs :default-value="default" class="mx-2 lg:w-[600px]">
       <!-- triggers on the top -->
       <TabsList class="grid w-full grid-cols-2">
@@ -214,11 +212,10 @@ defineProps(['default']);
 import { teachers } from '../../utils/teachers';
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
+
 const toastStore = useToastStore();
 const avatarStore = useAvatarStore();
 const routesStore = useRoutesStore();
-
-const isLoading = ref(true);
 
 // signup fields
 const userName = ref('');
@@ -313,6 +310,7 @@ async function handleLogin() {
         return;
       }
 
+      // actual update metadata
       const { error: updateError } = await supabase.auth.updateUser({
         data: {
           profile_complete: true,
@@ -324,6 +322,7 @@ async function handleLogin() {
     }
     toastStore.changeToast('Success', 'You have successfully logged in.');
 
+    // get the new data to update avatar
     await avatarStore.refreshUser();
     await avatarStore.retrieveAvatar();
 
@@ -332,8 +331,4 @@ async function handleLogin() {
   }
   loginLoading.value = false;
 }
-
-onMounted(() => {
-  isLoading.value = false;
-});
 </script>

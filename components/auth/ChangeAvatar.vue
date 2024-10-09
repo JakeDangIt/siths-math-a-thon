@@ -3,13 +3,16 @@
     <!-- image file input for avatar -->
     <div>
       <Label for="uploadAvatar">Upload your avatar</Label>
-      <div class="flex flex-col lg:flex-row items-start lg:items-center gap-2">
+      <div class="flex flex-col items-start gap-2 lg:flex-row lg:items-center">
+        <!-- file upload -->
         <Input
           id="uploadAvatar"
           type="file"
           accept="image/*"
           @change="setImage"
         />
+
+        <!-- remove avatar -->
         <Button class="my-1" @click="handleAvatarRemove()" variant="secondary"
           >Remove Avatar</Button
         >
@@ -19,7 +22,6 @@
     <!-- dialog for cropping the image -->
     <Dialog v-model:open="isDialogOpen">
       <DialogContent class="h-fit">
-        <!-- Changed the height here -->
         <DialogHeader>
           <DialogTitle>Crop your avatar</DialogTitle>
           <DialogDescription>

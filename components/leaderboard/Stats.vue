@@ -1,4 +1,5 @@
 <template>
+  <!-- if submitted and checked, show all your stats in a table and graph -->
   <div
     v-if="hasSubmitted && answersHaveBeenChecked"
     class="mx-2 mt-2 space-y-2 lg:mt-0 lg:w-1/3"
@@ -19,7 +20,7 @@
           <div v-else>
             <LeaderboardStatsBarGraph />
             <p>
-              {{ ordinalPlace(leaderboardStore.userPlace) }}/{{
+              {{ useOrdinalPlace(leaderboardStore.userPlace) }}/{{
                 leaderboardStore.leaderboardData.length
               }}
               contestants
@@ -45,6 +46,7 @@
       <Skeleton class="h-9 w-full"></Skeleton>
       <Skeleton class="h-screen w-full"></Skeleton>
     </div>
+    <!-- table of your answer data -->
     <Tabs v-else :default-value="1" class="mx-auto my-4">
       <TabsList class="mb-4 w-full">
         <Carousel class="relative mx-auto w-4/5">
@@ -102,6 +104,7 @@
     </Tabs>
   </div>
 
+  <!-- message for when you did submit, but not checked, or just no submit -->
   <div v-else class="mx-2 mt-2 space-y-2 lg:mt-0 lg:w-1/3">
     <Card>
       <CardHeader>
@@ -124,11 +127,14 @@
 const questionsStore = useQuestionsStore();
 const leaderboardStore = useLeaderboardStore();
 
+// if there is some answer, you've submited
 const hasSubmitted = computed(() => leaderboardStore.userAnswers[0] != null);
+// if there is some answer that has been checked, in that the correct answer is true/false, not null, you've been checked
 const answersHaveBeenChecked = computed(() =>
   leaderboardStore.userAnswers.some((week) => week?.correct_answers !== null)
 );
 
+// week names for tabs
 const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus'];
 const groupedWeekNames = [
   [1, '1 Bonus'],
@@ -145,6 +151,7 @@ const presentWeekNames = computed(() => {
   });
 });
 
+// function to get the answers for a week
 function weeksAnswers(weekName) {
   const weekAnsweredQuestions = leaderboardStore.userAnswers
     .find((week) => week.correct_answers[0].week == weekName)
@@ -160,6 +167,7 @@ function weeksAnswers(weekName) {
   return [...weekAnsweredQuestions, totalCorrect];
 }
 
+// function to format the response for the table
 function formattedResponse(submittedAnswer, isCorrect) {
   if (submittedAnswer == '') {
     return 'Omitted';
@@ -170,21 +178,5 @@ function formattedResponse(submittedAnswer, isCorrect) {
   } else {
     return 'Incorrect';
   }
-}
-
-// function to get the ordinal place, if 11th, 12th, or 13th, return the number with th
-function ordinalPlace(place) {
-  const onesDigit = place % 10,
-    specialNotTeens = place % 100;
-  if (onesDigit == 1 && specialNotTeens != 11) {
-    return place + 'st';
-  }
-  if (onesDigit == 2 && specialNotTeens != 12) {
-    return place + 'nd';
-  }
-  if (onesDigit == 3 && specialNotTeens != 13) {
-    return place + 'rd';
-  }
-  return place + 'th';
 }
 </script>

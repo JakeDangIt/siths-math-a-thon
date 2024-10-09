@@ -1,10 +1,12 @@
 <template>
   <div v-if="user">
+    <!-- user profile on home -->
     <Card>
       <CardHeader>
         <CardTitle>Your Profile</CardTitle>
       </CardHeader>
       <CardContent>
+        <!-- just avatar and some info -->
         <div className="flex items-center space-x-4">
           <Avatar>
             <AvatarImage
@@ -21,16 +23,10 @@
             <p className="text-sm text-muted-foreground">
               {{ user?.user_metadata?.grade }} Grade
             </p>
+
+            <!-- more badges to come -->
             <div className="mt-2 flex space-x-2">
               <HomeBadgeTopPercent />
-              <!-- <Badge variant="secondary">
-                                <ActivityIcon className="mr-1 h-3 w-3" />
-                                Active Streak
-                            </Badge>
-                            <Badge variant="secondary">
-                                <BrainIcon className="mr-1 h-3 w-3" />
-                                Math Whiz
-                            </Badge> -->
             </div>
           </div>
         </div>
@@ -43,11 +39,5 @@
 const user = useSupabaseUser();
 const avatarStore = useAvatarStore();
 
-const name = computed(() => user.value?.user_metadata?.name || '');
-const firstName = computed(() => {
-  const [first] = name.value.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-});
+const firstName = useFirstName(user.value?.user_metadata?.name);
 </script>

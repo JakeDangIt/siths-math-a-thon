@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-center gap-8 lg:flex-row">
-    <!-- just a form to get a reset link (which doesnt actually reset, you just log in and then go to update password) -->
+    <!-- just a form to get a reset link (which doesnt actually reset, the link logs you in and then redirects to update password) -->
     <Card class="mx-4 lg:w-1/3">
       <CardHeader class="flex">
         <CardTitle>Forgot Password</CardTitle>
@@ -10,6 +10,7 @@
         >
       </CardHeader>
 
+      <!-- email -->
       <CardContent class="mr-4 flex flex-col">
         <div class="space-y-1">
           <Label
@@ -26,6 +27,7 @@
         </div>
       </CardContent>
 
+      <!-- send button -->
       <CardFooter class="flex justify-between">
         <Button
           @click="sendResetPassword"

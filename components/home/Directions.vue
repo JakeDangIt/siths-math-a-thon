@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- directions -->
     <Card>
       <CardHeader>
         <CardTitle>How to Compete</CardTitle>
@@ -31,5 +32,3 @@
     </Card>
   </div>
 </template>
-
-<script setup></script>

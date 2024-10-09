@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   },
   icon: {
     serverBundle: {
-      collections: ['material-symbols'] // <!--- this
+      collections: ['material-symbols'], // <!--- this
     },
     clientBundle: {
       // list of icons to include in the client bundle

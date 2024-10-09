@@ -1,18 +1,23 @@
 <template>
   <div>
+    <!-- featured problem, which is just a random problem from the list of questions -->
     <Card class="flex h-full flex-col">
       <CardHeader>
         <CardTitle>Featured Problem</CardTitle>
       </CardHeader>
-      <CardContent v-if="!questionsStore.isLoading" class="flex h-full flex-col justify-between">
-        <div class="flex flex-col gap-2 mb-4">
-          <p class="font-semibold text-lg">
-            {{ randomQuestion?.title }}.
-          </p>
+      <CardContent
+        v-if="!questionsStore.isLoading"
+        class="flex h-full flex-col justify-between"
+      >
+        <div class="mb-4 flex flex-col gap-2">
+          <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span>{{ randomQuestion?.content }}</span>
         </div>
 
-        <nuxt-link to="/questions"><Button class="w-full">Solve Now</Button></nuxt-link>
+        <!-- solve now button that goes to /questions -->
+        <nuxt-link to="/questions"
+          ><Button class="w-full">Solve Now</Button></nuxt-link
+        >
       </CardContent>
 
       <CardContent v-else>
@@ -26,17 +31,26 @@
 <script setup>
 import { rand } from '@vueuse/core';
 const questionsStore = useQuestionsStore();
-const randomQuestion = computed(() => questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)]);
 
+// random question
+const randomQuestion = computed(
+  () =>
+    questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)]
+);
 
+// load questions
 onMounted(async () => {
-  watch(() => questionsStore.questionData, () => {
-    if (questionsStore.questionData.length !== 0) {
-      nextTick(() => {
-        // rerender mathjax when the questions are loaded
-        questionsStore.rerenderMathJax();
-      });
-    }
-  }, { immediate: true });
+  watch(
+    () => questionsStore.questionData,
+    () => {
+      if (questionsStore.questionData.length !== 0) {
+        nextTick(() => {
+          // rerender mathjax when the questions are loaded
+          questionsStore.rerenderMathJax();
+        });
+      }
+    },
+    { immediate: true }
+  );
 });
 </script>

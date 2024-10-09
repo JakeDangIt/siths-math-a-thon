@@ -1,5 +1,6 @@
 <template>
   <div class="h-full w-full">
+    <!-- card for the top 3 leaderboard -->
     <Card class="h-full" v-if="leaderboardStore.top3Avatars.length == 3">
       <CardHeader>
         <CardTitle class="text-center">
@@ -14,7 +15,7 @@
         >
           <div class="text-center">
             <p class="text-2xl font-bold">
-              {{ ordinalPlace(leaderboardStore.userPlace) }}
+              {{ useOrdinalPlace(leaderboardStore.userPlace) }}
             </p>
             <p class="text-sm text-muted-foreground">place</p>
           </div>
@@ -39,7 +40,7 @@
                   draggable="false"
                 ></AvatarImage>
                 <AvatarFallback class="text-lg">{{
-                  firstName(avatar?.name ?? ' ')[0]
+                  useFirstName(avatar?.name ?? ' ')[0]
                 }}</AvatarFallback>
               </Avatar>
               <span>{{ avatar?.name ?? '' }}</span>
@@ -63,26 +64,4 @@
 <script setup>
 const leaderboardStore = useLeaderboardStore();
 const user = useSupabaseUser();
-
-const firstName = (user) => {
-  const [first] = user.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-};
-
-function ordinalPlace(place) {
-  const onesDigit = place % 10,
-    specialNotTeens = place % 100;
-  if (onesDigit == 1 && specialNotTeens != 11) {
-    return place + 'st';
-  }
-  if (onesDigit == 2 && specialNotTeens != 12) {
-    return place + 'nd';
-  }
-  if (onesDigit == 3 && specialNotTeens != 13) {
-    return place + 'rd';
-  }
-  return place + 'th';
-}
 </script>

@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+const leaderboardStore = useLeaderboardStore();
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -14,8 +15,7 @@ import {
 } from 'chart.js';
 import { useLeaderboardStore } from '@/stores/leaderboard';
 
-const leaderboardStore = useLeaderboardStore();
-
+// just the functions and data needed to create the chart
 function extractWeekNumber(week) {
   const [weekNumber, bonus] = week.correct_answers[0].week.split(' ');
   return bonus ? Number(weekNumber) + 0.5 : Number(weekNumber);

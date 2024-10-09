@@ -67,11 +67,6 @@ const confirmPassword = ref('');
 async function changePassword() {
   changePasswordLoading.value = true;
 
-  // check if passwords match
-  if (password.value !== confirmPassword.value) {
-    toastStore.changeToast('Error', 'Your passwords do not match');
-  }
-
   // update the user's password
   const { data, error } = await supabase.auth.updateUser({
     password: password.value,

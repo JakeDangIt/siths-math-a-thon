@@ -227,7 +227,7 @@ const userGrade = ref('');
 const userAgreement = ref(false);
 
 // validity
-const passwordValid = computed(() => userPassword.value.length >= 6);
+const passwordValid = computed(() => userPassword.value.length >= 8);
 const emailValid = computed(() => userEmail.value.includes('@nycstudents.net'));
 const osisValid = computed(
   () => String(userOSIS.value).length == 9 && !isNaN(Number(userOSIS.value))

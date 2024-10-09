@@ -1,4 +1,5 @@
 <template>
+  <!-- dialog to add/edit answers -->
   <Dialog>
     <DialogTrigger>
       <Button>
@@ -9,13 +10,15 @@
     <DialogScrollContent class="lg:max-w-[50vw]">
       <DialogHeader>
         <DialogTitle>Questions for Week {{ week }}</DialogTitle>
+        <!-- 12 or 20 depending on if it's a bonus or not -->
         <DialogDescription>
           Add and edit
           {{ String(week).includes('Bonus') ? '12' : '20' }} questions for week
           {{ week }}.
         </DialogDescription>
       </DialogHeader>
-      <div class="">
+      <div>
+        <!-- accordion for each question -->
         <Accordion type="multiple" collapsible class="grid grid-cols-2 gap-x-8">
           <AccordionItem
             v-for="index in String(week).includes('Bonus') ? 12 : 20"

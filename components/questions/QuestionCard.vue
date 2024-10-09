@@ -40,7 +40,7 @@ const isInvalid = ref(false); // Track if input is invalid
 
 // if the answer is changed, update the answer in the store
 function validateAndChangeAnswer() {
-  // Only allow numbers and replace non-numeric characters
+  // only allow numbers and replace non-numeric characters
   const cleanedValue = input.value.replace(/[^0-9]/g, '');
 
   isInvalid.value = (cleanedValue !== input.value);

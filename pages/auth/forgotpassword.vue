@@ -3,5 +3,3 @@
     <AuthForgotPassword />
   </div>
 </template>
-
-<script setup></script>

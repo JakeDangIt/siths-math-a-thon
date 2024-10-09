@@ -3,8 +3,11 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   const user = useSupabaseUser();
   const toastStore = useToastStore();
 
+  // leaderboard data (only id and correct answers, sorted by correct answers)
   const leaderboardData = ref([]);
+  // top 10 (only uid, name, and correct answers)
   const top10 = ref([]);
+  // top 3 user avatars (name and image)
   const top3Avatars = ref([]);
 
   const userAnswers = ref([]);
@@ -16,6 +19,8 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   const placeLoading = ref(true);
 
   const user_id = computed(() => user.value?.id);
+
+  // these two is your number of correct answers and number of answered questions
   const numberOfCorrect = computed(
     () =>
       leaderboardData.value.find((user) => user.uid == user_id.value)
@@ -28,6 +33,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     )
   );
 
+  // get the data from the top 10
   async function retrieveLeaderboard() {
     const { data: top10Data, error } = await supabase
       .from('leaderboard')
@@ -44,6 +50,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     isLoading.value = false;
   }
 
+  // get your user place
   async function getUserPlace() {
     const { data, error } = await supabase
       .from('leaderboard')
@@ -61,6 +68,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     }
   }
 
+  // get the top 3 user avatars
   async function getTop3UserAvatars() {
     top10.value.slice(0, 3).forEach(async (user, index) => {
       const { data, error } = await supabase
@@ -87,6 +95,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     avatarLoading.value = false;
   }
 
+  // get your answers
   async function getUserAnswers() {
     const { data, error } = await supabase
       .from('submitted_answers')
@@ -105,14 +114,17 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   }
 
   onMounted(async () => {
+    // get the leaderboard and avatars
     await retrieveLeaderboard();
     await getTop3UserAvatars();
 
+    // if you're logged in, get your answers and place
     if (user.value) {
       await getUserAnswers();
       await getUserPlace();
     }
 
+    // if you log in and out, update the user answers and place
     watch(
       () => user.value,
       async (newUser) => {

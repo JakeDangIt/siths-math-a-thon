@@ -1,5 +1,6 @@
 <template>
   <div class="mx-2 lg:w-1/2">
+    <!-- top 10 on leaderboard -->
     <Card>
       <CardHeader class="mb-2 text-center">
         <CardTitle>Leaderboard</CardTitle>
@@ -22,6 +23,7 @@
           />
         </div>
 
+        <!-- user data -->
         <div class="space-y-1 pt-2 lg:p-2">
           <div
             class="flex items-center rounded-lg bg-slate-200 py-2"

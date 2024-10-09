@@ -1,4 +1,5 @@
 <template>
+  <!-- icon for each top 3 -->
   <div
     class="w-1/3 rounded-t-2xl"
     :class="(user_id == user.uid ? 'border-2 border-slate-400' : '', bgColor)"
@@ -17,6 +18,8 @@
       >
         <Icon :name="iconName" class="h-8 w-8 bg-white" />
       </div>
+
+      <!-- user info -->
       <div class="mt-4 flex flex-col items-center justify-center lg:mt-10">
         <Avatar class="lg:h-20 lg:w-20">
           <AvatarImage v-if="userAvatar" :src="userAvatar" />
@@ -33,14 +36,15 @@
 </template>
 
 <script setup>
-import { avatarVariant } from '~/components/ui/avatar';
-
 const props = defineProps(['user', 'index']);
 const leaderboardStore = useLeaderboardStore();
+
+// used for matching with your card
 const user_id = computed(() => useSupabaseUser().value?.id);
 
 const { width } = useWindowSize();
 
+// user data
 const top3 = ref(leaderboardStore.top10.slice(0, 3));
 const user = ref(props.user);
 const index = ref(props.index + 1);
@@ -49,6 +53,7 @@ const userAvatar = computed(
 );
 const firstName = useFirstName(user.value.user_name)
 
+// some stats
 const maxScore = computed(() => top3.value[0].correct_answers);
 const minScore = computed(() => top3.value[2].correct_answers);
 const scoreRange = computed(() => maxScore.value - minScore.value);
@@ -62,6 +67,7 @@ const computedHeight = computed(() => {
   return height;
 });
 
+// color and icon per place
 const bgColor = computed(() => {
   switch (index.value) {
     case 1:

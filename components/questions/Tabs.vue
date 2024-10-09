@@ -224,6 +224,7 @@ const roleStore = useRoleStore();
 
 const user = useSupabaseUser();
 
+// track if answers have changed
 const initialAnswers = ref([]);
 const hasAnswersChanged = computed(() => {
   return (
@@ -322,6 +323,7 @@ function scrollUp() {
   });
 }
 
+// function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
 function handleBeforeUnload(event) {
   if (hasAnswersChanged.value) {
     event.preventDefault();
@@ -354,11 +356,12 @@ onMounted(() => {
     { immediate: true }
   );
 
+  // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
 });
 
 onBeforeUnmount(() => {
-  // Remove the event listener to avoid memory leaks
+  // remove the event listener to avoid memory leaks
   window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 </script>

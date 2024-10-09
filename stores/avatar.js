@@ -66,6 +66,7 @@ export const useAvatarStore = defineStore('avatar', () => {
   onMounted(async () => {
     await retrieveAvatar();
 
+    // if you log out and log in with a different account, the avatar will be updated
     watch(
       () => user.value,
       async (newUser) => {

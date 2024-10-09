@@ -69,7 +69,7 @@ export const useAnswersStore = defineStore('answers', () => {
       .eq('submitted_week', week);
 
     if (submittedData.length > 0) {
-      // Can't submit more than once per hour
+      // can't submit more than once per hour
       if (
         Date.now() - new Date(submittedData[0].created_at).getTime() <
         1000 * 60 * 60 * 1
@@ -81,6 +81,7 @@ export const useAnswersStore = defineStore('answers', () => {
         return;
       }
 
+      // update or insert the answers
       const { error: updateError } = await supabase
         .from('submitted_answers')
         .update({
@@ -146,7 +147,6 @@ export const useAnswersStore = defineStore('answers', () => {
     }
   }
 
-  // on mount
   onMounted(async () => {
     // wait for questions to load, then create the answer data
     watch(

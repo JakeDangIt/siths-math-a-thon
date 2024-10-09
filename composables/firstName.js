@@ -1,3 +1,4 @@
+// function to get the first name of a user
 export const useFirstName = (user) => {
   const [first] = user.split(' ');
   return first

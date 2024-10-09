@@ -1,4 +1,5 @@
 <template>
+  <!-- the inputs for each accordion for adding/changing questions -->
   <div class="flex flex-col gap-2 p-2">
     <span class="flex gap-2 text-lg">
       <h1 class="font-bold">Title:</h1>
@@ -38,6 +39,7 @@ const sanity = useSanity();
 
 const createLoading = ref(false);
 
+// constructed title for easier reading in Sanity
 const title = computed(
   () =>
     questionInfo.value.title ||
@@ -46,6 +48,7 @@ const title = computed(
 const content = ref('');
 const author = ref(questionInfo.value.author || '');
 
+// changes needed for Sanity
 const changes = ref({
   title,
   content,
@@ -55,10 +58,12 @@ const changes = ref({
   _type: 'questions',
 });
 
+// create or update the question in Sanity
 async function createOrUpdateQuestion() {
   try {
     createLoading.value = true;
 
+    // like the actual changes
     const confirmedChanges = {
       ...changes.value,
       content: content.value,
@@ -66,11 +71,13 @@ async function createOrUpdateQuestion() {
       title: title.value,
     };
 
+    // query to get the question
     const QUESTIONS_QUERY = groq`*[_type == "questions" && week == '${questionInfo.value.week}' && number == '${questionInfo.value.number}'][0]`;
     const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
     const existingQuestion = questions.value;
 
+    // if the question exists, update it, otherwise create it
     if (existingQuestion) {
       await sanity.client
         .patch(existingQuestion._id)
@@ -81,6 +88,7 @@ async function createOrUpdateQuestion() {
         })
         .commit();
 
+        // update the question in the store as well
       const questionIndex = questionsStore.questionData.findIndex(
         (question) =>
           question.week == questionInfo.value.week &&
@@ -93,7 +101,10 @@ async function createOrUpdateQuestion() {
       questionsStore.questionData.push(confirmedChanges);
     }
 
+    // update on the client side as well
     questionInfo.value = { ...changes.value };
+
+    // rerender MathJax after a second to make sure it looks right
     setTimeout(() => {
       questionsStore.rerenderMathJax();
     }, 1000);

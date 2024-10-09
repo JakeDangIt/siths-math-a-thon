@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- featured problem, which is just a random problem from the list of questions -->
     <Card class="flex h-full flex-col">
       <CardHeader>
         <CardTitle>Featured Problem</CardTitle>
@@ -13,6 +14,7 @@
           <span>{{ randomQuestion?.content }}</span>
         </div>
 
+        <!-- solve now button that goes to /questions -->
         <nuxt-link to="/questions"
           ><Button class="w-full">Solve Now</Button></nuxt-link
         >
@@ -29,11 +31,14 @@
 <script setup>
 import { rand } from '@vueuse/core';
 const questionsStore = useQuestionsStore();
+
+// random question
 const randomQuestion = computed(
   () =>
     questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)]
 );
 
+// load questions
 onMounted(async () => {
   watch(
     () => questionsStore.questionData,

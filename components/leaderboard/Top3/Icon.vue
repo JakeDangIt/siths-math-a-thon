@@ -33,6 +33,8 @@
 </template>
 
 <script setup>
+import { avatarVariant } from '~/components/ui/avatar';
+
 const props = defineProps(['user', 'index']);
 const leaderboardStore = useLeaderboardStore();
 const user_id = computed(() => useSupabaseUser().value?.id);
@@ -45,12 +47,7 @@ const index = ref(props.index + 1);
 const userAvatar = computed(
   () => leaderboardStore.top3Avatars[props.index]?.image
 );
-const firstName = computed(() => {
-  const [first] = user.value.user_name.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-});
+const firstName = useFirstName(user.value.user_name)
 
 const maxScore = computed(() => top3.value[0].correct_answers);
 const minScore = computed(() => top3.value[2].correct_answers);

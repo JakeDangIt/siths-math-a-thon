@@ -15,13 +15,7 @@ const avatarStore = useAvatarStore();
 const user = useSupabaseUser();
 
 // first name
-const name = computed(() => user.value?.user_metadata?.name || '');
-const firstName = computed(() => {
-  const [first] = name.value.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-});
+const firstName = useFirstName(user.value?.user_metadata?.name);
 
 const showAvatar = computed(
   () => avatarStore.avatarImage !== '' && avatarStore.avatarImage !== null

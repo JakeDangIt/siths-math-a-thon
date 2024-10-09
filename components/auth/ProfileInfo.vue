@@ -137,12 +137,7 @@ const osis = computed(() => user.value?.user_metadata?.osis || '');
 const teacher = computed(() => user.value?.user_metadata?.teacher || '');
 const grade = computed(() => user.value?.user_metadata?.grade || '');
 
-const firstName = computed(() => {
-  const [first] = name.value.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-});
+const firstName = useFirstName(name.value);
 
 // input values
 const newName = ref('');

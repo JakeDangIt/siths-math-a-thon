@@ -1,6 +1,6 @@
 <template>
   <!-- badge to show your top percentage if top 50% -->
-  <div v-if="!leaderboardStore.placeLoading && topPercentage > 50">
+  <div v-if="!leaderboardStore.placeLoading && topPercentage < 50">
     <Badge variant="secondary">
       <Icon name="material-symbols:trophy" class="mr-1 h-3 w-3" />
       Top {{ topPercentage }}%

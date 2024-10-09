@@ -39,7 +39,7 @@
                   draggable="false"
                 ></AvatarImage>
                 <AvatarFallback class="text-lg">{{
-                  firstName(avatar?.name ?? ' ')[0]
+                  useFirstName(avatar?.name ?? ' ')[0]
                 }}</AvatarFallback>
               </Avatar>
               <span>{{ avatar?.name ?? '' }}</span>
@@ -63,13 +63,6 @@
 <script setup>
 const leaderboardStore = useLeaderboardStore();
 const user = useSupabaseUser();
-
-const firstName = (user) => {
-  const [first] = user.split(' ');
-  return first
-    ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase()
-    : '';
-};
 
 function ordinalPlace(place) {
   const onesDigit = place % 10,

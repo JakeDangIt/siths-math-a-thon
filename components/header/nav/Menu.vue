@@ -34,19 +34,11 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
-<<<<<<< Updated upstream
-        <HeaderNavButtonLogIn class="md:block hidden" />
-      </div>
-			<div v-else class="flex justify-end gap-2 mx-2">
-        <HeaderAvatar class="md:block hidden" />
-				<HeaderNavButtonLogOut class="md:block hidden" />
-=======
         <HeaderNavButtonLogIn class="sm:hidden md:block" />
       </div>
       <div v-else class="mx-2 flex justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />
         <HeaderNavButtonLogOut class="sm:hidden md:block" />
->>>>>>> Stashed changes
       </div>
     </header>
 

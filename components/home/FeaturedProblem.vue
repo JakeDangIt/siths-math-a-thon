@@ -56,7 +56,9 @@ const randomQuestion = computed(
 
 onMounted(() => {
 	if (window.MathJax) {
+		setTimeout(() => {
 		questionsStore.rerenderMathJax();
+}, 1000)
 	}
 })
 </script>

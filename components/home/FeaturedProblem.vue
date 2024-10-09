@@ -53,4 +53,10 @@ const randomQuestion = computed(
     },
     { immediate: true }
   );
+
+onMounted(() => {
+	if (window.MathJax) {
+		questionsStore.rerenderMathJax();
+	}
+})
 </script>

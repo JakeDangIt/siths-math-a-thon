@@ -30,7 +30,7 @@ Things got a little out of hand from there...
 
 ## Demos
 
-![Demo of Profile Page](https://cdn.discordapp.com/attachments/895126354549440512/1274866650285477971/demo_1.png?ex=66c3cf97&is=66c27e17&hm=9e3a2e1fef277684a961bae63ecacecd22a304e3f67753394ce74b22794acc18&)
+Coming soon...
 
 ### Features
 

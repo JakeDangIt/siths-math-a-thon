@@ -39,18 +39,18 @@ const randomQuestion = computed(
 );
 
 // load questions
-onMounted(async () => {
   watch(
     () => questionsStore.questionData,
     () => {
       if (questionsStore.questionData.length !== 0) {
-        nextTick(() => {
-          // rerender mathjax when the questions are loaded
-          questionsStore.rerenderMathJax();
-        });
+				if (!questionsStore.isLoading) {
+	        nextTick(() => {
+	          // rerender mathjax when the questions are loaded
+	          questionsStore.rerenderMathJax();
+	        });
+				}
       }
     },
     { immediate: true }
   );
-});
 </script>

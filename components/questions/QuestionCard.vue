@@ -43,13 +43,8 @@ function validateAndChangeAnswer() {
   // Only allow numbers and replace non-numeric characters
   const cleanedValue = input.value.replace(/[^0-9]/g, '');
 
-  // Check if cleaned value is different from the original input
-  if (cleanedValue !== input.value) {
-    isInvalid.value = true; // Mark input as invalid
-  } else {
-    isInvalid.value = false; // Input is valid
-  }
-
+  isInvalid.value = (cleanedValue !== input.value);
+  
   input.value = cleanedValue;
 
   const correspondingQuestionIndex = answersStore.answerData.findIndex(

@@ -1,23 +1,20 @@
 <template>
   <div>
-    <!-- featured problem, which is just a random problem from the list of questions -->
+     <!-- featured problem, which is just a random problem from the list of questions -->
     <Card class="flex h-full flex-col">
       <CardHeader>
         <CardTitle>Featured Problem</CardTitle>
       </CardHeader>
-      <CardContent
-        v-if="!questionsStore.isLoading"
-        class="flex h-full flex-col justify-between"
-      >
+      <CardContent v-if="!questionsStore.isLoading" class="flex h-full flex-col justify-between">
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
-          <span>{{ randomQuestion?.content }}</span>
+          <span v-html="randomQuestion?.content"></span>
         </div>
 
         <!-- solve now button that goes to /questions -->
-        <nuxt-link to="/questions"
-          ><Button class="w-full">Solve Now</Button></nuxt-link
-        >
+        <nuxt-link to="/questions">
+          <Button class="w-full">Solve Now</Button>
+        </nuxt-link>
       </CardContent>
 
       <CardContent v-else>
@@ -29,36 +26,32 @@
 </template>
 
 <script setup>
-import { rand } from '@vueuse/core';
 const questionsStore = useQuestionsStore();
 
 // random question
-const randomQuestion = computed(
-  () =>
-    questionsStore.questionData[rand(0, questionsStore.questionData.length - 1)]
+const randomQuestion = computed(() => {
+  return questionsStore.questionData[
+    Math.floor(Math.random() * questionsStore.questionData.length)
+  ];
+});
+
+// rerender mathjax when question data changes
+watch(
+  () => questionsStore.questionData,
+  async () => {
+    if (questionsStore.questionData.length > 0 && !questionsStore.isLoading) {
+      await nextTick();
+      await questionsStore.rerenderMathJax();
+    }
+  },
+  { immediate: true }
 );
 
-// load questions
-  watch(
-    () => questionsStore.questionData,
-    () => {
-      if (questionsStore.questionData.length !== 0) {
-				if (!questionsStore.isLoading) {
-	        nextTick(() => {
-	          // rerender mathjax when the questions are loaded
-	          questionsStore.rerenderMathJax();
-	        });
-				}
-      }
-    },
-    { immediate: true }
-  );
-
-onMounted(() => {
-	if (window.MathJax) {
-		nextTick(() => {
-      questionsStore.rerenderMathJax();
-    });
-	}
-})
+// rerender mathjax when component is mounted
+onMounted(async () => {
+  if (window.MathJax) {
+    await nextTick();
+    questionsStore.rerenderMathJax();
+  }
+});
 </script>

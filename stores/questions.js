@@ -11,14 +11,13 @@ export const useQuestionsStore = defineStore('questions', () => {
     const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
     questionData.value = questions.value;
+    await rerenderMathJax();
   }
 
   // rerender MathJax, really for route changes or if you flip through the tabs
-  function rerenderMathJax() {
+  async function rerenderMathJax() {
     if (window.MathJax) {
-      MathJax.typesetPromise().then(() => {
-        isLoading.value = false;
-      });
+      await MathJax.typesetPromise();
     }
   }
 
@@ -29,11 +28,9 @@ export const useQuestionsStore = defineStore('questions', () => {
     script.async = true;
     document.head.appendChild(script);
 
-    script.onload = () => {
-      rerenderMathJax();
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 1000);
+    script.onload = async () => {
+      await rerenderMathJax();
+      isLoading.value = false;
     };
 
     script.onerror = () => {
@@ -47,13 +44,8 @@ export const useQuestionsStore = defineStore('questions', () => {
 
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
-    await getQuestions();
     getMathJax();
-
-    watch(questionData.value, () => {
-      rerenderMathJax();
-      console.log(questionData.value);
-    });
+    await getQuestions();
   });
 
   return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };

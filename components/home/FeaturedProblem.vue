@@ -9,7 +9,7 @@
         v-if="!questionsStore.isLoading"
         class="flex h-full flex-col justify-between"
       >
-        <div class="mb-4 flex flex-col gap-2">
+        <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span>{{ randomQuestion?.content }}</span>
         </div>
@@ -56,9 +56,9 @@ const randomQuestion = computed(
 
 onMounted(() => {
 	if (window.MathJax) {
-		setTimeout(() => {
-		questionsStore.rerenderMathJax();
-}, 1000)
+		nextTick(() => {
+      questionsStore.rerenderMathJax();
+    });
 	}
 })
 </script>

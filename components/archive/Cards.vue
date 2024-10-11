@@ -4,8 +4,8 @@
     class="mx-2 flex flex-col flex-wrap items-center justify-center gap-4 lg:flex-row"
     v-if="archiveStore.isLoading"
   >
-    <Skeleton class="h-60 lg:w-1/3" />
-    <Skeleton class="h-60 lg:w-1/3" />
+    <Skeleton class="h-60 w-4/5 lg:w-1/3" />
+    <Skeleton class="h-60 w-4/5 lg:w-1/3" />
   </div>
 
   <!-- once loading is complete, show the archive cards -->

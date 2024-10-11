@@ -1,5 +1,5 @@
 <template>
-  <Card class="h-fit lg:w-1/3">
+  <Card class="h-fit md:w-4/5 lg:w-1/3">
     <!-- card  -->
     <CardHeader>
       <CardTitle>Math-a-Thon {{ year }}</CardTitle>
@@ -8,20 +8,13 @@
       <!-- accordion for the files -->
       <Accordion type="single" collapsible>
         <!-- each item has to have a value of 'item-' and a number -->
-        <AccordionItem
-          v-for="(week, index) in files"
-          :value="'item-' + (index + 1)"
-        >
+        <AccordionItem v-for="(week, index) in files" :value="'item-' + (index + 1)">
           <AccordionTrigger class="text-lg" v-if="week.files.length > 0">{{
             week.week
           }}</AccordionTrigger>
           <AccordionContent>
             <!-- link to download -->
-            <ArchiveDownloadLink
-              v-for="file in week.files"
-              :id="file.id"
-              :file="file"
-            />
+            <ArchiveDownloadLink v-for="file in week.files" :id="file.id" :file="file" />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

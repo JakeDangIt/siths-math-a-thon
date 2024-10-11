@@ -26,11 +26,11 @@
             <p class="text-sm text-muted-foreground">Points</p>
           </div>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-2">
           <div
             v-for="(avatar, index) in leaderboardStore.top3Avatars"
             :key="index"
-            class="flex items-center justify-between"
+            class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2"
           >
             <div class="flex items-center space-x-2">
               <Avatar>

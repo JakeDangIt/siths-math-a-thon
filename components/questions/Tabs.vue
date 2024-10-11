@@ -11,7 +11,7 @@
     <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
     <Tabs
       :default-value="1"
-      class="mx-2 lg:mx-auto lg:w-2/3"
+      class="mx-2 md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
       :class="questionsStore.isLoading ? 'opacity-0' : ''"
       @update:model-value="onTabChange"
     >

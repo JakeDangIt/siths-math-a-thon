@@ -1,7 +1,7 @@
 <template>
   <!-- if you're logged in, but it should redirect to login -->
   <div v-if="user" class="flex flex-col justify-center gap-8 lg:flex-row">
-    <Card class="mx-4 lg:w-1/2">
+    <Card class="mx-4 md:mx-auto md:w-4/5 lg:w-1/2">
       <CardHeader class="flex">
         <div class="flex justify-between">
           <!-- header with name and avatar -->

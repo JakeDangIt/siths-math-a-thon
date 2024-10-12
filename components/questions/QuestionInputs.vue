@@ -8,24 +8,13 @@
 
     <div>
       <Label for="title">Content</Label>
-      <Input
-        id="title"
-        :placeholder="questionInfo.content"
-        v-model="content"
-      ></Input>
+      <Input id="title" :placeholder="questionInfo.content" v-model="content"></Input>
 
       <Label for="title">Author</Label>
-      <Input
-        id="title"
-        :placeholder="questionInfo.author"
-        v-model="author"
-      ></Input>
+      <Input id="title" :placeholder="questionInfo.author" v-model="author"></Input>
     </div>
-    <Button
-      :disabled="author == '' || content == '' || createLoading"
-      @click="createOrUpdateQuestion"
-      >Confirm Changes</Button
-    >
+    <Button :disabled="author == '' || content == '' || createLoading" @click="createOrUpdateQuestion">Confirm
+      Changes</Button>
   </div>
 </template>
 
@@ -63,63 +52,41 @@ async function createOrUpdateQuestion() {
   try {
     createLoading.value = true;
 
-    // like the actual changes
     const confirmedChanges = {
-      ...changes.value,
+      title: title.value,
       content: content.value,
       author: author.value,
-      title: title.value,
+      week: String(questionInfo.value.week),
+      number: String(questionInfo.value.number),
+      _type: 'questions',
     };
 
-    // query to get the question
-    const QUESTIONS_QUERY = groq`*[_type == "questions" && week == '${questionInfo.value.week}' && number == '${questionInfo.value.number}'][0]`;
-    const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
+    const response = await $fetch('/api/questions', {
+      method: 'POST',
+      body: {
+        changes: confirmedChanges,
+        questionInfo: questionInfo.value,
+      },
+    });
 
-    const existingQuestion = questions.value;
-
-    // if the question exists, update it, otherwise create it
-    if (existingQuestion) {
-      await sanity.client
-        .patch(existingQuestion._id)
-        .set({
-          title: changes.value.title.value,
-          content: changes.value.content,
-          author: changes.value.author.value,
-        })
-        .commit();
-
-        // update the question in the store as well
-      const questionIndex = questionsStore.questionData.findIndex(
-        (question) =>
-          question.week == questionInfo.value.week &&
-          question.number == questionInfo.value.number
+    if (response.status === 'success') {
+      toastStore.changeToast(
+        'Question changed successfully',
+        `Question ${changes.value.number} for week ${changes.value.week} has been changed successfully`
       );
 
-      questionsStore.questionData[questionIndex] = { ...changes.value };
+      content.value = '';
+      author.value = '';
+      questionInfo.value = confirmedChanges;
     } else {
-      await sanity.client.create(changes.value);
-      questionsStore.questionData.push(confirmedChanges);
+      toastStore.changeToast('Error', response.message);
     }
 
-    // update on the client side as well
-    questionInfo.value = { ...changes.value };
-
-    // rerender MathJax after a second to make sure it looks right
-    setTimeout(() => {
-      questionsStore.rerenderMathJax();
-    }, 1000);
-
-    // clear the inputs
-    content.value = '';
-    author.value = '';
-
-    toastStore.changeToast(
-      'Question changed successfully',
-      `Question ${changes.value.number} for week ${changes.value.week} has been changed successfully`
-    );
     createLoading.value = false;
-  } catch (error) {
-    toastStore.changeToast('Error changing question', error.message);
+  } catch (err) {
+    toastStore.changeToast('Error changing question', err.message);
+    createLoading.value = false;
   }
 }
+
 </script>

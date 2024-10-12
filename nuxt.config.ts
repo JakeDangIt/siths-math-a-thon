@@ -60,10 +60,20 @@ export default defineNuxtConfig({
       exclude: [],
     },
   },
-  sanity: {
-    projectId: 'ferer2d9',
-    dataset: 'production',
-    token: import.meta.env.SANITY_TOKEN,
-    ignoreBrowserTokenWarning: true,
-  },
+  runtimeConfig: {
+    sanity: {
+      token: process.env.SANITY_TOKEN,
+      projectId: 'ferer2d9',
+      dataset: 'production',
+      useCdn: true,
+    },
+    public: {
+      sanity: {
+        projectId: 'ferer2d9',
+        dataset: 'production',
+        useCdn: true,
+      }
+    },
+    sanityToken: process.env.SANITY_TOKEN,
+  }
 });

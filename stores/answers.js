@@ -125,8 +125,6 @@ export const useAnswersStore = defineStore('answers', () => {
       return;
     }
 
-    console.log(data);
-
     if (data.length > 0) {
       answerData.value = data[0].answers;
       // if the number of questions has changed, make blank answers for the new questions

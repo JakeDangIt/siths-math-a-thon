@@ -23,8 +23,6 @@ const props = defineProps(['questionInfo']);
 const questionInfo = ref(props.questionInfo);
 
 const toastStore = useToastStore();
-const questionsStore = useQuestionsStore();
-const sanity = useSanity();
 
 const createLoading = ref(false);
 

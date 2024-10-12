@@ -110,14 +110,21 @@ onMounted(async () => {
   );
 
   // watch if user logs in, set the interval to check for session expiration
-  watch(user, (newValue) => {
-    if (newValue) {
+  watch(user, async (newUser) => {
+    const answersStore = useAnswersStore();
+    if (newUser) {
       // Set up activity listeners to track user activity
       setupActivityListeners();
       // Periodically check for session expiration every 30 seconds
       const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+
+      await answersStore.retrieveAnswers();
     }
-  });
+    else {
+      answersStore.answerData = [];
+    }
+  })
+
 
   isLoading.value = false;
 });
@@ -131,19 +138,16 @@ onUnmounted(() => {
 </script>
 
 <template>
+
   <Head>
     <Title>SITHS Math-a-Thon</Title>
 
     <!-- meta -->
     <Meta name="application-name" content="SITHS Math-a-Thon" />
-    <Meta
-      name="description"
-      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity"
-    />
-    <Meta
-      name="keywords"
-      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School"
-    />
+    <Meta name="description"
+      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
+    <Meta name="keywords"
+      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School" />
     <Meta name="author" content="SITHS" />
     <Meta name="robots" content="index, follow" />
     <Meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -157,8 +161,7 @@ onUnmounted(() => {
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </Head>
 
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 

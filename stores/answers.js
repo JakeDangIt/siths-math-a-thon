@@ -125,6 +125,8 @@ export const useAnswersStore = defineStore('answers', () => {
       return;
     }
 
+    console.log(data);
+
     if (data.length > 0) {
       answerData.value = data[0].answers;
       // if the number of questions has changed, make blank answers for the new questions
@@ -147,42 +149,29 @@ export const useAnswersStore = defineStore('answers', () => {
     }
   }
 
-  onMounted(async () => {
-    // wait for questions to load, then create the answer data
-    watch(
-      () => questionsStore.isLoading,
-      async (newIsLoading) => {
-        if (!newIsLoading) {
-          questionsStore.questionData.forEach((question) => {
-            answerData.value.push({
-              week: question.week,
-              question: question.number,
-              answer: '',
-            });
+  // wait for questions to load, then create the answer data
+  watch(
+    () => questionsStore.isLoading,
+    async (newIsLoading) => {
+      if (!newIsLoading) {
+        questionsStore.questionData.forEach((question) => {
+          answerData.value.push({
+            week: question.week,
+            question: question.number,
+            answer: '',
           });
+        });
 
-          // if the user is logged in, retrieve their answers and update the answer data
-          if (user.value) {
-            await retrieveAnswers();
-          }
-          getAnswerLoading.value = false;
-        }
-      },
-      { immediate: true }
-    );
-
-    // watch for when the user logs in and out, then retrieve their answers
-    watch(
-      () => user.value,
-      async (newUser) => {
-        if (newUser) {
+        // if the user is logged in, retrieve their answers and update the answer data
+        if (user.value) {
+          getAnswerLoading.value = true;
           await retrieveAnswers();
-        } else {
-          answerData.value = [];
         }
+        getAnswerLoading.value = false;
       }
-    );
-  });
+    },
+    { immediate: true }
+  );
 
   return {
     answerData,

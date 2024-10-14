@@ -2,6 +2,7 @@
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 await preloadComponents('Icon');
+import { SpeedInsights } from '@vercel/speed-insights/vue';
 import { useToast } from '@/components/ui/toast/use-toast';
 
 // toast
@@ -179,6 +180,7 @@ onUnmounted(() => {
 
   <!-- show mobile if mobile screen, show default if larger -->
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
+    <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
     <NuxtPage class="py-4 lg:py-8" />
     <Toaster />

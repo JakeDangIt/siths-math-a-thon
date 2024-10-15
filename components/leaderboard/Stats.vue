@@ -1,19 +1,13 @@
 <template>
   <!-- if submitted and checked, show all your stats in a table and graph -->
-  <div
-    v-if="hasSubmitted && answersHaveBeenChecked"
-    class="mx-2 md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-2/5"
-  >
+  <div v-if="hasSubmitted && answersHaveBeenChecked" class="mx-2 md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-2/5">
     <div>
       <Card>
         <CardHeader>
           <CardTitle>Total Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <div
-            v-if="leaderboardStore.userAnswers.length == 0"
-            class="space-y-1"
-          >
+          <div v-if="leaderboardStore.userAnswers.length == 0" class="space-y-1">
             <Skeleton class="h-6 w-1/2"></Skeleton>
             <Skeleton class="h-6 w-1/2"></Skeleton>
           </div>
@@ -51,10 +45,7 @@
       <TabsList class="mb-4 w-full">
         <Carousel class="relative mx-auto w-4/5">
           <CarouselContent>
-            <CarouselItem
-              v-for="(weekPair, index) in presentWeekNames"
-              :key="index"
-            >
+            <CarouselItem v-for="(weekPair, index) in presentWeekNames" :key="index">
               <TabsList class="grid w-full grid-cols-2">
                 <TabsTrigger :value="weekPair[0]">
                   <p>Week {{ weekPair[0] }}</p>
@@ -72,8 +63,7 @@
 
       <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]">
         <Table>
-          <TableCaption v-if="weeksAnswers(weekNames[index])"
-            >Your answers for Week {{ weekNames[index] }}
+          <TableCaption v-if="weeksAnswers(weekNames[index])">Your answers for Week {{ weekNames[index] }}
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -83,20 +73,21 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow
-              v-if="weeksAnswers(weekNames[index])"
-              v-for="question in weeksAnswers(weekNames[index])"
-            >
+            <TableRow v-if="weeksAnswers(weekNames[index])"
+              v-for="question in weeksAnswers(weekNames[index]).slice(0, -1)">
               <TableCell>{{ question.question }}</TableCell>
               <TableCell>{{
                 formattedResponse(question.submittedAnswer, question.isCorrect)
               }}</TableCell>
               <TableCell>{{ question.submittedAnswer }}</TableCell>
+              <TableRow>
+                <TableCell>Total</TableCell>
+                <TableCell></TableCell>
+                <TableCell>{{ weeksAnswers(weekNames[index]).at(-1).submittedAnswer }}</TableCell>
+              </TableRow>
             </TableRow>
             <TableRow v-else>
-              <TableCell colspan="3"
-                >No answers submitted for this set of questions</TableCell
-              >
+              <TableCell colspan="3">No answers submitted for this set of questions</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -173,9 +164,7 @@ function formattedResponse(submittedAnswer, isCorrect) {
     return 'Omitted';
   } else if (isCorrect) {
     return 'Correct';
-  } else if (isCorrect == '') {
-    return '';
-  } else {
+  } else if (!isCorrect) {
     return 'Incorrect';
   }
 }

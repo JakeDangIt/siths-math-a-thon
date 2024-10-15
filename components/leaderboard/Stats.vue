@@ -80,11 +80,11 @@
                 formattedResponse(question.submittedAnswer, question.isCorrect)
               }}</TableCell>
               <TableCell>{{ question.submittedAnswer }}</TableCell>
-              <TableRow>
+            </TableRow>
+            <TableRow v-if="weeksAnswers(weekNames[index])">
                 <TableCell>Total</TableCell>
                 <TableCell></TableCell>
                 <TableCell>{{ weeksAnswers(weekNames[index]).at(-1).submittedAnswer }}</TableCell>
-              </TableRow>
             </TableRow>
             <TableRow v-else>
               <TableCell colspan="3">No answers submitted for this set of questions</TableCell>

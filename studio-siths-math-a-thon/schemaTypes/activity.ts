@@ -6,12 +6,12 @@ export const activityType = defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'title',
-      type: 'string',
-    }),
-    defineField({
       name: 'content',
       type: 'string',
     }),
+    defineField({
+      name: 'date',
+      type: 'datetime',
+    })
   ],
 })

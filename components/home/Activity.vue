@@ -6,10 +6,19 @@
         <CardTitle>Recent Activity</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
-          <p>Nothing has happened. I am alone.</p>
+        <div v-for="activity in activityStore.activityData" className="space-y-2">
+          <p>{{formatDate(activity.date)}}</p>
+          <p>{{activity.content}}</p>
         </div>
       </CardContent>
     </Card>
   </div>
 </template>
+
+<script setup>
+const activityStore = useActivityStore();
+
+function formatDate(date) {
+  return new Date(date).toLocaleString().split(',')[0].replaceAll('/', '-')
+}
+</script>

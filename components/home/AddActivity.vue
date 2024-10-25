@@ -16,29 +16,20 @@
         </DialogDescription>
       </DialogHeader>
       <div>
-        <!-- <Accordion type="multiple" collapsible class="grid grid-cols-2 gap-x-8">
-          <AccordionItem
-            v-for="index in String(week).includes('Bonus') ? 12 : 20"
-            :key="index"
-            :value="'item-' + index"
-          >
-            <AccordionTrigger>Question {{ index }}</AccordionTrigger>
+        <Accordion type="multiple" collapsible>
+          <AccordionItem v-for="activity in activityStore.activityData.slice(0, 3)" :key="index"
+            :value="'item-' + index">
+            <AccordionTrigger>{{ activity.date }}</AccordionTrigger>
             <AccordionContent>
-              <QuestionsQuestionInputs
-                :questionInfo="
-                  questionsStore.questionData.find(
-                    (question) =>
-                      question.week == week && question.number == index
-                  ) || { week: week, number: index }
-                "
-              />
+              <Input :placeholder="activity.content" />
             </AccordionContent>
           </AccordionItem>
-        </Accordion> -->
+        </Accordion>
       </div>
     </DialogScrollContent>
   </Dialog>
 </template>
 
 <script setup>
+const activityStore = useActivityStore();
 </script>

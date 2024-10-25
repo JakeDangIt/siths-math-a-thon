@@ -10,7 +10,7 @@
           <p><span class="font-bold">{{ formatDate(activity.date) }}</span> - {{ activity.content }}</p>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter class="flex gap-2">
         <Dialog>
           <DialogTrigger>
             <Button>View All</Button>

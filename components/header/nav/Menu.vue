@@ -5,7 +5,7 @@ const route = useRoute();
 const currentRoutePath = computed(() => route.path);
 const currentRouteName = computed(() =>
   currentRoutePath.value == '/'
-    ? 'SITHS Math-a-Thon'
+    ? 'Math-a-Thon'
     : routes.find((route) => route?.routePath == currentRoutePath.value)
         ?.routeName
 );

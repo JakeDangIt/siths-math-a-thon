@@ -26,6 +26,9 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/math-a-thon-icon.webp' },
       ],
+      htmlAttrs: {
+        lang: 'en'
+      }
     },
   },
   icon: {

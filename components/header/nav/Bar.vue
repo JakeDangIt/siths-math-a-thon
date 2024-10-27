@@ -22,9 +22,10 @@ const currentRouteName = computed(() =>
         to="/"
         class="flex h-full w-fit items-center"
         draggable="false"
+        aria-label="Home"
       >
         <div class="my-2 mr-2 h-full rounded-md bg-theme-dark-blue">
-          <img src="/math-a-thon-icon.webp" class="h-full" />
+          <NuxtImg src="/math-a-thon-icon.png" alt="Math-a-Thon logo" width="40px"height="40px" />
         </div>
       </nuxt-link>
       <p class="text-md lg:text-xl">{{ currentRouteName }}</p>

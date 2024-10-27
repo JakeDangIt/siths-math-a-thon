@@ -66,7 +66,7 @@
                   : 'translate-x-0'
               "
             >
-              <Button @click="scrollDown()">
+              <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon
                   name="material-symbols:arrow-downward"
                   class="h-full w-6"
@@ -78,7 +78,7 @@
               />
               <!-- to save space, 'Answers' is omitted on mobile -->
               <SheetTrigger
-                ><Button
+                ><Button aria-label="Preview Answers"
                   >Preview {{ width > 1024 ? 'Answers' : '' }}</Button
                 ></SheetTrigger
               >
@@ -92,7 +92,7 @@
                   : 'translate-x-[14rem] lg:translate-x-[-14rem]'
               "
             >
-              <Button @click="scrollUp()">
+              <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon
                   name="material-symbols:arrow-upward"
                   class="h-full w-6"
@@ -106,7 +106,7 @@
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button>Preview Answers</Button></SheetTrigger>
+          <SheetTrigger><Button aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
 
           <!-- preview answer content -->
           <SheetContent>
@@ -159,7 +159,7 @@
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
                   </p>
-                  <button
+                  <button aria-label="Remove Answer"
                     @click="removeAnswer(weekNames[index], answer.question)"
                     class="flex items-center opacity-0 transition-all group-hover:opacity-100"
                   >
@@ -174,7 +174,7 @@
                 <div
                   class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto"
                 >
-                  <Button
+                  <Button aria-label="Save Answers"
                     @click="saveAnswers()"
                     variant="secondary"
                     :disabled="
@@ -186,7 +186,7 @@
                   >
                     Save Answers
                   </Button>
-                  <Button
+                  <Button aria-label="Submit Answers"
                     @click="
                       submitAnswers(
                         weekNames[index],

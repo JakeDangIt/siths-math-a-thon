@@ -1,5 +1,5 @@
 <template>
-  <Card class="h-fit md:w-4/5 lg:w-1/3">
+  <Card class="h-fit w-full md:w-4/5 lg:w-1/3">
     <!-- card  -->
     <CardHeader>
       <CardTitle>Math-a-Thon {{ year }}</CardTitle>

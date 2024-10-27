@@ -8,11 +8,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <h3
+  <h2
     :class="
       cn('text-2xl font-semibold leading-none tracking-tight', props.class)
     "
   >
     <slot />
-  </h3>
+  </h2>
 </template>

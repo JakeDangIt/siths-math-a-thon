@@ -82,6 +82,7 @@ html {
   color: #252525;
   padding-bottom: env(safe-area-inset-bottom);
   height: 100dvh;
+  overscroll-behavior: contain;
 }
 
 input[type='number']::-webkit-inner-spin-button,

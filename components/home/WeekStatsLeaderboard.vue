@@ -55,8 +55,8 @@
         </div>
       </CardContent>
     </Card>
-    <Card v-else class="flex h-56 w-full lg:h-full">
-      <Skeleton class="h-full w-full" />
+    <Card v-else>
+      <Skeleton class="h-60 w-full" />
     </Card>
   </div>
 </template>

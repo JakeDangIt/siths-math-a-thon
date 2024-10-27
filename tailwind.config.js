@@ -55,8 +55,8 @@ module.exports = {
 
         // my colors
         black: '#1B1212',
-        'theme-red': '#CB5D56',
-        'theme-dark-red': '#b6534d',
+        'theme-red': '#b6463e',
+        'theme-dark-red': '#973f3b',
         'theme-blue': '#B1BAD1',
         'theme-dark-blue': '#8E95A7',
         bronze: '#D9A962',

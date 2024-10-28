@@ -146,15 +146,17 @@ const presentWeekNames = computed(() => {
 function weeksAnswers(weekName) {
   const weekAnsweredQuestions = leaderboardStore.userAnswers
     .find((week) => week.correct_answers[0].week == weekName)
-    ?.correct_answers.sort((a, b) => a.question - b.question);
-  const totalCorrect = {
+    ?.correct_answers.sort((a, b) => a.question - b.question) || [];
+
+  const totalCorrect = weekAnsweredQuestions ? {
     question: 'Total',
     submittedAnswer: weekAnsweredQuestions.filter(
       (question) => question.isCorrect
     ).length,
     isCorrect: '',
-  };
+  } : [];
 
+  // last row is total, number of correct answers
   return [...weekAnsweredQuestions, totalCorrect];
 }
 

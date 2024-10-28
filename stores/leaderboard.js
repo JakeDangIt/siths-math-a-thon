@@ -70,30 +70,53 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   // get the top 3 user avatars
   async function getTop3UserAvatars() {
-    top10.value.slice(0, 3).forEach(async (user, index) => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('avatar, name')
-        .eq('uid', user.uid);
+    // Extract the top 3 UIDs
+    const top3UIDs = top10.value.slice(0, 3).map(user => user.uid);
 
-      if (data[0].avatar) {
-        const { data: avatarData, error: avatarError } = await supabase.storage
-          .from('avatars')
-          .download(data[0].avatar);
-        top3Avatars.value[index] = {
-          name: data[0].name,
-          image: URL.createObjectURL(avatarData),
-        };
-      } else {
-        top3Avatars.value[index] = {
-          name: data[0].name,
-          image: null,
-        };
-      }
-    });
+    // Query Supabase once to get all top 3 profiles
+    const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('avatar, name, uid')
+        .in('uid', top3UIDs);
+
+    if (error) {
+        console.error('Error fetching profiles:', error);
+        avatarLoading.value = false;
+        return;
+    }
+
+    // Map each profile to top3Avatars with avatar download if it exists
+    for (let i = 0; i < profiles.length; i++) {
+        const profile = profiles[i];
+        if (profile.avatar) {
+            const { data: avatarData, error: avatarError } = await supabase
+                .storage
+                .from('avatars')
+                .download(profile.avatar);
+
+            if (avatarError) {
+                console.error('Error downloading avatar:', avatarError);
+                top3Avatars.value[i] = {
+                    name: profile.name,
+                    image: null,
+                };
+            } else {
+                top3Avatars.value[i] = {
+                    name: profile.name,
+                    image: URL.createObjectURL(avatarData),
+                };
+            }
+        } else {
+            top3Avatars.value[i] = {
+                name: profile.name,
+                image: null,
+            };
+        }
+    }
 
     avatarLoading.value = false;
-  }
+}
+
 
   // get your answers
   async function getUserAnswers() {

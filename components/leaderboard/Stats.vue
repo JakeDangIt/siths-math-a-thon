@@ -101,14 +101,14 @@
       <CardHeader>
         <CardTitle>Total Statistics</CardTitle>
       </CardHeader>
-      <CardContent v-if="!leaderboardStore.answersLoading">
+      <CardContent v-if="leaderboardStore.answersLoading">
+        <Skeleton class="h-6 w-1/2"></Skeleton>
+      </CardContent>
+      <CardContent v-else>
         <p v-if="!hasSubmitted">You have not submitted any answers yet.</p>
         <p v-else-if="!answersHaveBeenChecked">
           Please wait until your answers have been checked.
         </p>
-      </CardContent>
-      <CardContent v-else>
-        <Skeleton class="h-6 w-1/2"></Skeleton>
       </CardContent>
     </Card>
   </div>

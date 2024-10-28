@@ -13,10 +13,8 @@
         </SheetDescription>
       </SheetHeader>
       <div class="flex flex-col items-center">
-        <div class="flex items-center p-1 gap-2 w-full" v-for="(activity, index) in last3Activities"
-          :key="index">
+        <div class="flex items-center p-1 gap-2 w-full" v-for="(activity, index) in last3Activities" :key="index">
           <p>{{ formatDate(activity.date) }}</p>
-          <!-- Use v-model to bind the input to activity.content -->
           <Input v-model="activity.content" placeholder="Enter activity content" />
         </div>
         <Button @click="addActivity">
@@ -32,35 +30,71 @@
 
 <script setup>
 const activityStore = useActivityStore();
-const originalActivities = ref([]);
 const last3Activities = ref([...activityStore.activityData.slice(0, 3)]);
+const originalActivities = ref([]);
 
-// Format date to a readable string
+// Copy the initial state for change tracking
+onMounted(() => {
+  originalActivities.value = JSON.parse(JSON.stringify(last3Activities.value));
+});
+
 function formatDate(date) {
   return new Date(date).toLocaleString().split(',')[0];
 }
 
-// Function to add a new blank activity to the list
 function addActivity() {
-  const newActivity = { date: new Date(), content: '' };
+  const newActivity = { date: new Date(), content: '', isNew: true };
   last3Activities.value.push(newActivity);
 }
 
-// Function to save activities, updating the store if required
-function saveActivities() {
-  activityStore.activityData = last3Activities.value;
-  console.log(originalActivities)
-  originalActivities.value.forEach((activity) => {
-    console.log(activity.content)
-    if (activity.content !== last3Activities.value.find((originalActivity) => activity._id == originalActivity._id).content) {
-      console.log(`Activity updated: ${activity.content} -> ${last3Activities.value[index].content}`);
-    }
+// Function to check for changes and save updated or new activities
+async function saveActivities() {
+  const changes = last3Activities.value.filter((activity, index) => {
+    const original = originalActivities.value[index];
+    return (
+      activity.isNew || // New activities
+      (original && activity.content !== original.content) // Edited activities
+    );
   });
+  console.log(changes)
 
-  console.log('Activities saved:', last3Activities.value);
+  return
+  // Process changes by making API calls
+  const results = await Promise.all(changes.map(async (activity) => {
+    if (activity.isNew) {
+      // Create new activity
+      const response = await fetch('/api/activity', {
+        method: 'POST',
+        body: JSON.stringify({
+          changes: {
+            content: activity.content,
+            date: activity.date,
+          }
+        }),
+      });
+      return response.json();
+    } else {
+      // Update existing activity
+      const response = await fetch('/api/activity', {
+        method: 'PUT',
+        body: JSON.stringify({
+          _id: activity._id,
+          changes: {
+            content: activity.content,
+            date: activity.date,
+          }
+        }),
+      });
+      return response.json();
+    }
+  }));
+
+  console.log('Save Results:', results);
+
+  // After successful save, update the original state and remove the isNew flag
+  last3Activities.value.forEach(activity => {
+    activity.isNew = false;
+  });
+  originalActivities.value = JSON.parse(JSON.stringify(last3Activities.value));
 }
-
-onMounted(() => {
-  originalActivities.value = [...activityStore.activityData.slice(0, 3)];
-})
 </script>

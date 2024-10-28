@@ -26,7 +26,7 @@
             </div>
           </DialogScrollContent>
         </Dialog>
-        <HomeAddActivity v-if="roleStore.role == 'admin'" />
+        <HomeActivityAddActivity v-if="roleStore.role == 'admin'" />
       </CardFooter>
     </Card>
   </div>

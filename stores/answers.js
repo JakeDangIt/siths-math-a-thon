@@ -3,6 +3,7 @@ export const useAnswersStore = defineStore('answers', () => {
   const user = useSupabaseUser();
   const toastStore = useToastStore();
   const questionsStore = useQuestionsStore();
+  const leaderboardStore = useLeaderboardStore();
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
@@ -62,11 +63,7 @@ export const useAnswersStore = defineStore('answers', () => {
   async function submitAnswers(week, answers) {
     await saveAnswers();
 
-    const { data: submittedData } = await supabase
-      .from('submitted_answers')
-      .select('*')
-      .eq('uid', user.value.id)
-      .eq('submitted_week', week);
+    const submittedData = leaderboardStore.userAnswers.filter((answer) => answer.week == week);
 
     if (submittedData.length > 0) {
       // can't submit more than once per hour

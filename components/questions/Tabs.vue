@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- skeleton for the question cards and button -->
-    <div v-if="questionsStore.isLoading" class="mx-auto space-y-2 lg:w-2/3">
+    <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
       <Skeleton class="mx-2 mb-4 h-10" />
       <Skeleton class="mx-2 h-32" />
       <Skeleton class="mx-2 h-32" />
@@ -223,6 +223,7 @@ const toastStore = useToastStore();
 const roleStore = useRoleStore();
 
 const user = useSupabaseUser();
+const mathJaxLoaded = computed(() => MathJax !== undefined);
 
 // track if answers have changed
 const initialAnswers = ref([]);
@@ -342,7 +343,7 @@ onMounted(() => {
   // check if far down enough when the user scrolls
   watch(y, () => {
     checkIsFarDownEnough();
-  });
+  }, { immediate: true });
 
   watch(
     () => answersStore.getAnswerLoading,

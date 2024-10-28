@@ -1,7 +1,11 @@
 <template>
   <div class="h-full w-full">
+    <Card v-if="leaderboardStore.top3Avatars.length != 3">
+      <Skeleton class="h-60 w-full" />
+    </Card>
+    
     <!-- card for the top 3 leaderboard -->
-    <Card class="h-full" v-if="leaderboardStore.top3Avatars.length == 3">
+    <Card class="h-full" v-else>
       <CardHeader>
         <CardTitle class="text-center">
           <span v-if="user && leaderboardStore.userPlace">Your Stats & </span
@@ -54,9 +58,6 @@
           </div>
         </div>
       </CardContent>
-    </Card>
-    <Card v-else>
-      <Skeleton class="h-60 w-full" />
     </Card>
   </div>
 </template>

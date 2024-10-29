@@ -2,7 +2,7 @@
   <Sheet>
     <SheetTrigger>
       <Button>
-        <Icon name="material-symbols:add" class="h-5 w-5"></Icon>
+        <Icon name="material-symbols:edit" class="h-5 w-5"></Icon>
       </Button>
     </SheetTrigger>
     <SheetContent>
@@ -43,7 +43,7 @@ function formatDate(date) {
 }
 
 function addActivity() {
-  const newActivity = { date: new Date(), content: '', isNew: true };
+  const newActivity = { date: new Date().toISOString(), content: '', isNew: true, _id: '' };
   last3Activities.value.push(newActivity);
 }
 
@@ -58,34 +58,20 @@ async function saveActivities() {
   });
   console.log(changes)
 
-  return
   // Process changes by making API calls
   const results = await Promise.all(changes.map(async (activity) => {
     if (activity.isNew) {
       // Create new activity
-      const response = await fetch('/api/activity', {
+      const response = await $fetch('/api/activity', {
         method: 'POST',
-        body: JSON.stringify({
-          changes: {
-            content: activity.content,
-            date: activity.date,
-          }
-        }),
-      });
-      return response.json();
-    } else {
-      // Update existing activity
-      const response = await fetch('/api/activity', {
-        method: 'PUT',
-        body: JSON.stringify({
+        body: {
           _id: activity._id,
           changes: {
             content: activity.content,
             date: activity.date,
           }
-        }),
+        },
       });
-      return response.json();
     }
   }));
 

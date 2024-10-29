@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
     const { _id, changes } = body;
 
-    if (_id) {
+    if (_id && _id !== '') {
       await sanityClient
         .patch(_id)
         .set({

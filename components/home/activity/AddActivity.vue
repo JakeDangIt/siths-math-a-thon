@@ -60,19 +60,19 @@ async function saveActivities() {
 
   // Process changes by making API calls
   const results = await Promise.all(changes.map(async (activity) => {
-    if (activity.isNew) {
-      // Create new activity
-      const response = await $fetch('/api/activity', {
-        method: 'POST',
-        body: {
-          _id: activity._id,
-          changes: {
-            content: activity.content,
-            date: activity.date,
-          }
-        },
-      });
-    }
+    // Create new activity
+    const response = await $fetch('/api/activity', {
+      method: 'POST',
+      body: {
+        _id: activity._id,
+        changes: {
+          content: activity.content,
+          date: activity.date,
+        }
+      },
+    });
+
+    console.log('Response:', response);
   }));
 
   console.log('Save Results:', results);

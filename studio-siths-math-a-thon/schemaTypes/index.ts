@@ -1,2 +1,3 @@
 import {questionsType} from './questions'
-export const schemaTypes = [questionsType]
+import { activityType } from './activity'
+export const schemaTypes = [questionsType, activityType]

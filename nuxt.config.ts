@@ -10,14 +10,14 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxt/image',
+    '@nuxt/icon',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/supabase',
+    '@nuxtjs/sanity',
     'shadcn-nuxt',
     '@vueuse/nuxt',
-    '@nuxt/icon',
     '@formkit/auto-animate',
-    '@nuxtjs/supabase',
     '@pinia/nuxt',
-    '@nuxtjs/sanity',
   ],
   app: {
     head: {
@@ -52,6 +52,7 @@ export default defineNuxtConfig({
         'material-symbols:group',
         'material-symbols:mail',
         'material-symbols:folder',
+        'material-symbols:edit',
       ],
     },
   },

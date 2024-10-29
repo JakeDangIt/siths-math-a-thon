@@ -13,24 +13,20 @@ export default defineEventHandler(async (event) => {
       useCdn: false,
     });
 
-    const { changes, questionInfo } = body;
+    const { _id, changes } = body;
 
-    const QUESTIONS_QUERY = `*[_type == "questions" && week == '${questionInfo.week}' && number == '${questionInfo.number}'][0]`;
-    const existingQuestion = await sanityClient.fetch(QUESTIONS_QUERY);
-
-    if (existingQuestion) {
+    if (_id && _id !== '') {
       await sanityClient
-        .patch(existingQuestion._id)
+        .patch(_id)
         .set({
-          title: changes.title,
           content: changes.content,
-          author: changes.author,
+          date: changes.date,
         })
         .commit();
 
       return { status: 'success', message: 'Question updated successfully' };
     } else {
-      await sanityClient.create({...changes, _type: "questions"});
+      await sanityClient.create({...changes, _type: "activity"});
       return { status: 'success', message: 'Question created successfully' };
     }
   } catch (error) {

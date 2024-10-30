@@ -16,7 +16,7 @@ const currentRouteName = computed(() =>
     <!-- header w/ hamburger icon -->
     <header class="flex h-12 items-center justify-between bg-theme-blue">
       <!-- left -->
-      <div class="mx-2 flex h-full items-center">
+      <div class="flex h-full items-center">
         <SheetTrigger aria-label="Menu">
           <!-- hamburger takes time to load but should be fine on initial load -->
           <HeaderHamburgerIcon />
@@ -36,7 +36,7 @@ const currentRouteName = computed(() =>
         <HeaderNavButtonSignUp />
         <HeaderNavButtonLogIn class="sm:hidden md:block" />
       </div>
-      <div v-else class="mx-2 flex justify-end gap-2">
+      <div v-else class="flex justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />
         <HeaderNavButtonLogOut class="sm:hidden md:block" />
       </div>

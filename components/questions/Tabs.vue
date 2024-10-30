@@ -2,17 +2,17 @@
   <div>
     <!-- skeleton for the question cards and button -->
     <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
-      <Skeleton class="mx-2 mb-4 h-10" />
-      <Skeleton class="mx-2 h-32" />
-      <Skeleton class="mx-2 h-32" />
-      <Skeleton class="mx-2 h-10 w-36" />
+      <Skeleton class="mb-4 h-10" />
+      <Skeleton class="h-32" />
+      <Skeleton class="h-32" />
+      <Skeleton class="h-10 w-36" />
     </div>
 
     <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
     <Tabs
       v-else
       :default-value="1"
-      class="mx-2 md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+      class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
       @update:model-value="onTabChange"
     >
       <!-- carousel for the tabs -->

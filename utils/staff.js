@@ -8,7 +8,7 @@ export const staff = [
   },
   {
     name: 'Bridget Feng',
-    title: 'Web Developer & Designer / Project Manager / Consultant',
+    title: 'Consultant',
     email: 'fbridget0404@gmail.com'
   }
 ];

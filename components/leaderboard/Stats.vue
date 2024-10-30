@@ -1,6 +1,6 @@
 <template>
   <!-- if submitted and checked, show all your stats in a table and graph -->
-  <div v-if="hasSubmitted && answersHaveBeenChecked" class="mx-2 md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-2/5">
+  <div v-if="hasSubmitted && answersHaveBeenChecked" class="md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-2/5">
     <div>
       <Card>
         <CardHeader>
@@ -96,7 +96,7 @@
   </div>
 
   <!-- message for when you did submit, but not checked, or just no submit -->
-  <div v-else class="mx-2 md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-1/3">
+  <div v-else class="md:w-4/5 mt-2 space-y-2 lg:mt-0 lg:w-1/3">
     <Card>
       <CardHeader>
         <CardTitle>Total Statistics</CardTitle>

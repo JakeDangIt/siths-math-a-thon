@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-2 md:w-4/5 lg:w-1/2 xl:w-2/5">
+  <div class="md:w-4/5 lg:w-1/2 xl:w-2/5">
     <!-- top 10 on leaderboard -->
     <Card>
       <CardHeader class="mb-2 text-center">

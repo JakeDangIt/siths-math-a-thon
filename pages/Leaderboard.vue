@@ -7,7 +7,7 @@
       </Skeleton>
     </div>
 
-    <div v-else class="flex flex-col justify-center items-center lg:items-start lg:flex-row">
+    <div v-else class="flex flex-col gap-4 justify-center items-center lg:items-start lg:flex-row">
       <LeaderboardTop10 />
       <LeaderboardStats v-if="user" />
     </div>

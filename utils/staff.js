@@ -3,7 +3,12 @@ export const staff = [
   {
     name: 'Jake Deng',
     title:
-      'Web Developer & Designer / Project Manager / The Best Ever in the Whole World',
+      'Web Developer & Designer / Project Manager',
     email: 'jakejdeng@gmail.com',
   },
+  {
+    name: 'Bridget Feng',
+    title: 'Consultant',
+    email: 'fbridget0404@gmail.com'
+  }
 ];

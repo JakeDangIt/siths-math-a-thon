@@ -1,7 +1,7 @@
 <template>
   <!-- tabs -->
   <div class="flex w-full justify-center">
-    <Tabs :default-value="default" class="mx-2 w-full md:w-4/5 lg:w-[600px]">
+    <Tabs :default-value="default" class="w-full md:w-4/5 lg:w-[600px]">
       <!-- triggers on the top -->
       <TabsList class="grid w-full grid-cols-2">
         <TabsTrigger value="signup" @click="navigateTo('/auth/signup')">

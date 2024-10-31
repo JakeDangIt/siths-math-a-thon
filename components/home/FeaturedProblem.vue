@@ -39,7 +39,7 @@ const randomQuestion = computed(() => {
 
 // rerender mathjax when question data changes
 watch(
-  () => questionsStore.questionData,
+  () => [questionsStore.questionData, window.MathJax],
   async () => {
     if (questionsStore.questionData.length > 0 && !questionsStore.isLoading) {
       await nextTick();
@@ -48,4 +48,11 @@ watch(
   },
   { immediate: true }
 );
+
+onMounted(async () => {
+  if (window.MathJax) {
+    await nextTick();
+    await questionsStore.rerenderMathJax();
+  }
+});
 </script>

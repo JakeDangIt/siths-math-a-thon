@@ -1,5 +1,4 @@
 export const useQuestionsStore = defineStore('questions', () => {
-  const toastStore = useToastStore();
 
   // question data and loading state
   const questionData = ref([]);
@@ -21,16 +20,15 @@ export const useQuestionsStore = defineStore('questions', () => {
     }
   }
 
-  watchEffect(async () => {
-    if (questionData.value.length > 0) {
-      await rerenderMathJax();
-      isLoading.value = false;
-    }
-  });
-
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
-    await getQuestions();
+    await getQuestions().then(async () => {
+      await rerenderMathJax();
+      setTimeout(async () => {
+        await rerenderMathJax();
+      }, 100);
+      isLoading.value = false;
+    });
   });
 
   return { questionData, isLoading, getQuestions, rerenderMathJax };

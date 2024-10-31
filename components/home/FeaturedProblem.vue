@@ -48,4 +48,11 @@ watch(
   },
   { immediate: true }
 );
+
+onMounted(async () => {
+  if (window.MathJax) {
+    await nextTick();
+    questionsStore.rerenderMathJax();
+  }
+});
 </script>

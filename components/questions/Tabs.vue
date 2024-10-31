@@ -1,10 +1,7 @@
 <template>
   <div>
     <!-- skeleton for the question cards and button -->
-    <div
-      v-if="questionsStore.isLoading || !mathJaxLoaded"
-      class="mx-auto space-y-2 lg:w-2/3"
-    >
+    <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
       <Skeleton class="mb-4 h-10" />
       <Skeleton class="h-32" />
       <Skeleton class="h-32" />
@@ -12,12 +9,7 @@
     </div>
 
     <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-    <Tabs
-      v-else
-      :default-value="1"
-      class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
-      @update:model-value="onTabChange"
-    >
+    <Tabs v-else :default-value="1" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3" @update:model-value="onTabChange">
       <!-- carousel for the tabs -->
       <Carousel class="relative mx-auto w-2/3">
         <CarouselContent>
@@ -38,82 +30,48 @@
       </Carousel>
 
       <!-- content for the tabs -->
-      <TabsContent
-        v-for="(_, index) in weekNames"
-        :value="weekNames[index]"
-        class="space-y-2"
-      >
+      <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-xl font-bold">
           Week {{ weekNames[index] }} Questions
         </h1>
-        <QuestionsQuestionCard
-          v-for="question in questionsStore.questionData
-            .filter((question) => question.week == weekNames[index])
-            .sort((a, b) => a.number - b.number)"
-          :key="question.number"
-          :question="question.number"
-          :mathContent="question.content"
-          :week="weekNames[index]"
-        />
+        <QuestionsQuestionCard v-for="question in questionsStore.questionData
+          .filter((question) => question.week == weekNames[index])
+          .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
+          :mathContent="question.content" :week="weekNames[index]" />
 
         <!-- preview answer -->
         <Sheet>
           <!-- scroll down button and preview answer button -->
           <div>
-            <div
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
-              :class="
-                isFarDownEnough
+            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+              :class="isFarDownEnough
                   ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
                   : 'translate-x-0'
-              "
-            >
+                ">
               <Button aria-label="Scroll Down" @click="scrollDown()">
-                <Icon
-                  name="material-symbols:arrow-downward"
-                  class="h-full w-6"
-                ></Icon>
+                <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
-              <QuestionsAddQuestion
-                v-if="roleStore.role == 'admin'"
-                :week="weekNames[index]"
-              />
+              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
               <!-- to save space, 'Answers' is omitted on mobile -->
-              <SheetTrigger
-                ><Button aria-label="Preview Answers"
-                  >Preview {{ width > 1024 ? 'Answers' : '' }}</Button
-                >
+              <SheetTrigger><Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
             </div>
 
-            <div
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
-              :class="
-                isFarDownEnough
+            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+              :class="isFarDownEnough
                   ? 'translate-x-0'
                   : 'translate-x-[14rem] lg:translate-x-[-14rem]'
-              "
-            >
+                ">
               <Button aria-label="Scroll Up" @click="scrollUp()">
-                <Icon
-                  name="material-symbols:arrow-upward"
-                  class="h-full w-6"
-                ></Icon>
+                <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <QuestionsAddQuestion
-                v-if="roleStore.role == 'admin'"
-                :week="weekNames[index]"
-              />
+              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
             </div>
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger
-            ><Button aria-label="Preview Answers"
-              >Preview Answers</Button
-            ></SheetTrigger
-          >
+          <SheetTrigger><Button aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
 
           <!-- preview answer content -->
           <SheetContent>
@@ -130,10 +88,7 @@
                 <Carousel class="relative mx-auto w-4/5">
                   <CarouselContent>
                     <!-- paired into week and its bonus -->
-                    <CarouselItem
-                      v-for="(weekPair, index) in presentWeekNames"
-                      :key="index"
-                    >
+                    <CarouselItem v-for="(weekPair, index) in presentWeekNames" :key="index">
                       <TabsList class="grid w-full grid-cols-2">
                         <TabsTrigger :value="weekPair[0]">
                           <p>Week {{ weekPair[0] }}</p>
@@ -150,69 +105,43 @@
               </TabsList>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
-              <TabsContent
-                v-for="(_, index) in weekNames"
-                :value="weekNames[index]"
-                class="grid grid-cols-2 lg:grid-cols-1"
-              >
+              <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
+                class="grid grid-cols-2 lg:grid-cols-1">
                 <!-- each answer, sorted, with a remove button -->
-                <div
-                  v-for="answer in answersStore.answerData
-                    .filter((answer) => answer.week == weekNames[index])
-                    .sort((a, b) => a.question - b.question)"
-                  class="group flex justify-between px-2 hover:bg-slate-200"
-                >
+                <div v-for="answer in answersStore.answerData
+                  .filter((answer) => answer.week == weekNames[index])
+                  .sort((a, b) => a.question - b.question)"
+                  class="group flex justify-between px-2 hover:bg-slate-200">
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
                   </p>
-                  <button
-                    aria-label="Remove Answer"
-                    @click="removeAnswer(weekNames[index], answer.question)"
-                    class="flex items-center opacity-0 transition-all group-hover:opacity-100"
-                  >
-                    <Icon
-                      v-if="answer.answer !== ''"
-                      name="material-symbols:cancel-outline"
-                    ></Icon>
+                  <button aria-label="Remove Answer" @click="removeAnswer(weekNames[index], answer.question)"
+                    class="flex items-center opacity-0 transition-all group-hover:opacity-100">
+                    <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
                   </button>
                 </div>
 
                 <!-- submit and save button -->
-                <div
-                  class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto"
-                >
-                  <Button
-                    aria-label="Save Answers"
-                    @click="saveAnswers()"
-                    variant="secondary"
-                    :disabled="
-                      saveLoading ||
-                      answersStore.answerData.length == 0 ||
-                      !hasAnswersChanged
-                    "
-                    class="w-full"
-                  >
+                <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
+                  <Button aria-label="Save Answers" @click="saveAnswers()" variant="secondary" :disabled="saveLoading ||
+                    answersStore.answerData.length == 0 ||
+                    !hasAnswersChanged
+                    " class="w-full">
                     Save Answers
                   </Button>
-                  <Button
-                    aria-label="Submit Answers"
-                    @click="
-                      submitAnswers(
-                        weekNames[index],
-                        answersStore.answerData.filter(
-                          (answer) => answer.week == weekNames[index]
-                        )
+                  <Button aria-label="Submit Answers" @click="
+                    submitAnswers(
+                      weekNames[index],
+                      answersStore.answerData.filter(
+                        (answer) => answer.week == weekNames[index]
                       )
-                    "
-                    :disabled="
-                      submitLoading ||
+                    )
+                    " :disabled="submitLoading ||
                       answersStore.answerData.filter(
                         (answer) => answer.week == weekNames[index]
                       ).length == 0
-                    "
-                    class="w-full"
-                  >
+                      " class="w-full">
                     Submit Week
                     {{ weekNames[index] }}
                   </Button>
@@ -376,6 +305,11 @@ watch(
 );
 
 onMounted(() => {
+  if (questionsStore.questionData.length !== 0) {
+    nextTick(() => {
+      questionsStore.rerenderMathJax();
+    });
+  }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
 });

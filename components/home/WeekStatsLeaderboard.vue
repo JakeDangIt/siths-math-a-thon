@@ -3,7 +3,7 @@
     <Card v-if="leaderboardStore.top3Avatars.length != 3">
       <Skeleton class="h-60 w-full" />
     </Card>
-    
+
     <!-- card for the top 3 leaderboard -->
     <Card class="h-full" v-else>
       <CardHeader>

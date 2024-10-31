@@ -133,6 +133,17 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     answersLoading.value = false;
   }
 
+  // if you log in and out, update the user answers and place
+  watch(
+    () => user.value,
+    async (newUser) => {
+      if (newUser) {
+        await getUserAnswers();
+        await getUserPlace();
+      }
+    }
+  );
+
   onMounted(async () => {
     // get the leaderboard and avatars
     await retrieveLeaderboard();
@@ -143,17 +154,6 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
       await getUserAnswers();
       await getUserPlace();
     }
-
-    // if you log in and out, update the user answers and place
-    watch(
-      () => user.value,
-      async (newUser) => {
-        if (newUser) {
-          await getUserAnswers();
-          await getUserPlace();
-        }
-      }
-    );
   });
 
   return {

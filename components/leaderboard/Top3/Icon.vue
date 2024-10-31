@@ -51,7 +51,7 @@ const index = ref(props.index + 1);
 const userAvatar = computed(
   () => leaderboardStore.top3Avatars[props.index]?.image
 );
-const firstName = useFirstName(user.value.user_name)
+const firstName = useFirstName(user.value.user_name);
 
 // some stats
 const maxScore = computed(() => top3.value[0].correct_answers);

@@ -8,14 +8,19 @@
     <SheetContent>
       <SheetHeader class="mb-4">
         <SheetTitle>Add Activity</SheetTitle>
-        <SheetDescription>
-          Add and edit the activity section
-        </SheetDescription>
+        <SheetDescription> Add and edit the activity section </SheetDescription>
       </SheetHeader>
       <div class="flex flex-col items-center">
-        <div class="flex items-center p-1 gap-2 w-full" v-for="(activity, index) in last3Activities" :key="index">
+        <div
+          class="flex w-full items-center gap-2 p-1"
+          v-for="(activity, index) in last3Activities"
+          :key="index"
+        >
           <p>{{ formatDate(activity.date) }}</p>
-          <Input v-model="activity.content" placeholder="Enter activity content" />
+          <Input
+            v-model="activity.content"
+            placeholder="Enter activity content"
+          />
         </div>
         <Button @click="addActivity">
           <Icon name="material-symbols:add" class="h-5 w-5"></Icon>
@@ -43,7 +48,12 @@ function formatDate(date) {
 }
 
 function addActivity() {
-  const newActivity = { date: new Date().toISOString(), content: '', isNew: true, _id: '' };
+  const newActivity = {
+    date: new Date().toISOString(),
+    content: '',
+    isNew: true,
+    _id: '',
+  };
   last3Activities.value.push(newActivity);
 }
 
@@ -56,29 +66,31 @@ async function saveActivities() {
       (original && activity.content !== original.content) // Edited activities
     );
   });
-  console.log(changes)
+  console.log(changes);
 
   // Process changes by making API calls
-  const results = await Promise.all(changes.map(async (activity) => {
-    // Create new activity
-    const response = await $fetch('/api/activity', {
-      method: 'POST',
-      body: {
-        _id: activity._id,
-        changes: {
-          content: activity.content,
-          date: activity.date,
-        }
-      },
-    });
+  const results = await Promise.all(
+    changes.map(async (activity) => {
+      // Create new activity
+      const response = await $fetch('/api/activity', {
+        method: 'POST',
+        body: {
+          _id: activity._id,
+          changes: {
+            content: activity.content,
+            date: activity.date,
+          },
+        },
+      });
 
-    console.log('Response:', response);
-  }));
+      console.log('Response:', response);
+    })
+  );
 
   console.log('Save Results:', results);
 
   // After successful save, update the original state and remove the isNew flag
-  last3Activities.value.forEach(activity => {
+  last3Activities.value.forEach((activity) => {
     activity.isNew = false;
   });
   originalActivities.value = JSON.parse(JSON.stringify(last3Activities.value));

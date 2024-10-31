@@ -1,11 +1,16 @@
 <template>
   <!-- show the form if youre logged in  -->
-  <div v-if="showPasswordChange" class="flex flex-col justify-center gap-8 lg:flex-row">
+  <div
+    v-if="showPasswordChange"
+    class="flex flex-col justify-center gap-8 lg:flex-row"
+  >
     <Card class="mx-4 lg:w-1/3">
       <CardHeader class="flex">
         <CardTitle>Update Password</CardTitle>
-        <CardDescription>Enter your email and follow the reset password link in your
-          email.</CardDescription>
+        <CardDescription
+          >Enter your email and follow the reset password link in your
+          email.</CardDescription
+        >
       </CardHeader>
 
       <CardContent>
@@ -17,7 +22,11 @@
           </div>
           <div class="space-y-1">
             <Label for="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" type="password" v-model="confirmPassword" />
+            <Input
+              id="confirmPassword"
+              type="password"
+              v-model="confirmPassword"
+            />
           </div>
         </form>
         <Label class="space-y-1 text-theme-red">{{
@@ -29,11 +38,16 @@
 
       <!-- button -->
       <CardFooter class="flex justify-between">
-        <Button @click="changePassword" :disabled="changePasswordLoading ||
-          password !== confirmPassword ||
-          password.length < 8 ||
-          confirmPassword.length < 8
-          ">Update</Button>
+        <Button
+          @click="changePassword"
+          :disabled="
+            changePasswordLoading ||
+            password !== confirmPassword ||
+            password.length < 8 ||
+            confirmPassword.length < 8
+          "
+          >Update</Button
+        >
       </CardFooter>
     </Card>
   </div>

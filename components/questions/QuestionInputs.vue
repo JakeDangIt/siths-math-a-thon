@@ -8,13 +8,24 @@
 
     <div>
       <Label for="title">Content</Label>
-      <Input id="title" :placeholder="questionInfo.content" v-model="content"></Input>
+      <Input
+        id="title"
+        :placeholder="questionInfo.content"
+        v-model="content"
+      ></Input>
 
       <Label for="title">Author</Label>
-      <Input id="title" :placeholder="questionInfo.author" v-model="author"></Input>
+      <Input
+        id="title"
+        :placeholder="questionInfo.author"
+        v-model="author"
+      ></Input>
     </div>
-    <Button :disabled="author == '' || content == '' || createLoading" @click="createOrUpdateQuestion">Confirm
-      Changes</Button>
+    <Button
+      :disabled="author == '' || content == '' || createLoading"
+      @click="createOrUpdateQuestion"
+      >Confirm Changes</Button
+    >
   </div>
 </template>
 
@@ -86,5 +97,4 @@ async function createOrUpdateQuestion() {
     createLoading.value = false;
   }
 }
-
 </script>

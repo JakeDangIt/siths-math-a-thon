@@ -13,8 +13,14 @@
         <div v-html="props.mathContent"></div>
       </CardContent>
       <CardFooter>
-        <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
-          @input="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
+        <Input
+          id="input"
+          type="text"
+          v-model="input"
+          :placeholder="'Question ' + question"
+          @input="validateAndChangeAnswer"
+          :disabled="answersStore.getAnswerLoading"
+        />
       </CardFooter>
     </Card>
   </div>
@@ -37,7 +43,7 @@ function validateAndChangeAnswer() {
   // only allow numbers and replace non-numeric characters
   const cleanedValue = input.value.replace(/[^0-9]/g, '');
 
-  isInvalid.value = (cleanedValue !== input.value);
+  isInvalid.value = cleanedValue !== input.value;
 
   input.value = cleanedValue;
 
@@ -52,15 +58,17 @@ function validateAndChangeAnswer() {
 
 // once the answers are loaded from the store, update the input value (really only for users logged in)
 watch(
-  () => [answersStore.answerData, answersStore.answerData.length, answersStore.getAnswerLoading],
+  () => [
+    answersStore.answerData,
+    answersStore.answerData.length,
+    answersStore.getAnswerLoading,
+  ],
   async () => {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
-      (answer) =>
-        answer.week == week.value && answer.question == question.value
+      (answer) => answer.week == week.value && answer.question == question.value
     );
 
-    input.value =
-      answersStore.answerData[correspondingQuestionIndex]?.answer;
+    input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   },
   { immediate: true }
 );
@@ -86,12 +94,10 @@ onMounted(() => {
   // if the user is logged in, set the input value
   if (answersStore.answerData.length > 0) {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
-      (answer) =>
-        answer.week == week.value && answer.question == question.value
+      (answer) => answer.week == week.value && answer.question == question.value
     );
 
-    input.value =
-      answersStore.answerData[correspondingQuestionIndex]?.answer;
+    input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   }
 });
 </script>

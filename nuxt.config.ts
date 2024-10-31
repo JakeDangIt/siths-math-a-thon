@@ -27,8 +27,14 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/math-a-thon-icon.webp' },
       ],
       htmlAttrs: {
-        lang: 'en'
-      }
+        lang: 'en',
+      },
+      script: [
+        {
+          src: '/mathjax/es5/tex-chtml.js',
+          async: true,
+        },
+      ],
     },
   },
   icon: {
@@ -76,8 +82,8 @@ export default defineNuxtConfig({
         projectId: 'ferer2d9',
         dataset: 'production',
         useCdn: true,
-      }
+      },
     },
     sanityToken: process.env.SANITY_TOKEN,
-  }
+  },
 });

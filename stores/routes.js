@@ -3,12 +3,12 @@ export const useRoutesStore = defineStore('routes', () => {
   const router = useRouter();
   const visitedRoutes = ref([]);
 
-	// put the route in the array
+  // put the route in the array
   function addRoute() {
     visitedRoutes.value.push(router.currentRoute.value.path);
   }
 
-	// go to the last one that wasn't login or signup
+  // go to the last one that wasn't login or signup
   async function redirectToLast() {
     await navigateTo(
       visitedRoutes.value
@@ -17,16 +17,14 @@ export const useRoutesStore = defineStore('routes', () => {
     );
   }
 
-	// when the route changes, add the route to the array
-  onMounted(() => {
-    watch(
-      router.currentRoute,
-      () => {
-        addRoute();
-      },
-      { immediate: true }
-    );
-  });
+  // when the route changes, add the route to the array
+  watch(
+    router.currentRoute,
+    () => {
+      addRoute();
+    },
+    { immediate: true }
+  );
 
   return { visitedRoutes, redirectToLast };
 });

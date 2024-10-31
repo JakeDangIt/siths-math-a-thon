@@ -63,24 +63,24 @@ export const useAvatarStore = defineStore('avatar', () => {
     return true;
   }
 
+  // if you log out and log in with a different account, the avatar will be updated
+  watch(
+    () => user.value,
+    async (newUser) => {
+      if (avatarPath.value !== newUser?.user_metadata?.avatar) {
+        await refreshUser();
+        await retrieveAvatar();
+      }
+
+      if (!newUser?.user_metadata?.avatar) {
+        avatarImage.value = null;
+      }
+    },
+    { immediate: true }
+  );
+
   onMounted(async () => {
     await retrieveAvatar();
-
-    // if you log out and log in with a different account, the avatar will be updated
-    watch(
-      () => user.value,
-      async (newUser) => {
-        if (avatarPath.value !== newUser?.user_metadata?.avatar) {
-          await refreshUser();
-          await retrieveAvatar();
-        }
-
-        if (!newUser?.user_metadata?.avatar) {
-          avatarImage.value = null;
-        }
-      },
-      { immediate: true }
-    );
   });
 
   return { avatarPath, avatarImage, retrieveAvatar, refreshUser, removeAvatar };

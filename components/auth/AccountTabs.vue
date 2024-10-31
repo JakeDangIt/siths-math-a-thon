@@ -26,9 +26,12 @@
             <CardContent class="space-y-2">
               <!-- sign up fields -->
               <div class="space-y-1">
-                <Label for="email" :class="{
-                  'text-theme-red': !emailValid && userEmail.length > 0,
-                }">{{
+                <Label
+                  for="email"
+                  :class="{
+                    'text-theme-red': !emailValid && userEmail.length > 0,
+                  }"
+                  >{{
                     !emailValid && userEmail.length > 0
                       ? 'Please enter a valid NYCDOE email'
                       : 'Email (NYCDOE)'
@@ -37,9 +40,12 @@
                 <Input type="email" id="email" v-model="userEmail" />
               </div>
               <div class="space-y-1">
-                <Label for="password" :class="{
-                  'text-theme-red': !passwordValid && userPassword.length > 0,
-                }">
+                <Label
+                  for="password"
+                  :class="{
+                    'text-theme-red': !passwordValid && userPassword.length > 0,
+                  }"
+                >
                   {{
                     !passwordValid && userPassword.length > 0
                       ? 'Please enter a password longer than 8 characters'
@@ -50,8 +56,11 @@
               </div>
 
               <div class="space-x-2">
-                <Checkbox aria-label="Payment Agreement" id="agreement"
-                  @update:checked="userAgreement = !userAgreement">
+                <Checkbox
+                  aria-label="Payment Agreement"
+                  id="agreement"
+                  @update:checked="userAgreement = !userAgreement"
+                >
                 </Checkbox>
                 <Label for="agreement">I agree.</Label>
               </div>
@@ -77,16 +86,26 @@
                       <Input type="text" id="name" v-model="userName" />
                     </div>
                     <div class="space-y-1">
-                      <Label for="osis" :class="{
-                        'text-theme-red':
-                          !osisValid && String(userOSIS).length > 0,
-                      }">
+                      <Label
+                        for="osis"
+                        :class="{
+                          'text-theme-red':
+                            !osisValid && String(userOSIS).length > 0,
+                        }"
+                      >
                         {{
                           !osisValid && String(userOSIS).length > 0
                             ? 'Please enter a valid OSIS number'
                             : 'OSIS Number'
-                        }}</Label>
-                      <Input type="" id="osis" v-model="userOSIS" inputmode="numeric" pattern="[0-9]*" />
+                        }}</Label
+                      >
+                      <Input
+                        type=""
+                        id="osis"
+                        v-model="userOSIS"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                      />
                     </div>
                     <div class="space-y-1">
                       <Label for="teacher">Teacher</Label>
@@ -98,7 +117,10 @@
                           <SelectGroup>
                             <SelectLabel>Teachers</SelectLabel>
                             <!-- teachers from teachers.js -->
-                            <SelectItem v-for="teacher in teachers" :value="teacher.name">
+                            <SelectItem
+                              v-for="teacher in teachers"
+                              :value="teacher.name"
+                            >
                               {{ teacher.name }}
                             </SelectItem>
                           </SelectGroup>
@@ -126,8 +148,12 @@
 
                   <DialogFooter>
                     <!-- real sign up button -->
-                    <Button @click="handleSignup()" :disabled="!isPersonalValid || signupLoading || !osisValid
-                      ">
+                    <Button
+                      @click="handleSignup()"
+                      :disabled="
+                        !isPersonalValid || signupLoading || !osisValid
+                      "
+                    >
                       Submit
                     </Button>
                   </DialogFooter>
@@ -156,14 +182,24 @@
               </div>
               <div class="space-y-1">
                 <Label for="loginPassword">Password</Label>
-                <Input type="password" id="loginPassword" v-model="userLoginPassword" />
+                <Input
+                  type="password"
+                  id="loginPassword"
+                  v-model="userLoginPassword"
+                />
               </div>
             </CardContent>
 
             <CardFooter class="flex justify-between">
-              <Button @click="handleLogin()" :disabled="loginLoading">Log in</Button>
-              <HeaderNavLink routePath="/auth/forgotpassword" routeName="Forgot Password?" variant="link"
-                class="text-md flex" />
+              <Button @click="handleLogin()" :disabled="loginLoading"
+                >Log in</Button
+              >
+              <HeaderNavLink
+                routePath="/auth/forgotpassword"
+                routeName="Forgot Password?"
+                variant="link"
+                class="text-md flex"
+              />
             </CardFooter>
           </Card>
         </form>

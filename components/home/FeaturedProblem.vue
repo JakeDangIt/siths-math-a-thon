@@ -10,7 +10,7 @@
         <Skeleton class="mb-4 h-6" />
         <Skeleton class="h-10 w-20" />
       </CardContent>
-      
+
       <CardContent v-else class="flex h-full flex-col justify-between">
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
@@ -28,7 +28,7 @@
 
 <script setup>
 const questionsStore = useQuestionsStore();
-const mathJaxLoaded = computed(() => MathJax !== undefined);
+const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
 // random question
 const randomQuestion = computed(() => {
@@ -48,12 +48,4 @@ watch(
   },
   { immediate: true }
 );
-
-// rerender mathjax when component is mounted
-onMounted(async () => {
-  if (window.MathJax) {
-    await nextTick();
-    questionsStore.rerenderMathJax();
-  }
-});
 </script>

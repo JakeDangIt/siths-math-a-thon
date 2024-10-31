@@ -7,7 +7,7 @@ const currentRouteName = computed(() =>
   currentRoutePath.value == '/'
     ? 'Math-a-Thon'
     : routes.find((route) => route?.routePath == currentRoutePath.value)
-      ?.routeName
+        ?.routeName
 );
 </script>
 
@@ -24,7 +24,12 @@ const currentRouteName = computed(() =>
 
         <NuxtLink to="/" aria-label="Home">
           <div class="m-2 h-10 rounded-md bg-theme-dark-blue">
-            <NuxtImg src="/math-a-thon-icon.png" alt="Math-a-Thon logo" width="40px" height="40px" />
+            <NuxtImg
+              src="/math-a-thon-icon.png"
+              alt="Math-a-Thon logo"
+              width="40px"
+              height="40px"
+            />
           </div>
         </NuxtLink>
 
@@ -47,7 +52,12 @@ const currentRouteName = computed(() =>
       <SheetHeader>
         <SheetTitle class="w-full">
           <div class="rounded-md">
-            <NuxtImg src="/math-a-thon-icon.png" alt="Math-a-Thon logo" width="92px"height="92px" />
+            <NuxtImg
+              src="/math-a-thon-icon.png"
+              alt="Math-a-Thon logo"
+              width="92px"
+              height="92px"
+            />
           </div>
         </SheetTitle>
       </SheetHeader>
@@ -55,9 +65,17 @@ const currentRouteName = computed(() =>
       <SheetDescription class="flex-1">
         <!-- nav links -->
         <nav class="flex flex-col items-start">
-          <SheetClose v-for="route in routes.slice(0, 6)" class="w-full hover:bg-gray-500 hover:bg-opacity-20">
-            <HeaderNavLink :route-path="route.routePath" :route-name="route.routeName" :icon-name="route.iconName"
-              :variant="'link'" class="text-lg" />
+          <SheetClose
+            v-for="route in routes.slice(0, 6)"
+            class="w-full hover:bg-gray-500 hover:bg-opacity-20"
+          >
+            <HeaderNavLink
+              :route-path="route.routePath"
+              :route-name="route.routeName"
+              :icon-name="route.iconName"
+              :variant="'link'"
+              class="text-lg"
+            />
           </SheetClose>
         </nav>
       </SheetDescription>

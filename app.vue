@@ -57,6 +57,27 @@ const setupActivityListeners = () => {
   window.addEventListener('scroll', updateLastActivity);
 };
 
+// set layout based on screen size and watch for changes in width
+watch(
+  isMobile,
+  (newValue) => {
+    layout.value = newValue ? 'mobile' : 'default';
+  },
+  { immediate: true }
+);
+
+// when the toast changes, show the toast
+watch(
+  () => [toastStore.toastID],
+  () => {
+    toast({
+      title: toastStore.titleMessage,
+      description: toastStore.descriptionMessage,
+    });
+  }
+);
+
+
 onMounted(async () => {
   // initialize interval id
   let intervalId;
@@ -91,26 +112,6 @@ onMounted(async () => {
   // periodically check for session expiration every 30 seconds
   intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
 
-  // Set layout based on screen size and watch for changes in width
-  watch(
-    isMobile,
-    (newValue) => {
-      layout.value = newValue ? 'mobile' : 'default';
-    },
-    { immediate: true }
-  );
-
-  // when the toast changes, show the toast
-  watch(
-    () => [toastStore.toastID],
-    () => {
-      toast({
-        title: toastStore.titleMessage,
-        description: toastStore.descriptionMessage,
-      });
-    }
-  );
-
   // watch if user logs in, set the interval to check for session expiration
   watch(user, async (newUser) => {
     const answersStore = useAnswersStore();
@@ -121,13 +122,11 @@ onMounted(async () => {
       const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
 
       await answersStore.retrieveAnswers();
-    }
-    else {
+    } else {
       answersStore.answerData = [];
     }
-  })
-
-
+  });
+  
   isLoading.value = false;
 });
 

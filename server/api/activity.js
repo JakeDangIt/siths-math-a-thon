@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
       return { status: 'success', message: 'Question updated successfully' };
     } else {
-      await sanityClient.create({...changes, _type: "activity"});
+      await sanityClient.create({ ...changes, _type: 'activity' });
       return { status: 'success', message: 'Question created successfully' };
     }
   } catch (error) {

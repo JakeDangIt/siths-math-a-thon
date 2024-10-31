@@ -63,7 +63,9 @@ export const useAnswersStore = defineStore('answers', () => {
   async function submitAnswers(week, answers) {
     await saveAnswers();
 
-    const submittedData = leaderboardStore.userAnswers.filter((answer) => answer.week == week);
+    const submittedData = leaderboardStore.userAnswers.filter(
+      (answer) => answer.week == week
+    );
 
     if (submittedData.length > 0) {
       // can't submit more than once per hour

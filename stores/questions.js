@@ -21,32 +21,17 @@ export const useQuestionsStore = defineStore('questions', () => {
     }
   }
 
-  // put the MathJax script in the head
-  function getMathJax() {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-    script.async = true;
-    document.head.appendChild(script);
-
-    script.onload = async () => {
+  watchEffect(async () => {
+    if (questionData.value.length > 0) {
       await rerenderMathJax();
       isLoading.value = false;
-    };
-
-    script.onerror = () => {
-      toastStore.changeToast(
-        'Error loading MathJax',
-        'Please refresh the page'
-      );
-      isLoading.value = false;
-    };
-  }
+    }
+  });
 
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
-    getMathJax();
     await getQuestions();
   });
 
-  return { questionData, isLoading, getQuestions, getMathJax, rerenderMathJax };
+  return { questionData, isLoading, getQuestions, rerenderMathJax };
 });

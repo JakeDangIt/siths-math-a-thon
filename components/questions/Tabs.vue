@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- skeleton for the question cards and button -->
-    <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
+    <div
+      v-if="questionsStore.isLoading || !mathJaxLoaded"
+      class="mx-auto space-y-2 lg:w-2/3"
+    >
       <Skeleton class="mb-4 h-10" />
       <Skeleton class="h-32" />
       <Skeleton class="h-32" />
@@ -80,8 +83,8 @@
               <SheetTrigger
                 ><Button aria-label="Preview Answers"
                   >Preview {{ width > 1024 ? 'Answers' : '' }}</Button
-                ></SheetTrigger
-              >
+                >
+              </SheetTrigger>
             </div>
 
             <div
@@ -106,7 +109,11 @@
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
+          <SheetTrigger
+            ><Button aria-label="Preview Answers"
+              >Preview Answers</Button
+            ></SheetTrigger
+          >
 
           <!-- preview answer content -->
           <SheetContent>
@@ -159,7 +166,8 @@
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
                   </p>
-                  <button aria-label="Remove Answer"
+                  <button
+                    aria-label="Remove Answer"
                     @click="removeAnswer(weekNames[index], answer.question)"
                     class="flex items-center opacity-0 transition-all group-hover:opacity-100"
                   >
@@ -174,7 +182,8 @@
                 <div
                   class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto"
                 >
-                  <Button aria-label="Save Answers"
+                  <Button
+                    aria-label="Save Answers"
                     @click="saveAnswers()"
                     variant="secondary"
                     :disabled="
@@ -186,7 +195,8 @@
                   >
                     Save Answers
                   </Button>
-                  <Button aria-label="Submit Answers"
+                  <Button
+                    aria-label="Submit Answers"
                     @click="
                       submitAnswers(
                         weekNames[index],
@@ -223,7 +233,7 @@ const toastStore = useToastStore();
 const roleStore = useRoleStore();
 
 const user = useSupabaseUser();
-const mathJaxLoaded = computed(() => MathJax !== undefined);
+const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
 // track if answers have changed
 const initialAnswers = ref([]);
@@ -332,31 +342,40 @@ function handleBeforeUnload(event) {
   }
 }
 
-onMounted(() => {
-  // rerender mathjax when the questions are loaded
-  if (questionsStore.questionData.length !== 0) {
-    nextTick(() => {
-      questionsStore.rerenderMathJax();
-    });
-  }
-
-  // check if far down enough when the user scrolls
-  watch(y, () => {
+// check if far down enough when the user scrolls
+watch(
+  y,
+  () => {
     checkIsFarDownEnough();
-  }, { immediate: true });
+  },
+  { immediate: true }
+);
 
-  watch(
-    () => answersStore.getAnswerLoading,
-    () => {
-      if (answersStore.answerData.length !== 0) {
-        initialAnswers.value = JSON.parse(
-          JSON.stringify(answersStore.answerData)
-        );
-      }
-    },
-    { immediate: true }
-  );
+watch(
+  () => answersStore.getAnswerLoading,
+  () => {
+    if (answersStore.answerData.length !== 0) {
+      initialAnswers.value = JSON.parse(
+        JSON.stringify(answersStore.answerData)
+      );
+    }
+  },
+  { immediate: true }
+);
 
+// rerender mathjax when the questions are loaded
+watch(
+  () => questionsStore.questionData,
+  async () => {
+    if (questionsStore.questionData.length > 0 && !questionsStore.isLoading) {
+      await nextTick();
+      await questionsStore.rerenderMathJax();
+    }
+  },
+  { immediate: true }
+);
+
+onMounted(() => {
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
 });

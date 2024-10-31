@@ -4,7 +4,7 @@ export const useRoleStore = defineStore('role', () => {
 
   const role = ref('');
 
-	// function that gets the user's profile's role, should be member by default, logged in or not
+  // function that gets the user's profile's role, should be member by default, logged in or not
   async function getRole() {
     if (user.value) {
       const { data, error } = await supabase
@@ -15,14 +15,13 @@ export const useRoleStore = defineStore('role', () => {
       if (data && data.length > 0) {
         role.value = data[0].role;
       } else {
-	      role.value = 'member';
+        role.value = 'member';
       }
-    } 
-    else {
+    } else {
       role.value = 'member';
     }
   }
-	
+
   // on log in and out, get role again
   watch(
     user,

@@ -12,6 +12,6 @@ export const activityType = defineType({
     defineField({
       name: 'date',
       type: 'datetime',
-    })
+    }),
   ],
 })

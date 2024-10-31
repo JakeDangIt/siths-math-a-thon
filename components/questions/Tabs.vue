@@ -294,7 +294,7 @@ watch(
 
 // rerender mathjax when the questions are loaded
 watch(
-  () => questionsStore.questionData,
+  () => [questionsStore.questionData, window.MathJax],
   async () => {
     if (questionsStore.questionData.length > 0 && !questionsStore.isLoading) {
       await nextTick();
@@ -304,11 +304,10 @@ watch(
   { immediate: true }
 );
 
-onMounted(() => {
-  if (questionsStore.questionData.length !== 0) {
-    nextTick(() => {
-      questionsStore.rerenderMathJax();
-    });
+onMounted(async () => {
+  if (window.MathJax) {
+    await nextTick();
+    await questionsStore.rerenderMathJax();
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);

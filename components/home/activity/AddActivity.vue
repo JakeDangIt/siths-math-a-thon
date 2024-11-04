@@ -11,16 +11,9 @@
         <SheetDescription> Add and edit the activity section </SheetDescription>
       </SheetHeader>
       <div class="flex flex-col items-center">
-        <div
-          class="flex w-full items-center gap-2 p-1"
-          v-for="(activity, index) in last3Activities"
-          :key="index"
-        >
+        <div class="flex w-full items-center gap-2 p-1" v-for="(activity, index) in last3Activities" :key="index">
           <p>{{ formatDate(activity.date) }}</p>
-          <Input
-            v-model="activity.content"
-            placeholder="Enter activity content"
-          />
+          <Input v-model="activity.content" placeholder="Enter activity content" />
         </div>
         <Button @click="addActivity">
           <Icon name="material-symbols:add" class="h-5 w-5"></Icon>
@@ -34,6 +27,7 @@
 </template>
 
 <script setup>
+const toastStore = useToastStore();
 const activityStore = useActivityStore();
 const last3Activities = ref([...activityStore.activityData.slice(0, 3)]);
 const originalActivities = ref([]);
@@ -66,7 +60,6 @@ async function saveActivities() {
       (original && activity.content !== original.content) // Edited activities
     );
   });
-  console.log(changes);
 
   // Process changes by making API calls
   const results = await Promise.all(
@@ -82,12 +75,12 @@ async function saveActivities() {
           },
         },
       });
-
-      console.log('Response:', response);
+      if (response.status == 'success') {
+        toastStore.changeToast('Activity saved successfully', response.message);
+      }
     })
   );
 
-  console.log('Save Results:', results);
 
   // After successful save, update the original state and remove the isNew flag
   last3Activities.value.forEach((activity) => {

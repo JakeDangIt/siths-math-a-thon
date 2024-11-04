@@ -23,10 +23,7 @@
               <DialogTitle>All Activity</DialogTitle>
             </DialogHeader>
             <div>
-              <div
-                v-for="activity in activityStore.activityData"
-                className="space-y-2"
-              >
+              <div v-for="activity in activityStore.activityData" className="space-y-2">
                 <p>
                   <span class="font-bold">{{ formatDate(activity.date) }}</span>
                   - {{ activity.content }}
@@ -47,8 +44,6 @@ const activityStore = useActivityStore();
 
 const activities = computed(() =>
   activityStore.activityData
-    .slice()
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3)
 );
 

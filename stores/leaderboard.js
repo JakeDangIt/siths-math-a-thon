@@ -79,6 +79,8 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
       .select('avatar, name, uid')
       .in('uid', top3UIDs);
 
+    profiles.sort((a, b) => top3UIDs.indexOf(a.uid) - top3UIDs.indexOf(b.uid));
+
     if (error) {
       console.error('Error fetching profiles:', error);
       avatarLoading.value = false;

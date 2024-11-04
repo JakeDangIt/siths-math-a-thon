@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.7.0",
+    "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/sanity": "^1.12.1",
     "@sanity/image-url": "^1.0.2",
     "@supabase/ssr": "^0.4.0",

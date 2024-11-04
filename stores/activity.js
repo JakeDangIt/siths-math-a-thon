@@ -6,7 +6,9 @@ export const useActivityStore = defineStore('activity', () => {
     const ACTIVITY_QUERY = groq`*[_type == "activity"]`;
     const { data: activity } = await useSanityQuery(ACTIVITY_QUERY);
 
-    activityData.value = activity.value;
+    activityData.value = activity.value.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
   }
 
   onMounted(async () => {

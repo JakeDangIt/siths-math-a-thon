@@ -19,7 +19,7 @@
       </DialogHeader>
       <div>
         <!-- accordion for each question -->
-        <Accordion type="multiple" collapsible class="grid grid-cols-2 gap-x-8">
+        <Accordion type="single" collapsible class="grid grid-cols-2 gap-x-8">
           <AccordionItem
             v-for="index in String(week).includes('Bonus') ? 12 : 20"
             :key="index"

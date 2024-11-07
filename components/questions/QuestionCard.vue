@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
 const answersStore = useAnswersStore();
 
 const props = defineProps(['question', 'week', 'mathContent']);
@@ -36,7 +35,7 @@ const week = ref(props.week);
 
 // question input
 const input = ref(null);
-const isInvalid = ref(false); // Track if input is invalid
+const isInvalid = ref(false);
 
 // if the answer is changed, update the answer in the store
 function validateAndChangeAnswer() {

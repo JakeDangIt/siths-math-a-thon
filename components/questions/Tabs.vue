@@ -32,8 +32,9 @@
       <!-- content for the tabs -->
       <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
         <!-- week name and each question for that week -->
-        <h1 class="my-2 text-center text-xl font-bold">
+        <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ weekNames[index] }} Questions
+          <QuestionsClock :week="weekNames[index]" />
         </h1>
         <QuestionsQuestionCard v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
@@ -46,8 +47,8 @@
           <div>
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="isFarDownEnough
-                  ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-                  : 'translate-x-0'
+                ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
+                : 'translate-x-0'
                 ">
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
@@ -60,8 +61,8 @@
 
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="isFarDownEnough
-                  ? 'translate-x-0'
-                  : 'translate-x-[14rem] lg:translate-x-[-14rem]'
+                ? 'translate-x-0'
+                : 'translate-x-[14rem] lg:translate-x-[-14rem]'
                 ">
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
@@ -110,8 +111,7 @@
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)"
-                  class="group flex justify-between px-2 hover:bg-slate-200">
+                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}

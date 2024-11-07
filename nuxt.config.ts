@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
     '@nuxtjs/sanity',
-    "@nuxtjs/color-mode",
+    '@nuxtjs/color-mode',
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@formkit/auto-animate',
@@ -60,6 +60,8 @@ export default defineNuxtConfig({
         'material-symbols:mail',
         'material-symbols:folder',
         'material-symbols:edit',
+        'radix-icons:sun',
+        'radix-icons:moon',
       ],
     },
   },
@@ -70,6 +72,11 @@ export default defineNuxtConfig({
       include: ['/auth/profile'],
       exclude: [],
     },
+  },
+  colorMode: {
+    classSuffix: '',
+    preference: 'light',
+    fallback: 'light',
   },
   runtimeConfig: {
     sanity: {

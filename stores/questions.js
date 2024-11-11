@@ -1,7 +1,9 @@
 export const useQuestionsStore = defineStore('questions', () => {
+  const timeStore = useTimeStore();
 
   // question data and loading state
   const questionData = ref([]);
+  const questionTimeData = ref([]);
   const isLoading = ref(true);
 
   // get questions
@@ -9,7 +11,15 @@ export const useQuestionsStore = defineStore('questions', () => {
     const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
     const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
-    questionData.value = questions.value;
+    questionData.value = questions.value.filter((question) => !question.title.includes('Time'));
+    questionTimeData.value = questions.value.filter((question) => question.title.includes('Time'));
+
+    // update time store with new time data
+    timeStore.targetDates = questionTimeData.value.map((question) => {
+      const targetDate = new Date(question.content);
+      return { week: [question.week, question.week + ' Bonus'], date: targetDate };
+    });
+
     await rerenderMathJax();
   }
 
@@ -31,5 +41,5 @@ export const useQuestionsStore = defineStore('questions', () => {
     });
   });
 
-  return { questionData, isLoading, getQuestions, rerenderMathJax };
+  return { questionData, questionTimeData, isLoading, getQuestions, rerenderMathJax };
 });

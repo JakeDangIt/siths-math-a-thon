@@ -1,17 +1,25 @@
 export const useTimeStore = defineStore('time', () => {
-  const questionsStore = useQuestionsStore();
-
   const time = ref(new Date());
+  const targetDates = ref([])
 
-  setInterval(() => {
-    time.value = new Date();
-  }, 1000);
-
-  const targetDates = questionsStore.questionTimeData.map((question) => {
-    const targetDate = new Date(question.content);
-    return { week: question.week, date: targetDate };
+  const timeRemainings = computed(() => {
+    return targetDates.value.map((targetDate) => {
+      const timeRemaining = targetDate.date - time.value;
+      return { week: targetDate.week, timeRemaining };
+    });
   });
-  console.log(targetDates);
 
-  return { time, targetDates };
+  const currentWeek = computed(() => {
+    return targetDates.value.find((targetDate) => {
+      return targetDate.date > time.value;
+    }).week[0];
+  });
+  
+  onMounted(() => {
+    setInterval(() => {
+      time.value = new Date();
+    }, 1000);
+  })
+
+  return { time, targetDates, timeRemainings, currentWeek };
 });

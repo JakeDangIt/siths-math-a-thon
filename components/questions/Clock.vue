@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p class="font-normal text-lg">{{ timeRemaining }}</p>
+        <p class="font-normal text-lg" :class="{'text-theme-red' : timeRemaining.diff < (1000 * 60 * 60 * 3) }">{{ timeRemaining.format }}</p>
     </div>
 </template>
 
@@ -8,8 +8,7 @@
 const props = defineProps(['week'])
 const timeStore = useTimeStore();
 
-const week = computed(() => String(props.week).split(' ')[0]);
-const targetWeekDate = ref(new Date(timeStore.targetDates.find((targetDate) => targetDate.week == week.value).date));
+const targetWeekDate = ref(timeStore.targetDates.find((targetDate) => targetDate.week.includes(String(props.week)))?.date);
 
 const timeRemaining = computed(() => {
     const now = timeStore.time
@@ -19,6 +18,6 @@ const timeRemaining = computed(() => {
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    return {format: `${days}d ${hours}h ${minutes}m ${seconds}s`, diff};
 });
 </script>

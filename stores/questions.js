@@ -1,4 +1,5 @@
 export const useQuestionsStore = defineStore('questions', () => {
+  const timeStore = useTimeStore();
 
   // question data and loading state
   const questionData = ref([]);
@@ -12,6 +13,13 @@ export const useQuestionsStore = defineStore('questions', () => {
 
     questionData.value = questions.value.filter((question) => !question.title.includes('Time'));
     questionTimeData.value = questions.value.filter((question) => question.title.includes('Time'));
+
+    // update time store with new time data
+    timeStore.targetDates = questionTimeData.value.map((question) => {
+      const targetDate = new Date(question.content);
+      return { week: [question.week, question.week + ' Bonus'], date: targetDate };
+    });
+
     await rerenderMathJax();
   }
 

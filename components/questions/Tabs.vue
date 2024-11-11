@@ -9,7 +9,8 @@
     </div>
 
     <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-    <Tabs v-else :default-value="weekStartIndex" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3" @update:model-value="onTabChange">
+    <Tabs v-else :default-value="weekStartIndex" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+      @update:model-value="onTabChange">
       <!-- carousel for the tabs -->
       <Carousel class="mx-auto w-2/3" :opts="{
         align: 'start',
@@ -89,25 +90,24 @@
 
               <!-- another tabs, basically the same as the one outside -->
               <Tabs :default-value="weekNames[index]" class="mx-auto my-4">
-                <TabsList class="mb-4 w-full">
-                  <Carousel class="relative mx-auto w-4/5">
-                    <CarouselContent>
-                      <!-- paired into week and its bonus -->
-                      <CarouselItem v-for="(weekPair, index) in presentWeekNames" :key="index">
-                        <TabsList class="grid w-full grid-cols-2">
-                          <TabsTrigger :value="weekPair[0]">
-                            <p>Week {{ weekPair[0] }}</p>
-                          </TabsTrigger>
-                          <TabsTrigger :value="weekPair[1]">
-                            <p>Week {{ weekPair[1] }}</p>
-                          </TabsTrigger>
-                        </TabsList>
-                      </CarouselItem>
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </TabsList>
+                <Carousel class="mx-auto w-2/3" :opts="{
+                  align: 'start',
+                  slidesToScroll: 2,
+                  startIndex: weekStartIndex,
+                }">
+                  <CarouselContent>
+                    <!-- paired into week and its bonus -->
+                    <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+                      <TabsList class="w-full">
+                        <TabsTrigger :value="week">
+                          Week {{ week }}
+                        </TabsTrigger>
+                      </TabsList>
+                    </CarouselItem>
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
 
                 <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
                 <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"

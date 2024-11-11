@@ -9,13 +9,13 @@
     </div>
 
     <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-    <Tabs v-else :default-value="weekStartIndex" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+    <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
       @update:model-value="onTabChange">
       <!-- carousel for the tabs -->
       <Carousel class="mx-auto w-2/3" :opts="{
         align: 'start',
         slidesToScroll: 2,
-        startIndex: weekStartIndex,
+        startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
       }">
         <CarouselContent>
           <!-- paired into week and its bonus -->
@@ -89,11 +89,11 @@
               </SheetHeader>
 
               <!-- another tabs, basically the same as the one outside -->
-              <Tabs :default-value="weekNames[index]" class="mx-auto my-4">
+              <Tabs :default-value="Number(timeStore.currentWeek)" class="mx-auto my-4">
                 <Carousel class="mx-auto w-2/3" :opts="{
                   align: 'start',
                   slidesToScroll: 2,
-                  startIndex: weekStartIndex,
+                  startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
                 }">
                   <CarouselContent>
                     <!-- paired into week and its bonus -->
@@ -204,10 +204,6 @@ const presentWeekNames = computed(() => {
       (question) => question.week == week
     );
   });
-});
-
-const weekStartIndex = computed(() => {
-  return weekNames.findIndex((week) => week == timeStore.currentWeek);
 });
 
 // function to rerender mathjax when tab changes, must be nexttick to wait for DOM to update

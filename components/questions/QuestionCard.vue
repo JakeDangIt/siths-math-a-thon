@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <Card>
+    <Card class="my-2">
       <CardHeader>
         <CardTitle>
           {{ `Question ${question}` }}
@@ -23,7 +22,6 @@
         />
       </CardFooter>
     </Card>
-  </div>
 </template>
 
 <script setup>

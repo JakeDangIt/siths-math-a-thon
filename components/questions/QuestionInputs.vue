@@ -17,7 +17,7 @@
       <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
 
     </div>
-    <Button :disabled="author == '' || content == '' || createLoading" @click="createOrUpdateQuestion">Confirm
+    <Button :disabled="buttonDisabled" @click="createOrUpdateQuestion">Confirm
       Changes</Button>
   </div>
 </template>
@@ -29,6 +29,7 @@ const questionInfo = ref(props.questionInfo);
 const toastStore = useToastStore();
 
 const createLoading = ref(false);
+const buttonDisabled = computed(() => author.value == '' || content.value == '' || createLoading.value);
 
 // constructed title for easier reading in Sanity
 const title = computed(
@@ -97,7 +98,7 @@ async function createOrUpdateQuestion() {
 function handleImageUpload(event) {
   const file = event.target.files[0];
   if (file) {
-    image.value = file; // Store the file in the `image` ref
+    image.value = file;
   }
 }
 </script>

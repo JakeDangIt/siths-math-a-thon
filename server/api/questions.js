@@ -18,6 +18,9 @@ export default defineEventHandler(async (event) => {
     const QUESTIONS_QUERY = `*[_type == "questions" && week == '${questionInfo.week}' && number == '${questionInfo.number}'][0]`;
     const existingQuestion = await sanityClient.fetch(QUESTIONS_QUERY);
 
+    const image = changes.image;
+    const filePath = `week${questionInfo.week}_question${questionInfo.number}.png`;
+
     if (existingQuestion) {
       await sanityClient
         .patch(existingQuestion._id)
@@ -27,6 +30,27 @@ export default defineEventHandler(async (event) => {
           author: changes.author,
         })
         .commit();
+
+      if (image) {
+        await sanityClient.assets
+          .upload('image', image, {
+            filename: filePath,
+          })
+          .then((imageAsset) => {
+            return sanityClient
+              .patch(existingQuestion._id)
+              .set({
+                image: {
+                  _type: 'image',
+                  asset: {
+                    _type: 'reference',
+                    _ref: imageAsset._id,
+                  },
+                },
+              })
+              .commit();
+          });
+      }
 
       return { status: 'success', message: 'Question updated successfully' };
     } else {

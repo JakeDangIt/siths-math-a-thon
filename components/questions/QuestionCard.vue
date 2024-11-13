@@ -1,29 +1,21 @@
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {{ `Question ${question}` }}
-        </CardTitle>
-        <CardDescription class="text-theme-red">
-          {{ isInvalid ? 'Please enter a valid number' : '' }}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div v-html="props.mathContent"></div>
-      </CardContent>
-      <CardFooter>
-        <Input
-          id="input"
-          type="text"
-          v-model="input"
-          :placeholder="'Question ' + question"
-          @input="validateAndChangeAnswer"
-          :disabled="answersStore.getAnswerLoading"
-        />
-      </CardFooter>
-    </Card>
-  </div>
+  <Card class="my-2">
+    <CardHeader>
+      <CardTitle>
+        {{ `Question ${question}` }}
+      </CardTitle>
+      <CardDescription class="text-theme-red">
+        {{ isInvalid ? 'Please enter a valid number' : '' }}
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div v-html="props.mathContent"></div>
+    </CardContent>
+    <CardFooter>
+      <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
+        @input="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
+    </CardFooter>
+  </Card>
 </template>
 
 <script setup>

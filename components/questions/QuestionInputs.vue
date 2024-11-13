@@ -7,25 +7,18 @@
     </span>
 
     <div>
-      <Label for="title">Content</Label>
-      <Input
-        id="title"
-        :placeholder="questionInfo.content"
-        v-model="content"
-      ></Input>
+      <Label for="content">Content</Label>
+      <Textarea id="content" :placeholder="questionInfo.content" v-model="content"></Textarea>
 
-      <Label for="title">Author</Label>
-      <Input
-        id="title"
-        :placeholder="questionInfo.author"
-        v-model="author"
-      ></Input>
+      <Label for="author">Author</Label>
+      <Input id="author" :placeholder="questionInfo.author" v-model="author"></Input>
+
+      <Label for="image">Image</Label>
+      <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
+
     </div>
-    <Button
-      :disabled="author == '' || content == '' || createLoading"
-      @click="createOrUpdateQuestion"
-      >Confirm Changes</Button
-    >
+    <Button :disabled="author == '' || content == '' || createLoading" @click="createOrUpdateQuestion">Confirm
+      Changes</Button>
   </div>
 </template>
 
@@ -45,12 +38,14 @@ const title = computed(
 );
 const content = ref('');
 const author = ref(questionInfo.value.author || '');
+const image = ref(null);
 
 // changes needed for Sanity
 const changes = ref({
   title,
   content,
   author,
+  image,
   week: String(questionInfo.value.week),
   number: String(questionInfo.value.number),
   _type: 'questions',
@@ -65,6 +60,7 @@ async function createOrUpdateQuestion() {
       title: title.value,
       content: content.value,
       author: author.value,
+      image: image.value,
       week: String(questionInfo.value.week),
       number: String(questionInfo.value.number),
       _type: 'questions',
@@ -90,11 +86,18 @@ async function createOrUpdateQuestion() {
     } else {
       toastStore.changeToast('Error', response.message);
     }
-
-    createLoading.value = false;
   } catch (err) {
     toastStore.changeToast('Error changing question', err.message);
-    createLoading.value = false;
+  }
+  createLoading.value = false;
+}
+
+
+// Helper to handle the image file conversion
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    image.value = file; // Store the file in the `image` ref
   }
 }
 </script>

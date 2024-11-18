@@ -98,7 +98,11 @@ async function createOrUpdateQuestion() {
 function handleImageUpload(event) {
   const file = event.target.files[0];
   if (file) {
-    image.value = file;
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      image.value = reader.result;
+    };
   }
 }
 </script>

@@ -1,35 +1,37 @@
 <template>
-  <div>
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {{ `Question ${question}` }}
-        </CardTitle>
-        <CardDescription class="text-theme-red">
-          {{ isInvalid ? 'Please enter a valid number' : '' }}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div v-html="props.mathContent"></div>
-      </CardContent>
-      <CardFooter>
-        <Input
-          id="input"
-          type="text"
-          v-model="input"
-          :placeholder="'Question ' + question"
-          @input="validateAndChangeAnswer"
-          :disabled="answersStore.getAnswerLoading"
-        />
-      </CardFooter>
-    </Card>
-  </div>
+  <Card class="my-2">
+    <CardHeader>
+      <CardTitle>
+        {{ `Question ${question}` }}
+      </CardTitle>
+      <CardDescription class="text-theme-red">
+        {{ isInvalid ? 'Please enter a valid number' : '' }}
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <!-- Render the image if it exists -->
+      <div v-if="props.imageUrl" class="mb-4">
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full h-auto" />
+      </div>
+      <div v-html="props.mathContent"></div>
+    </CardContent>
+    <CardFooter>
+      <Input
+        id="input"
+        type="text"
+        v-model="input"
+        :placeholder="'Question ' + question"
+        @input="validateAndChangeAnswer"
+        :disabled="answersStore.getAnswerLoading"
+      />
+    </CardFooter>
+  </Card>
 </template>
 
 <script setup>
 const answersStore = useAnswersStore();
 
-const props = defineProps(['question', 'week', 'mathContent']);
+const props = defineProps(['question', 'week', 'mathContent', 'imageUrl']);
 const question = ref(props.question);
 const week = ref(props.week);
 
@@ -41,18 +43,14 @@ const isInvalid = ref(false);
 function validateAndChangeAnswer() {
   // only allow numbers and replace non-numeric characters
   const cleanedValue = input.value.replace(/[^0-9]/g, '');
-
   isInvalid.value = cleanedValue !== input.value;
-
   input.value = cleanedValue;
 
   const correspondingQuestionIndex = answersStore.answerData.findIndex(
     (answer) => answer.week == week.value && answer.question == question.value
   );
 
-  answersStore.answerData[correspondingQuestionIndex].answer = String(
-    input.value
-  );
+  answersStore.answerData[correspondingQuestionIndex].answer = String(input.value);
 }
 
 // once the answers are loaded from the store, update the input value (really only for users logged in)
@@ -66,7 +64,6 @@ watch(
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
       (answer) => answer.week == week.value && answer.question == question.value
     );
-
     input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   },
   { immediate: true }
@@ -95,7 +92,6 @@ onMounted(() => {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
       (answer) => answer.week == week.value && answer.question == question.value
     );
-
     input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   }
 });

@@ -44,7 +44,7 @@
           <QuestionsQuestionCard v-for="question in questionsStore.questionData
             .filter((question) => question.week == weekNames[index])
             .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-            :mathContent="question.content" :week="weekNames[index]" />
+            :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl"/>
 
           <!-- preview answer -->
           <Sheet>

@@ -1,3 +1,21 @@
+import imageUrlBuilder from '@sanity/image-url';
+import { createClient } from '@sanity/client';
+
+// Sanity client configuration
+const sanityClient = createClient({
+  projectId: 'ferer2d9',
+  dataset: 'production',
+  apiVersion: '2021-08-31',
+  useCdn: true,
+});
+
+// Image URL builder
+const builder = imageUrlBuilder(sanityClient);
+
+function urlFor(source) {
+  return builder.image(source).url();
+}
+
 export const useQuestionsStore = defineStore('questions', () => {
   const timeStore = useTimeStore();
 
@@ -11,8 +29,16 @@ export const useQuestionsStore = defineStore('questions', () => {
     const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
     const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
-    questionData.value = questions.value.filter((question) => !question.title.includes('Time'));
-    questionTimeData.value = questions.value.filter((question) => question.title.includes('Time'));
+    // Add image URLs to each question
+    const questionsWithImages = questions.value.map((question) => {
+      if (question.image?.asset?._ref) {
+        question.imageUrl = urlFor(question.image);
+      }
+      return question;
+    });
+
+    questionData.value = questionsWithImages.filter((question) => !question.title.includes('Time'));
+    questionTimeData.value = questionsWithImages.filter((question) => question.title.includes('Time'));
 
     // update time store with new time data
     timeStore.targetDates = questionTimeData.value.map((question) => {

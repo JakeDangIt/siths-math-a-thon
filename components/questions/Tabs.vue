@@ -38,11 +38,11 @@
           Week {{ weekNames[index] }} Questions
           <QuestionsClock :week="weekNames[index]" />
         </h1>
-
-        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
-          .filter((question) => question.week == weekNames[index])
-          .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :week="weekNames[index]" />
+        
+          <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
+            .filter((question) => question.week == weekNames[index])
+            .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
+            :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl"/>
 
         <!-- preview answer -->
         <Sheet>

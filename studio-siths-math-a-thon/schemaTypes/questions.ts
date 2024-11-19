@@ -25,5 +25,9 @@ export const questionsType = defineType({
       name: 'week',
       type: 'string',
     }),
+    defineField({
+      name: 'image',
+      type: 'image',
+    })
   ],
 })

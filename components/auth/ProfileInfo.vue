@@ -113,12 +113,8 @@
           "
           >Save</Button
         >
-        <HeaderNavLink
-          routePath="/auth/updatepassword"
-          routeName="Change Password"
-          variant="link"
-          class="text-md flex"
-        />
+        <NuxtLink to="/auth/updatepassword"
+          class="text-md flex">Change Password</NuxtLink>
       </CardFooter>
     </Card>
   </div>

@@ -5,6 +5,7 @@
     variant="secondary"
     @click="logout()"
     class="text-lg"
+    :textColor="'black'"
     :disabled="logoutLoading"
   ></HeaderNavLink>
 </template>

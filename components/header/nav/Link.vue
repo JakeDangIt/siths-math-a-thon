@@ -1,6 +1,7 @@
 <script setup>
 // props
-const props = defineProps(['routePath', 'routeName', 'iconName', 'variant']);
+const props = defineProps(['routePath', 'routeName', 'iconName', 'variant', 'textColor']);
+const textColor = props?.textColor == 'black' ? 'dark:text-black' : 'dark:text-white';
 </script>
 
 <template>
@@ -12,7 +13,7 @@ const props = defineProps(['routePath', 'routeName', 'iconName', 'variant']);
         class="mr-2"
         :name="`material-symbols:${iconName}`"
       />
-      {{ routeName }}
+      <span :class="textColor">{{ routeName }}</span>
     </Button>
   </NuxtLink>
 </template>

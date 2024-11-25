@@ -30,11 +30,11 @@
             :class="user_id == user.uid ? 'border-2 border-slate-400' : ''"
             v-for="(user, index) in leaderboardStore.top10.slice(3, 10)"
           >
-            <p class="m-2 w-6 text-center text-lg lg:text-2xl">
+            <p class="m-2 w-6 text-center text-lg lg:text-2xl dark:text-black">
               {{ index + 4 }}
             </p>
 
-            <p class="w-5/6 rounded-lg bg-slate-100 p-2 lg:w-auto">
+            <p class="w-5/6 rounded-lg bg-slate-100 p-2 lg:w-auto dark:text-black">
               <span class="lg:text-lg">{{ user.user_name }}</span>
               - {{ user.correct_answers }} points
             </p>

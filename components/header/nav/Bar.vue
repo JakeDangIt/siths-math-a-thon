@@ -48,12 +48,12 @@ const currentRouteName = computed(() =>
 
     <!-- right buttons -->
     <div class="flex flex-1 items-center justify-end gap-2">
-      <div v-if="user?.role !== 'authenticated'" class="flex gap-2">
+      <div v-if="user?.role !== 'authenticated'" class="flex items-center gap-2">
         <HeaderNavButtonColorMode />
         <HeaderNavButtonSignUp />
         <HeaderNavButtonLogIn />
       </div>
-      <div v-if="user?.role == 'authenticated'" class="flex gap-2">
+      <div v-if="user?.role == 'authenticated'" class="flex items-center gap-2">
         <HeaderNavButtonColorMode />
         <HeaderAvatar />
         <HeaderNavButtonLogOut />

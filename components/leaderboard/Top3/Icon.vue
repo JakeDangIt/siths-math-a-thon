@@ -27,9 +27,9 @@
             firstName[0]
           }}</AvatarFallback>
         </Avatar>
-        <h1 class="text-[30px] lg:text-[40px]">{{ index }}</h1>
-        <p class="lg:text-lg">{{ user.user_name }}</p>
-        <p class="text-sm">{{ user.correct_answers }} points</p>
+        <h1 class="text-[30px] lg:text-[40px] dark:text-black">{{ index }}</h1>
+        <p class="lg:text-lg dark:text-black">{{ user.user_name }}</p>
+        <p class="text-sm dark:text-black">{{ user.correct_answers }} points</p>
       </div>
     </div>
   </div>

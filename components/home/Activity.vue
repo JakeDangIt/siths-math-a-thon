@@ -20,13 +20,13 @@
           </DialogTrigger>
           <DialogScrollContent>
             <DialogHeader>
-              <DialogTitle>All Activity</DialogTitle>
+              <DialogTitle class="text-2xl">All Activity</DialogTitle>
             </DialogHeader>
             <div>
-              <div v-for="activity in activityStore.activityData" className="space-y-2">
+              <div v-for="activity in activityStore.activityData" class="space-y-2">
                 <p>
-                  <span class="font-bold">{{ formatDate(activity.date) }}</span>
-                  - {{ activity.content }}
+                  <span class="font-bold">{{ formatDate(activity.date) }} -</span>
+                  {{ activity.content }}
                 </p>
               </div>
             </div>

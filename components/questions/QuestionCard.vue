@@ -9,7 +9,6 @@
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <!-- Render the image if it exists -->
       <div v-if="props.imageUrl" class="mb-4">
         <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full h-auto" />
       </div>

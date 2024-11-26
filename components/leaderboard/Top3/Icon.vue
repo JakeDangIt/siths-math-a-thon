@@ -1,21 +1,12 @@
 <template>
   <!-- icon for each top 3 -->
-  <div
-    class="w-1/3 rounded-t-2xl"
-    :class="(user_id == user.uid ? 'border-2 border-slate-400' : '', bgColor)"
-  >
+  <div class="w-1/3 rounded-t-2xl" :class="(user_id == user.uid ? 'border-2 border-slate-400' : '', bgColor)">
     <div v-if="leaderboardStore.avatarLoading">
       <Skeleton :style="{ height: `${width < 1024 ? 250 : 400}px` }" />
     </div>
 
-    <div
-      v-else
-      class="flex flex-col items-center text-center"
-      :style="{ height: `${computedHeight}px` }"
-    >
-      <div
-        class="relative bottom-6 flex border-2 border-slate-400 bg-theme-red p-2"
-      >
+    <div v-else class="flex flex-col items-center text-center" :style="{ height: `${computedHeight}px` }">
+      <div class="relative bottom-6 flex border-2 border-slate-400 bg-theme-red p-2">
         <Icon :name="iconName" class="h-8 w-8 bg-white" />
       </div>
 
@@ -62,7 +53,7 @@ const computedHeight = computed(() => {
   // basically the percentage of how much higher the user is than the lowest score times the range (50px or 100px), with 250px or 350px as the minimum height
   const height =
     ((user.value.correct_answers - minScore.value) / scoreRange.value) *
-      (width.value < 1024 ? 50 : 100) +
+    (width.value < 1024 ? 50 : 100) +
     (width.value < 1024 ? 250 : 350);
   return height;
 });

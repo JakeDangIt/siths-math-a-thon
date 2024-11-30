@@ -1,7 +1,7 @@
 <template>
   <Card class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-4/5">
     <CardHeader>
-      <CardTitle>Contact us</CardTitle>
+      <CardTitle>Contact Us</CardTitle>
       <CardDescription
         >Have any questions? Fill out your information and let us
         know!</CardDescription
@@ -16,7 +16,7 @@
             v-model="formName"
             type="text"
             :disabled="name || timeDisableForm"
-            :placeholder="name || ''"
+            :placeholder="name || 'Jane Doe'"
             id="name"
           ></Input>
         </div>
@@ -37,7 +37,7 @@
             v-model="formEmail"
             type="email"
             :disabled="email || timeDisableForm"
-            :placeholder="email || ''"
+            :placeholder="email || 'e.g. janed1@nycstudents.net'"
             id="email"
           ></Input>
         </div>

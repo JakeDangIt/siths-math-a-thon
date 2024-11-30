@@ -37,7 +37,7 @@
                       : 'Email (NYCDOE)'
                   }}
                 </Label>
-                <Input type="email" id="email" v-model="userEmail" />
+                <Input type="email" id="email" placeholder="e.g. janed1@nycstudents.net" v-model="userEmail" />
               </div>
               <div class="space-y-1">
                 <Label
@@ -55,14 +55,14 @@
                 <Input type="password" id="password" v-model="userPassword" />
               </div>
 
-              <div class="space-x-2">
+              <div class="flex space-x-2">
                 <Checkbox
                   aria-label="Payment Agreement"
                   id="agreement"
                   @update:checked="userAgreement = !userAgreement"
                 >
                 </Checkbox>
-                <Label for="agreement">I agree.</Label>
+                <Label for="agreement">I agree to pay $5 to Mrs. Asher in Room 225.</Label>
               </div>
             </CardContent>
             <CardFooter>
@@ -178,7 +178,7 @@
             <CardContent class="space-y-2">
               <div class="space-y-1">
                 <Label for="loginEmail">Email Address</Label>
-                <Input type="email" id="loginEmail" v-model="userLoginEmail" />
+                <Input type="email" id="loginEmail" placeholder="e.g. janed1@nycstudents.net" v-model="userLoginEmail" />
               </div>
               <div class="space-y-1">
                 <Label for="loginPassword">Password</Label>

@@ -4,8 +4,9 @@
       <CardTitle>
         {{ `Question ${question}` }}
       </CardTitle>
-      <CardDescription class="text-theme-red">
-        {{ isInvalid ? 'Please enter a valid number' : '' }}
+      <CardDescription class="">
+        {{ `[${points} points]` }}
+        <span class="text-theme-red">{{ isInvalid ? 'Please enter a valid number' : '' }}</span>
       </CardDescription>
     </CardHeader>
     <CardContent>
@@ -30,9 +31,10 @@
 <script setup>
 const answersStore = useAnswersStore();
 
-const props = defineProps(['question', 'week', 'mathContent', 'imageUrl']);
+const props = defineProps(['question', 'week', 'mathContent', 'imageUrl', 'points']);
 const question = ref(props.question);
 const week = ref(props.week);
+const points = ref(props.points);
 
 // question input
 const input = ref(null);

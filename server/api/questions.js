@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
           title: changes.title,
           content: changes.content,
           author: changes.author,
+          points: changes.points,
         })
         .commit();
 

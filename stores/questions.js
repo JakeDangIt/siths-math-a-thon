@@ -29,7 +29,6 @@ export const useQuestionsStore = defineStore('questions', () => {
     const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
     const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
 
-    // Add image URLs to each question
     const questionsWithImages = questions.value.map((question) => {
       if (question.image?.asset?._ref) {
         question.imageUrl = urlFor(question.image);
@@ -56,6 +55,10 @@ export const useQuestionsStore = defineStore('questions', () => {
     }
   }
 
+  function buildImageUrl(image) {
+    return urlFor(image);
+  }
+
   // get questions on mount and load MathJax (which renders it on load)
   onMounted(async () => {
     await getQuestions().then(async () => {
@@ -67,5 +70,5 @@ export const useQuestionsStore = defineStore('questions', () => {
     });
   });
 
-  return { questionData, questionTimeData, isLoading, getQuestions, rerenderMathJax };
+  return { questionData, questionTimeData, isLoading, getQuestions, rerenderMathJax, buildImageUrl };
 });

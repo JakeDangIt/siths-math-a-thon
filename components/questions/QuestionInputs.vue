@@ -33,7 +33,13 @@
 const props = defineProps(['questionInfo']);
 const questionInfo = ref(props.questionInfo);
 
+const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
+
+const matchedQuestion = questionsStore.questionData.find(
+  (question) =>
+    question.week == questionInfo.value.week && question.number == questionInfo.value.number
+);
 
 const createLoading = ref(false);
 const buttonDisabled = computed(() => author.value == '' || content.value == '' || createLoading.value);
@@ -75,8 +81,21 @@ function handleImageUpload(event) {
 }
 
 // remove the image from the question
-function removeImage() {
-  image.value = null;
+async function removeImage() {
+  const response = await $fetch('/api/removeimage', {
+    method: 'DELETE',
+    body: {
+      questionInfo: questionInfo.value,
+    },
+  });
+
+  if (response.status === 'success') {
+    toastStore.changeToast('Image removed', 'The image has been removed successfully');
+    matchedQuestion.image = null;
+    matchedQuestion.imageUrl = '';
+  } else {
+    toastStore.changeToast('Error', response.message);
+  }
 }
 
 // create or update the question in Sanity
@@ -112,6 +131,8 @@ async function createOrUpdateQuestion() {
       content.value = '';
       author.value = '';
       questionInfo.value = confirmedChanges;
+
+      matchedQuestion.imageUrl = image.value;
     } else {
       toastStore.changeToast('Error', response.message);
     }

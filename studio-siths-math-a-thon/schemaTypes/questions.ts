@@ -28,6 +28,10 @@ export const questionsType = defineType({
     defineField({
       name: 'image',
       type: 'image',
-    })
+    }),
+    defineField({
+      name: 'points',
+      type: 'number',
+    }),
   ],
 })

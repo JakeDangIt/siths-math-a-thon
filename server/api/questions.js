@@ -19,10 +19,8 @@ export default defineEventHandler(async (event) => {
     const QUESTIONS_QUERY = `*[_type == "questions" && week == '${questionInfo.week}' && number == '${questionInfo.number}'][0]`;
     const existingQuestion = await sanityClient.fetch(QUESTIONS_QUERY);
 
-    const base64String = changes.image.split(',')[1];
-    const image = Buffer.from(base64String, 'base64');
     const filePath = `week${questionInfo.week}_question${questionInfo.number}.png`;
-    
+
     if (existingQuestion) {
       await sanityClient
         .patch(existingQuestion._id)
@@ -30,10 +28,14 @@ export default defineEventHandler(async (event) => {
           title: changes.title,
           content: changes.content,
           author: changes.author,
+          points: changes.points,
         })
         .commit();
 
-      if (image) {
+      if (changes.image) {
+        const base64String = changes.image.split(',')[1];
+        const image = Buffer.from(base64String, 'base64');
+        
         await sanityClient.assets
           .upload('image', await streamifier.createReadStream(image), {
             filename: filePath,

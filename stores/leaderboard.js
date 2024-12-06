@@ -38,7 +38,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     const { data: top10Data, error } = await supabase
       .from('leaderboard')
       .select('*')
-      .order('correct_answers', { ascending: false })
+      .order('total_points', { ascending: false })
       .limit(10);
 
     if (error) {
@@ -55,7 +55,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     const { data, error } = await supabase
       .from('leaderboard')
       .select('uid, correct_answers')
-      .order('correct_answers', { ascending: false });
+      .order('total_points', { ascending: false });
 
     if (error) {
       toastStore.changeToast('Failed to retrieve leaderboard', error.message);

@@ -26,7 +26,7 @@
 
           <p class="w-5/6 rounded-lg bg-slate-100 p-2 lg:w-auto">
             <span class="lg:text-lg">{{ user.user_name }}</span>
-            - {{ user.correct_answers }} points
+            - {{ user.total_points }} points
           </p>
         </div>
       </div>

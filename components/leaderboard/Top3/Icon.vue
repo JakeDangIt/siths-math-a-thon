@@ -20,7 +20,7 @@
         </Avatar>
         <h1 class="text-[30px] lg:text-[40px]">{{ index }}</h1>
         <p class="lg:text-lg">{{ user.user_name }}</p>
-        <p class="text-sm">{{ user.correct_answers }} points</p>
+        <p class="text-sm">{{ user.total_points }} points</p>
       </div>
     </div>
   </div>
@@ -45,14 +45,14 @@ const userAvatar = computed(
 const firstName = useFirstName(user.value.user_name);
 
 // some stats
-const maxScore = computed(() => top3.value[0].correct_answers);
-const minScore = computed(() => top3.value[2].correct_answers);
+const maxScore = computed(() => top3.value[0].total_points);
+const minScore = computed(() => top3.value[2].total_points);
 const scoreRange = computed(() => maxScore.value - minScore.value);
 
 const computedHeight = computed(() => {
   // basically the percentage of how much higher the user is than the lowest score times the range (50px or 100px), with 250px or 350px as the minimum height
   const height =
-    ((user.value.correct_answers - minScore.value) / scoreRange.value) *
+    ((user.value.total_points - minScore.value) / scoreRange.value) *
     (width.value < 1024 ? 50 : 100) +
     (width.value < 1024 ? 250 : 350);
   return height;

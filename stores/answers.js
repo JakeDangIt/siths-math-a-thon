@@ -61,21 +61,17 @@ export const useAnswersStore = defineStore('answers', () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
-    // await saveAnswers();
+    await saveAnswers();
 
     const currentWeekUserAnswers = leaderboardStore.userAnswers.find(
-      (weekAnswers) => weekAnswers.correct_answers.some((answers) => answers.week == '2')
+      (weekAnswers) =>
+        weekAnswers.correct_answers.some((answers) => answers.week == '1')
     );
 
-    if(currentWeekUserAnswers) {
-      console.log('hi')
-    }
-
-    return
     if (currentWeekUserAnswers) {
       // can't submit more than once per hour
       if (
-        Date.now() - new Date(currentWeekUserAnswers?.created_at).getTime() >
+        Date.now() - new Date(currentWeekUserAnswers?.created_at).getTime() <
         1000 * 60 * 60 * 1
       ) {
         toastStore.changeToast(
@@ -100,6 +96,13 @@ export const useAnswersStore = defineStore('answers', () => {
         toastStore.changeToast('Failed to update answers', updateError.message);
         return;
       }
+
+      toastStore.changeToast(
+        'Answers submitted',
+        'Thank you for submitting your answers'
+      );
+
+      await leaderboardStore.getUserAnswers();
     } else {
       const { error: insertError } = await supabase
         .from('submitted_answers')
@@ -109,12 +112,14 @@ export const useAnswersStore = defineStore('answers', () => {
         toastStore.changeToast('Failed to insert answers', insertError.message);
         return;
       }
-    }
 
-    toastStore.changeToast(
-      'Answers submitted',
-      'Thank you for submitting your answers'
-    );
+      toastStore.changeToast(
+        'Answers submitted',
+        'Thank you for submitting your answers'
+      );
+      
+      await leaderboardStore.getUserAnswers();
+    }
   }
 
   // retrieve answers

@@ -171,5 +171,6 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     numberOfCorrect,
     numberOfAnswered,
     retrieveLeaderboard,
+    getUserAnswers,
   };
 });

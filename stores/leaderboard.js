@@ -121,7 +121,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   async function getUserAnswers() {
     const { data, error } = await supabase
       .from('submitted_answers')
-      .select('correct_answers, uid')
+      .select('correct_answers, uid, created_at')
       .eq('uid', user.value.id);
 
     if (error) {
@@ -171,5 +171,6 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     numberOfCorrect,
     numberOfAnswered,
     retrieveLeaderboard,
+    getUserAnswers,
   };
 });

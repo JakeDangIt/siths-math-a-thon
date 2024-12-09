@@ -61,16 +61,21 @@ export const useAnswersStore = defineStore('answers', () => {
 
   // submit answers
   async function submitAnswers(week, answers) {
-    await saveAnswers();
+    // await saveAnswers();
 
-    const submittedData = leaderboardStore.userAnswers.filter(
-      (answer) => answer.week == week
+    const currentWeekUserAnswers = leaderboardStore.userAnswers.find(
+      (weekAnswers) => weekAnswers.correct_answers.some((answers) => answers.week == '2')
     );
 
-    if (submittedData.length > 0) {
+    if(currentWeekUserAnswers) {
+      console.log('hi')
+    }
+
+    return
+    if (currentWeekUserAnswers) {
       // can't submit more than once per hour
       if (
-        Date.now() - new Date(submittedData[0].created_at).getTime() <
+        Date.now() - new Date(currentWeekUserAnswers?.created_at).getTime() >
         1000 * 60 * 60 * 1
       ) {
         toastStore.changeToast(

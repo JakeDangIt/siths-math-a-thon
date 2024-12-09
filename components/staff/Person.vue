@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold">{{ person.name }}</h1>
     <Separator />
     <p class="text-gray-600">{{ person.title }}</p>
-    <p class="text-gray-600">Email: {{ person.email }}</p>
+    <p v-if="person.email" class="text-gray-600">Email: {{ person.email }}</p>
   </Card>
 </template>
 

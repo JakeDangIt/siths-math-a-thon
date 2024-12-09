@@ -41,7 +41,6 @@
                 <AvatarImage
                   v-if="avatar?.image"
                   :src="avatar?.image"
-                  draggable="false"
                 ></AvatarImage>
                 <AvatarFallback class="text-lg">{{
                   useFirstName(avatar?.name ?? ' ')[0]
@@ -51,7 +50,7 @@
             </div>
             <span
               >{{
-                leaderboardStore.top10[index]?.correct_answers ?? 0
+                leaderboardStore.top10[index]?.total_points ?? 0
               }}
               pts</span
             >

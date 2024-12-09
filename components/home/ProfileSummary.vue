@@ -12,7 +12,6 @@
             <AvatarImage
               v-if="avatarStore.avatarImage"
               :src="avatarStore.avatarImage"
-              draggable="false"
             ></AvatarImage>
             <AvatarFallback class="text-lg">{{ firstName[0] }}</AvatarFallback>
           </Avatar>

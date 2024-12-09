@@ -11,7 +11,7 @@
     </CardHeader>
     <CardContent>
       <div v-if="props.imageUrl" class="mb-4">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full h-auto" />
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full h-auto" draggable="false"/>
       </div>
       <div v-html="props.mathContent"></div>
     </CardContent>

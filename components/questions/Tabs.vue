@@ -98,7 +98,7 @@
                   <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
                     <TabsList class="w-full">
                       <TabsTrigger :value="week">
-                        Week {{ week }}
+                        {{ width > 640 ? 'Week ' : 'W' }}{{ week }}
                       </TabsTrigger>
                     </TabsList>
                   </CarouselItem>

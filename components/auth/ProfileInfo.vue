@@ -15,7 +15,6 @@
           <Avatar v-if="showAvatar" class="h-16 w-16">
             <AvatarImage
               :src="avatarImage || avatarStore.avatarImage"
-              draggable="false"
             />
           </Avatar>
           <Avatar v-else class="h-16 w-16">

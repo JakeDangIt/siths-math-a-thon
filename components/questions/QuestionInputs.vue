@@ -15,9 +15,9 @@
       <Input id="author" :placeholder="questionInfo.author" v-model="author"></Input>
 
       <Label for="image">Image</Label>
-      <div class="flex">
-      <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
-      <Button v-if="questionInfo.image" @click="removeImage">Remove Image</Button>
+      <div class="flex gap-2">
+        <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
+        <Button v-if="questionInfo.image" @click="removeImage" :disabled="removeLoading">Remove Image</Button>
       </div>
 
       <Label for="points">Points</Label>
@@ -42,6 +42,7 @@ const matchedQuestion = questionsStore.questionData.find(
 );
 
 const createLoading = ref(false);
+const removeLoading = ref(false);
 const buttonDisabled = computed(() => author.value == '' || content.value == '' || createLoading.value);
 
 // constructed title for easier reading in Sanity
@@ -82,6 +83,7 @@ function handleImageUpload(event) {
 
 // remove the image from the question
 async function removeImage() {
+  removeLoading.value = true;
   const response = await $fetch('/api/removeimage', {
     method: 'DELETE',
     body: {
@@ -96,6 +98,7 @@ async function removeImage() {
   } else {
     toastStore.changeToast('Error', response.message);
   }
+  removeLoading.value = false;
 }
 
 // create or update the question in Sanity

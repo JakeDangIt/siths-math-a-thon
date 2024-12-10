@@ -2,7 +2,7 @@
   <!-- avatar that also is a link to the profile page -->
   <NuxtLink to="/auth/profile" class="h-fit">
     <Avatar v-if="showAvatar" class="flex">
-      <AvatarImage :src="avatarStore.avatarImage" draggable="false" />
+      <AvatarImage :src="avatarStore.avatarImage" />
     </Avatar>
     <Avatar v-else class="flex">
       <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>

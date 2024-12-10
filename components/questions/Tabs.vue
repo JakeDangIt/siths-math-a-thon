@@ -38,11 +38,12 @@
           Week {{ weekNames[index] }} Questions
           <QuestionsClock :week="weekNames[index]" />
         </h1>
-        
-          <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
-            .filter((question) => question.week == weekNames[index])
-            .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-            :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl" :points="question.points"/>
+
+        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
+          .filter((question) => question.week == weekNames[index])
+          .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
+          :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl"
+          :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>
@@ -53,13 +54,18 @@
                 ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
                 : 'translate-x-0'
                 ">
+
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
+
               <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
               <!-- to save space, 'Answers' is omitted on mobile -->
-              <SheetTrigger><Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
+              <SheetTrigger>
+                <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
+
+              <MinigamesRedirectButton />
             </div>
 
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
@@ -67,10 +73,14 @@
                 ? 'translate-x-0'
                 : 'translate-x-[14rem] lg:translate-x-[-14rem]'
                 ">
+
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
+
               <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
+
+              <MinigamesRedirectButton />
             </div>
           </div>
 
@@ -113,8 +123,7 @@
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)"
-                  class="group flex justify-between px-2 hover:bg-slate-200">
+                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
@@ -141,10 +150,10 @@
                       )
                     )
                     " :disabled="submitLoading ||
-                        answersStore.answerData.filter(
-                          (answer) => answer.week == weekNames[index]
-                        ).length == 0
-                        " class="w-full">
+                      answersStore.answerData.filter(
+                        (answer) => answer.week == weekNames[index]
+                      ).length == 0
+                      " class="w-full">
                     Submit Week
                     {{ weekNames[index] }}
                   </Button>

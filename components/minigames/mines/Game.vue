@@ -62,12 +62,12 @@
                         <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
                         <div class="flex items-center gap-2">
                             <input v-model="betAmount" type="number"
-                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted">
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2">
+                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted || autoRunning">
+                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2" :disabled="autoRunning">
                                 ½
                             </button>
                             <button class="px-3 py-1 bg-[#243B4C] rounded-md"
-                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
+                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2" :disabled="autoRunning">
                                 2×
                             </button>
                         </div>
@@ -76,13 +76,13 @@
                     <div class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Mines</label>
                         <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
-                            :disabled="gameStarted">
+                            :disabled="gameStarted || autoRunning">
                             <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
                         </select>
                     </div>
                     <div class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Number of Games</label>
-                        <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md">
+                        <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md" :disabled="autoRunning">
                     </div>
 
                     <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
@@ -90,19 +90,19 @@
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                             resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnWin = false">
+                        ]" @click="resetOnWin = false"  :disabled="autoRunning">
                             Reset
                         </button>
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                             !resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnWin = true">
+                        ]" @click="resetOnWin = true" :disabled="autoRunning">
                             Increase By
                         </button>
                         <div class="flex items-center">
                             <input v-model="increaseOnWinPercentage" type="number"
-                                class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
-                                :disabled="!resetOnWin">
+                                class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
+                                :disabled="!resetOnWin || autoRunning">
                             <span>%</span>
                         </div>
                     </div>
@@ -111,19 +111,19 @@
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                             resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnLoss = false">
+                        ]" @click="resetOnLoss = false" :disabled="autoRunning">
                             Reset
                         </button>
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                             !resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnLoss = true">
+                        ]" @click="resetOnLoss = true" :disabled="autoRunning">
                             Increase By
                         </button>
                         <div class="flex items-center">
                             <input v-model="increaseOnLossPercentage" type="number"
-                                class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
-                                :disabled="!resetOnLoss">
+                                class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
+                                :disabled="!resetOnLoss || autoRunning">
                             <span>%</span>
                         </div>
                     </div>

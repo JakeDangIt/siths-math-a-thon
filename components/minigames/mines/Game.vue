@@ -86,6 +86,27 @@
                     </div>
 
                     <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
+                        <label class="block text-sm text-gray-400 mb-2">Reset on Win</label>
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="resetOnWin = false">
+                            Reset
+                        </button>
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            !resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="resetOnWin = true">
+                            Increase By
+                        </button>
+                        <div class="flex items-center">
+                            <input v-model="increaseOnWinPercentage" type="number"
+                                class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
+                                :disabled="!resetOnWin">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
                         <label class="block text-sm text-gray-400 mb-2">Reset on Loss</label>
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
@@ -100,8 +121,9 @@
                             Increase By
                         </button>
                         <div class="flex items-center">
-                        <input v-model="increaseOnLossPercentage" type="number" class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
-                            :disabled="!resetOnLoss">
+                            <input v-model="increaseOnLossPercentage" type="number"
+                                class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
+                                :disabled="!resetOnLoss">
                             <span>%</span>
                         </div>
                     </div>
@@ -123,12 +145,11 @@
                         class="w-full bg-[#00E701] hover:bg-[#00C701] disabled:bg-[#00c700ce] text-black font-bold py-3 rounded-lg transition-colors duration-200">
                         Stop Auto Bet
                     </button>
-                    {{ selectedCells }}
                 </div>
             </div>
 
             <!-- Game Grid -->
-            <div class="grid grid-cols-5 gap-2 relative">
+            <div class="h-fit grid grid-cols-5 gap-2 relative">
                 <button v-for="(cell, index) in cells" :key="index"
                     @click="!isAutoMode ? revealCell(index) : selectCell(index)"
                     :disabled="(!gameStarted || cell.revealed || gameOver) && (!isAutoMode && !gameStarted || autoRunning)"
@@ -201,6 +222,7 @@ const autoRunning = ref(false)
 const resetOnLoss = ref(false)
 const increaseOnLossPercentage = ref(0)
 const resetOnWin = ref(false)
+const increaseOnWinPercentage = ref(0)
 
 const showWinPopup = ref(false)
 
@@ -289,6 +311,7 @@ const revealCell = (index) => {
 
 const startAutoGame = async () => {
     autoRunning.value = true;
+    const originalBetAmount = betAmount.value;
     let gamesPlayed = 0;
 
     while (autoRunning.value && gamesPlayed < autoGames.value) {
@@ -307,13 +330,22 @@ const startAutoGame = async () => {
         }
 
         if (selectedCells.value.find((index) => cells.value[index].isMine) && resetOnLoss.value) {
-            console.log(betAmount.value, betAmount.value * (increaseOnLossPercentage.value / 100))
             betAmount.value += betAmount.value * (increaseOnLossPercentage.value / 100);
-            console.log(betAmount.value)
         }
-        else {
-            cashOut();
+
+        if (selectedCells.value.find((index) => cells.value[index].isMine) && !resetOnLoss.value) {
+            betAmount.value = originalBetAmount;
         }
+
+        if (!selectedCells.value.find((index) => cells.value[index].isMine) && resetOnWin.value) {
+            betAmount.value += betAmount.value * (increaseOnWinPercentage.value / 100);
+        }
+
+        if (!selectedCells.value.find((index) => cells.value[index].isMine) && !resetOnWin.value) {
+            betAmount.value = originalBetAmount;
+        }
+
+        cashOut();
         gamesPlayed++;
 
         // Delay before next game

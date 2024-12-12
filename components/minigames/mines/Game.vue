@@ -13,13 +13,13 @@
                     <button :class="[
                         'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                         !isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                    ]" @click="isAutoMode = false">
+                    ]" @click="isAutoMode = false; resetGame()">
                         Manual
                     </button>
                     <button :class="[
                         'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                         isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                    ]" @click="isAutoMode = true">
+                    ]" @click="isAutoMode = true; resetGame()">
                         Auto
                     </button>
                 </div>
@@ -51,39 +51,89 @@
 
                     <div v-if="gameStarted && !gameOver" class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Total Profit ({{ `${multiplier}x` }})</label>
-                        <input v-model="formattedWinnings" type="number" class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
-                            disabled>
+                        <input v-model="formattedWinnings" type="number"
+                            class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" disabled>
                     </div>
                 </div>
 
                 <!-- Auto Controls -->
                 <div v-else class="space-y-4">
                     <div class="bg-[#1A2C38] p-4 rounded-lg">
+                        <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
+                        <div class="flex items-center gap-2">
+                            <input v-model="betAmount" type="number"
+                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted">
+                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2">
+                                ½
+                            </button>
+                            <button class="px-3 py-1 bg-[#243B4C] rounded-md"
+                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
+                                2×
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#1A2C38] p-4 rounded-lg">
+                        <label class="block text-sm text-gray-400 mb-2">Mines</label>
+                        <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
+                            :disabled="gameStarted">
+                            <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
+                        </select>
+                    </div>
+                    <div class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Number of Games</label>
                         <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md">
+                    </div>
+
+                    <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
+                        <label class="block text-sm text-gray-400 mb-2">Reset on Loss</label>
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="resetOnLoss = false">
+                            Reset
+                        </button>
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            !resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="resetOnLoss = true">
+                            Increase By
+                        </button>
+                        <div class="flex items-center">
+                        <input v-model="increaseOnLossPercentage" type="number" class="w-full bg-[#243B4C] disabled:bg-[#203342] p-2 rounded-md"
+                            :disabled="!resetOnLoss">
+                            <span>%</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="space-y-2">
                     <button @click="isAutoMode ? startAutoGame() : startGame()"
-                        :disabled="gameStarted || betAmount <= 0 || betAmount > balance"
+                        :disabled="gameStarted || betAmount <= 0 || betAmount > balance || (isAutoMode && selectedCells.length === 0 || autoRunning)"
                         class="w-full bg-[#00E701] hover:bg-[#00C701] disabled:bg-gray-600 text-black font-bold py-3 rounded-lg transition-colors duration-200">
                         {{ isAutoMode ? 'Start Auto Bet' : 'Bet' }}
                     </button>
-                    <button v-if="gameStarted && !gameOver" @click="cashOut" :disabled="gameOver || revealedCount === 0"
+                    <button v-if="gameStarted && !gameOver && !isAutoMode" @click="cashOut"
+                        :disabled="gameOver || revealedCount === 0"
                         class="w-full bg-[#00E701] hover:bg-[#00C701] disabled:bg-[#00c700ce] text-black font-bold py-3 rounded-lg transition-colors duration-200">
                         Cash Out
                     </button>
+                    <button v-if="isAutoMode && autoRunning" @click="stopAutoGame"
+                        class="w-full bg-[#00E701] hover:bg-[#00C701] disabled:bg-[#00c700ce] text-black font-bold py-3 rounded-lg transition-colors duration-200">
+                        Stop Auto Bet
+                    </button>
+                    {{ selectedCells }}
                 </div>
             </div>
 
             <!-- Game Grid -->
             <div class="grid grid-cols-5 gap-2 relative">
-                <button v-for="(cell, index) in cells" :key="index" @click="revealCell(index)"
-                    :disabled="!gameStarted || cell.revealed || gameOver"
+                <button v-for="(cell, index) in cells" :key="index"
+                    @click="!isAutoMode ? revealCell(index) : selectCell(index)"
+                    :disabled="(!gameStarted || cell.revealed || gameOver) && (!isAutoMode && !gameStarted || autoRunning)"
                     class="aspect-square rounded-lg transition-all duration-300 relative overflow-hidden"
-                    :class="getCellClasses(cell, index)">
+                    :class="getCellClasses(cell, index), { 'bg-[#962EFF] hover:bg-[#962EFF]': isAutoMode && selectedCells.includes(index) }">
                     <transition name="reveal">
                         <div v-if="cell.revealed || (gameOver && !cell.revealed)"
                             class="absolute inset-0 flex items-center justify-center"
@@ -138,6 +188,7 @@ const gameStarted = ref(false)
 const gameOver = ref(false)
 const cells = ref([])
 const chosenCells = ref([])
+const selectedCells = ref([])
 const revealedCount = ref(0)
 const winnings = ref(0)
 const formattedWinnings = computed(() => winnings.value.toFixed(2))
@@ -146,6 +197,11 @@ const multiplier = computed(() => revealedCount.value != 0 ? mines.find((mine) =
 // Auto mode state
 const isAutoMode = ref(false)
 const autoGames = ref(10)
+const autoRunning = ref(false)
+const resetOnLoss = ref(false)
+const increaseOnLossPercentage = ref(0)
+const resetOnWin = ref(false)
+
 const showWinPopup = ref(false)
 
 // Initialize cells
@@ -168,12 +224,13 @@ const initializeCells = () => {
 const calculateWinnings = () => {
     if (revealedCount.value === 0) return 0
     winnings.value = betAmount.value * multiplier.value
-    return winnings.value
 }
 
 const startGame = () => {
     if (betAmount.value > balance.value) return
 
+    chosenCells.value = []
+    showWinPopup.value = false
     gameStarted.value = true
     gameOver.value = false
     revealedCount.value = 0
@@ -184,14 +241,24 @@ const startGame = () => {
 
 const cashOut = () => {
     if (!gameStarted.value || gameOver.value) return
+    chosenCells.value = []
     balance.value += winnings.value
     gameStarted.value = false
     gameOver.value = true
     showWinPopup.value = true
-    chosenCells.value = []
     setTimeout(() => {
         showWinPopup.value = false
     }, 2000)
+}
+
+const resetGame = () => {
+    chosenCells.value = []
+    showWinPopup.value = false
+    gameStarted.value = false
+    gameOver.value = false
+    revealedCount.value = 0
+    winnings.value = 0
+    initializeCells()
 }
 
 // Completion of the `revealCell` function and auto mode functionality
@@ -202,56 +269,71 @@ const revealCell = (index) => {
     chosenCells.value.push(index);
 
     if (cells.value[index].isMine) {
-        // If the revealed cell is a mine, game over
+        // Game over on mine reveal
         gameOver.value = true;
         gameStarted.value = false;
         cells.value.forEach((cell) => {
             if (cell.isMine) cell.revealed = true;
         });
     } else {
-        // Increment revealed count and check for win condition
+        // Increment revealed count
         revealedCount.value++;
+        calculateWinnings();
+
+        // Win condition: all safe cells revealed
         if (revealedCount.value === 25 - numberOfMines.value) {
-            // All non-mine cells revealed, player wins
             cashOut();
         }
     }
-
-    calculateWinnings()
 };
 
-const startAutoGame = () => {
-    if (autoGames.value <= 0 || betAmount.value > balance.value) return;
-
+const startAutoGame = async () => {
+    autoRunning.value = true;
     let gamesPlayed = 0;
-    const playGame = () => {
-        if (gamesPlayed >= autoGames.value || balance.value < betAmount.value) return;
 
+    while (autoRunning.value && gamesPlayed < autoGames.value) {
+        if (balance.value < betAmount.value) {
+            autoRunning.value = false;
+            break;
+        }
         startGame();
 
-        const interval = setInterval(() => {
-            if (gameOver.value || revealedCount.value === 25 - numberOfMines.value) {
-                // Cash out or reset if game ends
-                cashOut();
-                clearInterval(interval);
-                gamesPlayed++;
+        for (let i = 0; i < 25; i++) {
+            // make selected cells have mines at the end of the array
+            selectedCells.value = selectedCells.value.sort((a, b) => cells.value[a].isMine - cells.value[b].isMine);
+            selectedCells.value.forEach((index) => {
+                revealCell(index);
+            });
+        }
 
-                if (gamesPlayed < autoGames.value && balance.value >= betAmount.value) {
-                    // Start the next game after a short delay
-                    setTimeout(playGame, 1000);
-                }
-            } else {
-                // Reveal a random unrevealed cell
-                const unrevealedCells = cells.value.map((cell, idx) => idx).filter(idx => !cells.value[idx].revealed);
-                if (unrevealedCells.length > 0) {
-                    const randomIndex = unrevealedCells[Math.floor(Math.random() * unrevealedCells.length)];
-                    revealCell(randomIndex);
-                }
-            }
-        }, 500);
-    };
+        if (selectedCells.value.find((index) => cells.value[index].isMine) && resetOnLoss.value) {
+            console.log(betAmount.value, betAmount.value * (increaseOnLossPercentage.value / 100))
+            betAmount.value += betAmount.value * (increaseOnLossPercentage.value / 100);
+            console.log(betAmount.value)
+        }
+        else {
+            cashOut();
+        }
+        gamesPlayed++;
 
-    playGame();
+        // Delay before next game
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    autoRunning.value = false;
+};
+
+const stopAutoGame = () => {
+    autoRunning.value = false;
+    resetGame();
+};
+
+const selectCell = (index) => {
+    if (selectedCells.value.includes(index)) {
+        selectedCells.value = selectedCells.value.filter((cell) => cell !== index);
+        return;
+    }
+    selectedCells.value.push(index);
 };
 
 const getCellClasses = (cell, index) => {
@@ -260,9 +342,6 @@ const getCellClasses = (cell, index) => {
     }
     if (cell.revealed) {
         return cell.isMine ? 'bg-red-500' : 'bg-[#243B4C]'
-    }
-    if (gameOver.value && !cell.revealed) {
-        return 'unrevealed-cell'
     }
     return 'bg-[#1A2C38] hover:bg-[#243B4C] active:bg-[#2D4860]'
 }
@@ -357,21 +436,5 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .animate-popup {
     animation: popup 0.5s ease-out forwards;
-}
-
-.unrevealed-cell {
-    background-color: #162632;
-    position: relative;
-}
-
-.unrevealed-cell::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L22 12L12 22L2 12L12 2Z' fill='%23243B4C'/%3E%3C/svg%3E");
-    background-size: 50% 50%;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.5;
 }
 </style>

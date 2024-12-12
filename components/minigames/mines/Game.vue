@@ -1,8 +1,8 @@
 <template>
-    <div class="min-h-screen bg-[#0F212E] text-white p-6">
-        <div class="max-w-6xl mx-auto grid grid-cols-[320px,1fr] gap-6">
+    <div class="absolute top-14 left-0 w-screen bg-[#0F212E] text-white p-4 sm:p-6">
+        <div class="max-w-6xl mx-auto flex flex-col-reverse md:flex-col lg:grid lg:grid-cols-[320px,1fr] gap-3">
             <!-- Controls Panel -->
-            <div class="space-y-4">
+            <div class="space-y-2 md:space-y-4 mb-6 lg:mb-0">
                 <!-- Balance Display -->
                 <div class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
                     Balance: ${{ balance.toFixed(2) }}
@@ -25,7 +25,7 @@
                 </div>
 
                 <!-- Manual Controls -->
-                <div v-if="!isAutoMode" class="space-y-4">
+                <div v-if="!isAutoMode" class="space-y-2 md:space-y-4">
                     <div class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
                         <div class="flex items-center gap-2">
@@ -34,7 +34,8 @@
                             <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2">
                                 ½
                             </button>
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
+                            <button class="px-3 py-1 bg-[#243B4C] rounded-md"
+                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
                                 2×
                             </button>
                         </div>
@@ -49,8 +50,8 @@
                     </div>
 
                     <div v-if="gameStarted && !gameOver" class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Total Profit - {{ `${multiplier}x` }}</label>
-                        <input v-model="winnings" type="number" class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
+                        <label class="block text-sm text-gray-400 mb-2">Total Profit ({{ `${multiplier}x` }})</label>
+                        <input v-model="formattedWinnings" type="number" class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
                             disabled>
                     </div>
                 </div>
@@ -84,7 +85,9 @@
                     class="aspect-square rounded-lg transition-all duration-300 relative overflow-hidden"
                     :class="getCellClasses(cell, index)">
                     <transition name="reveal">
-                        <div v-if="cell.revealed || (gameOver && !cell.revealed)" class="absolute inset-0 flex items-center justify-center" :class="{'scale-75 opacity-50': gameOver && !cell.revealed}">
+                        <div v-if="cell.revealed || (gameOver && !cell.revealed)"
+                            class="absolute inset-0 flex items-center justify-center"
+                            :class="{ 'scale-75 opacity-50': gameOver && !cell.revealed }">
                             <template v-if="cell.isMine">
                                 <div class="mine-explosion">
                                     <svg viewBox="0 0 24 24" class="w-8 h-8 text-red-500">
@@ -93,8 +96,9 @@
                                 </div>
                             </template>
                             <template v-else>
-                                <div :class="{'diamond-reveal': chosenCells.includes(index)}">
-                                    <svg viewBox="0 0 24 24" class="w-8 h-8" :class="gameOver && !cell.revealed ? 'text-[#243B4C]' : 'text-[#00E701]'">
+                                <div :class="{ 'diamond-reveal': chosenCells.includes(index) }">
+                                    <svg viewBox="0 0 24 24" class="w-8 h-8"
+                                        :class="gameOver && !cell.revealed ? 'text-[#243B4C]' : 'text-[#00E701]'">
                                         <path d="M12 2L22 12L12 22L2 12L12 2Z" class="fill-current" />
                                     </svg>
                                 </div>
@@ -120,7 +124,6 @@
                 </Transition>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -137,6 +140,7 @@ const cells = ref([])
 const chosenCells = ref([])
 const revealedCount = ref(0)
 const winnings = ref(0)
+const formattedWinnings = computed(() => winnings.value.toFixed(2))
 const multiplier = computed(() => revealedCount.value != 0 ? mines.find((mine) => mine.mines === numberOfMines.value).multiplier[revealedCount.value - 1] : 1)
 
 // Auto mode state
@@ -173,6 +177,7 @@ const startGame = () => {
     gameStarted.value = true
     gameOver.value = false
     revealedCount.value = 0
+    winnings.value = betAmount.value
     balance.value -= betAmount.value
     initializeCells()
 }
@@ -257,7 +262,7 @@ const getCellClasses = (cell, index) => {
         return cell.isMine ? 'bg-red-500' : 'bg-[#243B4C]'
     }
     if (gameOver.value && !cell.revealed) {
-        return 'unrevealed-cell' 
+        return 'unrevealed-cell'
     }
     return 'bg-[#1A2C38] hover:bg-[#243B4C] active:bg-[#2D4860]'
 }
@@ -370,4 +375,3 @@ input[type="number"]::-webkit-outer-spin-button {
     opacity: 0.5;
 }
 </style>
-

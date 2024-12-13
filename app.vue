@@ -126,7 +126,7 @@ onMounted(async () => {
       answersStore.answerData = [];
     }
   });
-  
+
   isLoading.value = false;
 });
 

@@ -9,7 +9,10 @@
                     <div v-if="!syncLoading" class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
                         Balance: ${{ balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
                     </div>
-                    <div v-else class="flex items-center justify-center gap-2 text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">Balance: <Skeleton class="w-20 h-6"></Skeleton></div>
+                    <div v-else
+                        class="flex items-center justify-center gap-2 text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
+                        Balance: <Skeleton class="w-20 h-6"></Skeleton>
+                    </div>
 
                     <!-- Mode Toggle -->
                     <div class="bg-[#1A2C38] rounded-lg p-1 flex">
@@ -209,15 +212,20 @@
 
 <script setup>
 import { mines } from '~/utils/mines.js'
-        import bombSound from '@/assets/bomb.mp3';
-        import gemSound from '@/assets/gem.mp3';
-        import cashoutSound from '@/assets/cashout.mp3';
+import bombSound from '@/assets/bomb.mp3';
+import gemSound from '@/assets/gem.mp3';
+import cashoutSound from '@/assets/cashout.mp3';
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
+if (localStorage.getItem('balance')) {
+    localStorage.removeItem('balance')
+    localStorage.removeItem('last_updated')
+}
+
 const syncLoading = ref(true)
 // Game state
-const balance = ref(null)
+const balance = ref(1000)
 const betAmount = ref(10)
 const numberOfMines = ref(3)
 const gameStarted = ref(false)
@@ -270,9 +278,6 @@ const syncBalanceWithSupabase = async () => {
     syncLoading.value = true
     let now = getCurrentTimestamp()
 
-    let localLastUpdated = null
-    let localBalance = null
-
     let supabaseLastUpdated = null
     let supabaseBalance = null
 
@@ -282,35 +287,14 @@ const syncBalanceWithSupabase = async () => {
         .eq('user_id', user.value.id)
         .order('last_updated', { ascending: false })
 
-    if (localStorage.getItem('balance') && localStorage.getItem('last_updated')) {
-        localBalance = Number(localStorage.getItem('balance'))
-        localLastUpdated = localStorage.getItem('last_updated')
-    }
-
     if (balanceData.length > 0) {
         supabaseLastUpdated = balanceData[0].last_updated
         supabaseBalance = balanceData[0].balance
     }
-    if (supabaseLastUpdated && localLastUpdated) {
-        if (new Date(supabaseLastUpdated).getTime() > new Date(localLastUpdated).getTime()) {
-            console.log('a')
-            balance.value = Number(supabaseBalance)
-            lastUpdated.value = supabaseLastUpdated
-        } else {
-            console.log('b')
-            balance.value = localBalance
-            lastUpdated.value = localLastUpdated
-            await updateSupabaseBalance()
-        }
-    } else if (supabaseLastUpdated) {
-        console.log('c')
+    if (supabaseLastUpdated) {
+        console.log('a')
         balance.value = Number(supabaseBalance)
         lastUpdated.value = supabaseLastUpdated
-    } else if (localLastUpdated) {
-        console.log('d')
-        balance.value = Number(localBalance)
-        lastUpdated.value = localLastUpdated
-        await updateSupabaseBalance()
     }
 
     else {
@@ -326,7 +310,7 @@ const syncBalanceWithSupabase = async () => {
         localStorage.setItem('last_updated', now)
         lastUpdated.value = now
     }
-    
+
     syncLoading.value = false
 }
 
@@ -360,19 +344,8 @@ const updateSupabaseBalance = async () => {
 }
 
 const handleBeforeUnload = async () => {
-    const now = getCurrentTimestamp()
-    localStorage.setItem('balance', balance.value)
-    localStorage.setItem('last_updated', now)
     await updateSupabaseBalance()
 }
-
-// Watch for balance changes
-watch(balance, (newBalance) => {
-    const now = getCurrentTimestamp()
-    lastUpdated.value = now
-    localStorage.setItem('balance', newBalance)
-    localStorage.setItem('last_updated', now)
-})
 
 let saveInterval;
 
@@ -418,7 +391,7 @@ const cashOut = () => {
     showWinPopup.value = true
 
     var audio = new Audio(cashoutSound)
-        audio.play()
+    audio.play()
 
     setTimeout(() => {
         showWinPopup.value = false

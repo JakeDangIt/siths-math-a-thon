@@ -62,12 +62,15 @@
                         <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
                         <div class="flex items-center gap-2">
                             <input v-model="betAmount" type="number"
-                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted || autoRunning">
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2" :disabled="autoRunning">
+                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
+                                :disabled="gameStarted || autoRunning">
+                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2"
+                                :disabled="autoRunning">
                                 ½
                             </button>
                             <button class="px-3 py-1 bg-[#243B4C] rounded-md"
-                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2" :disabled="autoRunning">
+                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2"
+                                :disabled="autoRunning">
                                 2×
                             </button>
                         </div>
@@ -82,7 +85,8 @@
                     </div>
                     <div class="bg-[#1A2C38] p-4 rounded-lg">
                         <label class="block text-sm text-gray-400 mb-2">Number of Games</label>
-                        <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md" :disabled="autoRunning">
+                        <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md"
+                            :disabled="autoRunning">
                     </div>
 
                     <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
@@ -90,7 +94,7 @@
                         <button :class="[
                             'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
                             resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnWin = false"  :disabled="autoRunning">
+                        ]" @click="resetOnWin = false" :disabled="autoRunning">
                             Reset
                         </button>
                         <button :class="[
@@ -200,6 +204,8 @@
 
 <script setup>
 import { mines } from '~/utils/mines.js'
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 
 // Game state
 const balance = ref(1000)
@@ -242,6 +248,117 @@ const initializeCells = () => {
         }
     }
 }
+
+const lastUpdated = ref(null)
+
+// Helper to get the current timestamp
+const getCurrentTimestamp = () => new Date().toISOString()
+
+// Sync balance with Supabase and localStorage
+const syncBalanceWithSupabase = async () => {
+    if (!user.value) return
+
+    let now = getCurrentTimestamp()
+    let localLastUpdated = Date(localStorage.getItem('last_updated'))
+    let localBalance = parseFloat(localStorage.getItem('balance'))
+
+    let supabaseLastUpdated = null
+    let supabaseBalance = null
+
+    const { data: balanceData, error: fetchError } = await supabase
+        .from('balances')
+        .select('balance, last_updated')
+        .eq('user_id', user.value.id)
+        .order('last_updated', { ascending: false })
+
+    if (balanceData.length > 0) {
+        supabaseLastUpdated = balanceData[0].last_updated
+        supabaseBalance = balanceData[0].balance
+    }
+
+    if (supabaseLastUpdated && localLastUpdated) {
+        if (new Date(supabaseLastUpdated).getTime() > new Date(localLastUpdated).getTime()) {
+            balance.value = supabaseBalance
+            lastUpdated.value = supabaseLastUpdated
+        } else {
+            balance.value = localBalance
+            lastUpdated.value = localLastUpdated
+        }
+    } else if (supabaseLastUpdated) {
+        balance.value = supabaseBalance
+        lastUpdated.value = supabaseLastUpdated
+    } else {
+        const { error: insertError } = await supabase
+            .from('balances')
+            .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
+
+        if (insertError) {
+            console.error('Error inserting balance:', insertError)
+        }
+
+        localStorage.setItem('balance', balance.value)
+        localStorage.setItem('last_updated', now)
+        lastUpdated.value = now
+    }
+}
+
+// Update Supabase when unmounted
+const updateSupabaseBalance = async () => {
+    if (!user.value) return
+
+    const now = getCurrentTimestamp()
+    try {
+        // Check if the row exists
+        const { data: existingData, error: fetchError } = await supabase
+            .from('balances')
+            .select('user_id')
+            .eq('user_id', user.value.id)
+
+        if (existingData) {
+            // Update existing row
+            const { error: updateError } = await supabase
+                .from('balances')
+                .update({ balance: balance.value, last_updated: now })
+                .eq('user_id', user.value.id)
+        } else {
+            // Insert new row
+            const { error: insertError } = await supabase
+                .from('balances')
+                .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
+        }
+    } catch (err) {
+        console.error('Error updating balance in Supabase:', err)
+    }
+}
+
+const handleBeforeUnload = async () => {
+    const now = getCurrentTimestamp()
+    localStorage.setItem('balance', balance.value)
+    localStorage.setItem('last_updated', now)
+    await updateSupabaseBalance()
+}
+
+// Watch for balance changes
+watch(balance, (newBalance) => {
+    const now = getCurrentTimestamp()
+    lastUpdated.value = now
+    localStorage.setItem('balance', newBalance)
+    localStorage.setItem('last_updated', now)
+})
+
+// Lifecycle hooks
+onMounted(async () => {
+    if (localStorage.balance) {
+        balance.value = parseFloat(localStorage.balance)
+    }
+    await syncBalanceWithSupabase()
+    window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onUnmounted(async () => {
+    await updateSupabaseBalance()
+    window.removeEventListener('beforeunload', handleBeforeUnload)
+})
 
 const calculateWinnings = () => {
     if (revealedCount.value === 0) return 0

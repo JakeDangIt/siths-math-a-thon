@@ -1,7 +1,7 @@
 // all math teachers for the select dropdown
 export const teachers = [
   {
-    name: 'Ms. Amoroso',
+    name: 'Mr. Amoroso',
   },
   {
     name: 'Ms. Asher',

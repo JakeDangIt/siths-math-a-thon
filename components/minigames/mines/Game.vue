@@ -209,6 +209,9 @@
 
 <script setup>
 import { mines } from '~/utils/mines.js'
+        import bombSound from '@/assets/bomb.mp3';
+        import gemSound from '@/assets/gem.mp3';
+        import cashoutSound from '@/assets/cashout.mp3';
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
@@ -413,6 +416,10 @@ const cashOut = () => {
     gameStarted.value = false
     gameOver.value = true
     showWinPopup.value = true
+
+    var audio = new Audio(cashoutSound)
+        audio.play()
+
     setTimeout(() => {
         showWinPopup.value = false
     }, 2000)
@@ -442,10 +449,14 @@ const revealCell = (index) => {
         cells.value.forEach((cell) => {
             if (cell.isMine) cell.revealed = true;
         });
+        var audio = new Audio(bombSound);
+        audio.play();
     } else {
         // Increment revealed count
         revealedCount.value++;
         calculateWinnings();
+        var audio = new Audio(gemSound)
+        audio.play()
 
         // Win condition: all safe cells revealed
         if (revealedCount.value === 25 - numberOfMines.value) {

@@ -494,7 +494,7 @@ const startAutoGame = async () => {
         gamesPlayed++;
 
         // Delay before next game
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     autoRunning.value = false;

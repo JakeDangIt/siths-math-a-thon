@@ -168,8 +168,4 @@ function formattedResponse(submittedAnswer, isCorrect) {
     return 'Incorrect';
   }
 }
-
-onMounted(() => {
-  console.log(weeksAnswers(1));
-})
 </script>

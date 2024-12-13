@@ -59,6 +59,8 @@ module.exports = {
         'theme-dark-red': '#973f3b',
         'theme-blue': '#B1BAD1',
         'theme-dark-blue': '#8E95A7',
+        'connections-gray': '#efefe6',
+        'connections-dark-gray': '#5a594e',
         bronze: '#D9A962',
         silver: '#DDDDDD',
         gold: '#E7D38A',

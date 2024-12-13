@@ -10,6 +10,12 @@
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
+
+    <NuxtLink to="/minigames" class="fixed">
+      <Button variant="secondary" class="border border-slate-500">
+        <span>Minigames</span>
+      </Button>
+    </NuxtLink>
     <!-- carousel for the tabs -->
     <Carousel class="mx-auto w-2/3" :opts="{
       align: 'start',
@@ -64,8 +70,6 @@
               <SheetTrigger>
                 <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
-
-              <MinigamesRedirectButton />
             </div>
 
             <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
@@ -79,8 +83,6 @@
               </Button>
 
               <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
-
-              <MinigamesRedirectButton />
             </div>
           </div>
 

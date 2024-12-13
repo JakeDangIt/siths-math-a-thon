@@ -1,5 +1,6 @@
 <template>
     <div class="absolute top-14 left-0 w-screen bg-[#0F212E] text-white p-4 sm:p-6">
+        <MinigamesRedirectButton :color="'white'" class="mt-2 ml-[-1rem]" />
         <div class="max-w-6xl mx-auto flex flex-col-reverse md:flex-col lg:grid lg:grid-cols-[320px,1fr] gap-3">
             <!-- Controls Panel -->
             <div class="space-y-2 md:space-y-4 mb-6 lg:mb-0">

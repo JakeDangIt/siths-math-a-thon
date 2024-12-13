@@ -1,23 +1,87 @@
 <template>
-    <div>
-        <Button
-            class="flex w-full h-full aspect-square justify-center items-center border border-gray-300 p-4 bg-connections-gray text-black text-bold hover:bg-connections-gray"
-            :class="{
-                'bg-connections-dark-gray hover:bg-connections-dark-gray text-white': selectedConnections.includes(connection.id),
-            }" @click="handleClick">
-            {{ connection.title }}
-        </Button>
-    </div>
+    <button
+        class="w-full h-[80px] flex justify-center items-center p-4 text-lg font-bold transition-colors duration-200 rounded-lg"
+        :class="{
+            'bg-[#F7F7F6] hover:bg-[#E8E8E6] border border-gray-300': !selectedConnections.includes(connection.id),
+            'bg-[#666666] hover:bg-[#777777] text-white': selectedConnections.includes(connection.id),
+            'cursor-pointer': selectedConnections.length < 4 || selectedConnections.includes(connection.id),
+            'animate-check': isChecking && selectedConnections.includes(connection.id),
+            'animate-wrong': isWrong && selectedConnections.includes(connection.id)
+        }" :style="{
+    }" @click="handleClick"
+        :disabled="selectedConnections.length >= 4 && !selectedConnections.includes(connection.id) || isChecking">
+        {{ connection.content }}
+    </button>
 </template>
 
 <script setup>
 const props = defineProps({
-    connection: Object,
-    selectedConnections: Array,
+    connection: {
+        type: Object,
+        required: true
+    },
+    selectedConnections: {
+        type: Array,
+        default: () => []
+    },
+    isChecking: {
+        type: Boolean,
+        default: false
+    },
+    isWrong: {
+        type: Boolean,
+        default: false
+    }
 });
+
 const emit = defineEmits(['click']);
 
+const delay = computed(() => {
+    const index = props.selectedConnections.indexOf(props.connection.id);
+    return index !== -1 ? `${index * 0.2}s` : '0s'; // 0.1s delay per card
+});
+
 function handleClick() {
-    emit('click', props.connection.id);
+    if (props.selectedConnections.length < 4 || props.selectedConnections.includes(props.connection.id)) {
+        emit('click', props.connection.id);
+    }
 }
 </script>
+
+<style scoped>
+@keyframes checkAnimation {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes wrongAnimation {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.animate-check {
+    animation: checkAnimation 0.5s ease-in-out forwards;
+}
+
+.animate-wrong {
+    animation: wrongAnimation 0.5s ease-in-out forwards;
+}
+</style>

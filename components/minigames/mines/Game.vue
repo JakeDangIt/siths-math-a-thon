@@ -6,9 +6,10 @@
             <div class="flex flex-col-reverse md:flex-col space-y-2 md:space-y-4 mb-6 lg:mb-0">
                 <div class="space-y-2">
                     <!-- Balance Display -->
-                    <div class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
+                    <div v-if="!syncLoading" class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
                         Balance: ${{ balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
                     </div>
+                    <div v-else class="flex items-center justify-center gap-2 text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">Balance: <Skeleton class="w-20 h-6"></Skeleton></div>
 
                     <!-- Mode Toggle -->
                     <div class="bg-[#1A2C38] rounded-lg p-1 flex">
@@ -208,11 +209,15 @@
 
 <script setup>
 import { mines } from '~/utils/mines.js'
+        import bombSound from '@/assets/bomb.mp3';
+        import gemSound from '@/assets/gem.mp3';
+        import cashoutSound from '@/assets/cashout.mp3';
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
+const syncLoading = ref(true)
 // Game state
-const balance = ref(1000)
+const balance = ref(null)
 const betAmount = ref(10)
 const numberOfMines = ref(3)
 const gameStarted = ref(false)
@@ -262,9 +267,11 @@ const getCurrentTimestamp = () => new Date().toISOString()
 const syncBalanceWithSupabase = async () => {
     if (!user.value) return
 
+    syncLoading.value = true
     let now = getCurrentTimestamp()
-    let localLastUpdated = Date(localStorage.getItem('last_updated'))
-    let localBalance = parseFloat(localStorage.getItem('balance'))
+
+    let localLastUpdated = null
+    let localBalance = null
 
     let supabaseLastUpdated = null
     let supabaseBalance = null
@@ -275,25 +282,33 @@ const syncBalanceWithSupabase = async () => {
         .eq('user_id', user.value.id)
         .order('last_updated', { ascending: false })
 
+    if (localStorage.getItem('balance') && localStorage.getItem('last_updated')) {
+        localBalance = Number(localStorage.getItem('balance'))
+        localLastUpdated = localStorage.getItem('last_updated')
+    }
+
     if (balanceData.length > 0) {
         supabaseLastUpdated = balanceData[0].last_updated
         supabaseBalance = balanceData[0].balance
     }
-
     if (supabaseLastUpdated && localLastUpdated) {
         if (new Date(supabaseLastUpdated).getTime() > new Date(localLastUpdated).getTime()) {
-            balance.value = supabaseBalance
+            console.log('a')
+            balance.value = Number(supabaseBalance)
             lastUpdated.value = supabaseLastUpdated
         } else {
+            console.log('b')
             balance.value = localBalance
             lastUpdated.value = localLastUpdated
             await updateSupabaseBalance()
         }
     } else if (supabaseLastUpdated) {
-        balance.value = supabaseBalance
+        console.log('c')
+        balance.value = Number(supabaseBalance)
         lastUpdated.value = supabaseLastUpdated
     } else if (localLastUpdated) {
-        balance.value = localBalance
+        console.log('d')
+        balance.value = Number(localBalance)
         lastUpdated.value = localLastUpdated
         await updateSupabaseBalance()
     }
@@ -311,6 +326,8 @@ const syncBalanceWithSupabase = async () => {
         localStorage.setItem('last_updated', now)
         lastUpdated.value = now
     }
+    
+    syncLoading.value = false
 }
 
 // Update Supabase when unmounted
@@ -360,9 +377,6 @@ watch(balance, (newBalance) => {
 let saveInterval;
 
 onMounted(async () => {
-    if (localStorage.balance) {
-        balance.value = parseFloat(localStorage.balance);
-    }
     await syncBalanceWithSupabase();
 
     saveInterval = setInterval(async () => {
@@ -402,6 +416,10 @@ const cashOut = () => {
     gameStarted.value = false
     gameOver.value = true
     showWinPopup.value = true
+
+    var audio = new Audio(cashoutSound)
+        audio.play()
+
     setTimeout(() => {
         showWinPopup.value = false
     }, 2000)
@@ -431,10 +449,14 @@ const revealCell = (index) => {
         cells.value.forEach((cell) => {
             if (cell.isMine) cell.revealed = true;
         });
+        var audio = new Audio(bombSound);
+        audio.play();
     } else {
         // Increment revealed count
         revealedCount.value++;
         calculateWinnings();
+        var audio = new Audio(gemSound)
+        audio.play()
 
         // Win condition: all safe cells revealed
         if (revealedCount.value === 25 - numberOfMines.value) {
@@ -483,7 +505,7 @@ const startAutoGame = async () => {
         gamesPlayed++;
 
         // Delay before next game
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     autoRunning.value = false;

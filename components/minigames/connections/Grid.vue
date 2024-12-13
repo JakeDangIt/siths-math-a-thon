@@ -10,8 +10,8 @@
                 class="col-span-2 md:col-span-4 h-[80px] flex items-center justify-center p-2 rounded-lg text-center transition-all duration-500 group-pop"
                 :class="getGroupColor(group.index)">
                 <div>
-                    <h3 class="font-bold text-sm mb-1">{{ group.title }}</h3>
-                    <p class="text-xs">{{ group.items.join(', ') }}</p>
+                    <h3 class="font-bold text-xl mb-1">{{ group.title }}</h3>
+                    <p>{{ group.items.join(', ') }}</p>
                 </div>
             </div>
 
@@ -21,12 +21,13 @@
                 @click="handleClick" />
         </TransitionGroup>
 
+        <div class="flex flex-col items-center gap-3">
+            <MinigamesConnectionsInfo :selectedConnections="selectedConnections" :mistakes="mistakes" @shuffle="shuffle"
+                :isChecking="isChecking" :isGameOver="isGameOver" @deselect-all="deselectAll" @submit="submitGuess" />
 
-        <MinigamesConnectionsInfo :selectedConnections="selectedConnections" :mistakes="mistakes" @shuffle="shuffle"
-            :isChecking="isChecking" @deselect-all="deselectAll" @submit="submitGuess" />
-        <!-- 
-        <MinigamesConnectionsEndingScreen v-if="isGameOver" :foundGroups="foundGroups" :connections="allConnections"
-            @close="resetGame" /> -->
+            <MinigamesConnectionsEndingScreen v-if="isGameOver" :foundGroups="foundGroups" :connections="allConnections"
+                :isGameOver="isGameOver" :mistakes="mistakes" :guessHistory="guessHistory" />
+        </div>
     </div>
 </template>
 
@@ -37,6 +38,7 @@ const connections = ref([...allConnections]);
 const selectedConnections = ref([]);
 const mistakes = ref(0);
 const foundGroups = ref([]);
+const guessHistory = ref([]);
 const isChecking = ref(false);
 const isWrong = ref(false);
 
@@ -44,10 +46,10 @@ const isGameOver = computed(() => foundGroups.value.length === 4 || mistakes.val
 
 function getGroupColor(index) {
     const colors = {
-        0: 'bg-[#F7DA21] text-black', // Yellow
-        1: 'bg-[#92C13D] text-black', // Green
-        2: 'bg-[#7BA4DB] text-black', // Blue
-        3: 'bg-[#B87AA3] text-black', // Purple
+        0: 'bg-[#F7DA21] text-black',
+        1: 'bg-[#92C13D] text-black',
+        2: 'bg-[#7BA4DB] text-black',
+        3: 'bg-[#B87AA3] text-black',
     };
     return colors[index] || '';
 }
@@ -84,6 +86,11 @@ async function submitGuess() {
         item.group === selectedItems[0].group
     );
 
+    guessHistory.value.push({
+        items: selectedItems.map(item => item.content),
+        isCorrect: allSameGroup,
+    });
+
     if (allSameGroup) {
         const groupIndex = selectedItems[0].group - 1;
         connections.value = connections.value.filter(item =>
@@ -97,23 +104,15 @@ async function submitGuess() {
             items: selectedItems.map(item => item.content)
         });
 
-        // Remove found items from connections
         selectedConnections.value = [];
     } else {
         isWrong.value = true;
-        await new Promise(resolve => setTimeout(resolve, 800)); // Wait for animation
+        await new Promise(resolve => setTimeout(resolve, 800));
         isWrong.value = false;
         mistakes.value++;
     }
 
     isChecking.value = false;
-}
-
-function resetGame() {
-    connections.value = [...allConnections];
-    selectedConnections.value = [];
-    mistakes.value = 0;
-    foundGroups.value = [];
 }
 </script>
 

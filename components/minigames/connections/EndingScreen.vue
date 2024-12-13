@@ -1,53 +1,62 @@
 <template>
-    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-2xl w-full">
-        <h2 class="text-2xl font-bold mb-4">
-          {{ foundGroups.length === 4 ? 'Congratulations!' : 'Game Over' }}
-        </h2>
-        <p class="text-xl mb-4">
-          {{ foundGroups.length === 4 ? 'You found all the groups!' : 'Better luck next time!' }}
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div v-for="group in allGroups" :key="group" class="bg-gray-100 p-4 rounded">
-            <h3 class="font-bold mb-2">{{ group.charAt(0).toUpperCase() + group.slice(1) }}</h3>
-            <ul>
-              <li v-for="connection in connectionsInGroup(group)" :key="connection.id">
-                {{ connection.content }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <button
-          @click="$emit('close')"
-          class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200"
-        >
-          Play Again
-        </button>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { computed } from 'vue';
-  
-  const props = defineProps({
-    foundGroups: {
-      type: Array,
-      required: true
-    },
-    connections: {
-      type: Array,
-      required: true
-    }
-  });
-  
-  const allGroups = computed(() => {
-    return [...new Set(props.connections.map(connection => connection.group))];
-  });
-  
-  function connectionsInGroup(group) {
-    return props.connections.filter(connection => connection.group === group);
-  }
-  
-  defineEmits(['close']);
-  </script>
+    <Dialog :defaultOpen="true">
+        <DialogTrigger>
+            <button
+                class="px-6 py-2 rounded-full border-2 border-black hover:bg-gray-100 transition-colors duration-200 font-medium">
+                See Results
+            </button>
+        </DialogTrigger>
+        <DialogContent class="sm:max-w-md">
+            <DialogHeader>
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                        <StarIcon class="w-8 h-8 text-white" />
+                    </div>
+                    <DialogTitle class="text-2xl font-bold mb-6">
+                        {{ getCompletionMessage }}
+                    </DialogTitle>
+                </div>
+            </DialogHeader>
+
+            <div class="flex flex-col items-center">
+                <h3 class="text-lg text-center font-bold mb-2">Guess History</h3>
+                <div>
+                    <div v-for="(guess, index) in guessHistory" :key="index" class="flex gap-1">
+                        <div v-for="item in guess.items" :key="item" class="w-10 h-10 rounded text-center"
+                            :class="getGroupColor(connections.find((guess) => guess.content == item).group - 1)"></div>
+                    </div>
+                </div>
+            </div>
+        </DialogContent>
+    </Dialog>
+</template>
+
+<script setup>
+import { StarIcon } from 'lucide-vue-next';
+
+const props = defineProps({
+    foundGroups: Array,
+    connections: Array,
+    guessHistory: Array,
+    mistakes: Number,
+    isGameOver: Boolean
+});
+
+const getCompletionMessage = computed(() => {
+    if (props.mistakes === 0) return 'Perfect!';
+    if (props.mistakes === 1) return 'Excellent!';
+    if (props.mistakes === 2) return 'Great Job!';
+    if (props.mistakes === 3) return 'Well Done!';
+    return 'Game Over';
+});
+
+function getGroupColor(index) {
+    const colors = {
+        0: 'bg-[#F7DA21]', // Yellow
+        1: 'bg-[#92C13D]', // Green
+        2: 'bg-[#7BA4DB]', // Blue
+        3: 'bg-[#B87AA3]', // Purple
+    };
+    return colors[index] || '';
+}
+</script>

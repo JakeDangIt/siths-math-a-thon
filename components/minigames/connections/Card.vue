@@ -36,11 +36,6 @@ const props = defineProps({
 
 const emit = defineEmits(['click']);
 
-const delay = computed(() => {
-    const index = props.selectedConnections.indexOf(props.connection.id);
-    return index !== -1 ? `${index * 0.2}s` : '0s'; // 0.1s delay per card
-});
-
 function handleClick() {
     if (props.selectedConnections.length < 4 || props.selectedConnections.includes(props.connection.id)) {
         emit('click', props.connection.id);

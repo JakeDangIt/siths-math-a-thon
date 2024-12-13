@@ -1,135 +1,138 @@
 <template>
     <div class="absolute top-14 left-0 w-screen bg-[#0F212E] text-white p-4 sm:p-6">
         <MinigamesRedirectButton :color="'white'" class="mt-2 ml-[-1rem]" />
-        <div class="max-w-6xl mx-auto flex flex-col-reverse md:flex-col lg:grid lg:grid-cols-[320px,1fr] gap-3">
+        <div class="max-w-6xl mx-auto flex flex-col-reverse md:grid md:grid-cols-[320px,1fr] gap-3">
             <!-- Controls Panel -->
-            <div class="space-y-2 md:space-y-4 mb-6 lg:mb-0">
-                <!-- Balance Display -->
-                <div class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
-                    Balance: ${{ balance.toFixed(2) }}
-                </div>
+            <div class="flex flex-col-reverse md:flex-col space-y-2 md:space-y-4 mb-6 lg:mb-0">
+                <div class="space-y-2">
+                    <!-- Balance Display -->
+                    <div class="text-lg font-bold text-center bg-[#1A2C38] p-4 rounded-lg">
+                        Balance: ${{ balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                    </div>
 
-                <!-- Mode Toggle -->
-                <div class="bg-[#1A2C38] rounded-lg p-1 flex">
-                    <button :class="[
-                        'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                        !isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                    ]" @click="isAutoMode = false; resetGame()">
-                        Manual
-                    </button>
-                    <button :class="[
-                        'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                        isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                    ]" @click="isAutoMode = true; resetGame()">
-                        Auto
-                    </button>
-                </div>
+                    <!-- Mode Toggle -->
+                    <div class="bg-[#1A2C38] rounded-lg p-1 flex">
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            !isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="isAutoMode = false; resetGame()">
+                            Manual
+                        </button>
+                        <button :class="[
+                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                            isAutoMode ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                        ]" @click="isAutoMode = true; resetGame()">
+                            Auto
+                        </button>
+                    </div>
 
-                <!-- Manual Controls -->
-                <div v-if="!isAutoMode" class="space-y-2 md:space-y-4">
-                    <div class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
-                        <div class="flex items-center gap-2">
-                            <input v-model="betAmount" type="number"
-                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted">
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2">
-                                ½
-                            </button>
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md"
-                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
-                                2×
-                            </button>
+                    <!-- Manual Controls -->
+                    <div v-if="!isAutoMode" class="space-y-2 md:space-y-4">
+                        <div class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
+                            <div class="flex items-center gap-2">
+                                <input v-model="betAmount" type="number"
+                                    class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" :disabled="gameStarted">
+                                <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2">
+                                    ½
+                                </button>
+                                <button class="px-3 py-1 bg-[#243B4C] rounded-md"
+                                    @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2">
+                                    2×
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Mines</label>
+                            <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
+                                :disabled="gameStarted">
+                                <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
+                            </select>
+                        </div>
+
+                        <div v-if="gameStarted && !gameOver" class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Total Profit ({{ `${multiplier}x`
+                                }})</label>
+                            <input v-model="formattedWinnings" type="number"
+                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" disabled>
                         </div>
                     </div>
 
-                    <div class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Mines</label>
-                        <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
-                            :disabled="gameStarted">
-                            <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
-                        </select>
-                    </div>
+                    <!-- Auto Controls -->
+                    <div v-else class="space-y-4">
+                        <div class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
+                            <div class="flex items-center gap-2">
+                                <input v-model="betAmount" type="number"
+                                    class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
+                                    :disabled="gameStarted || autoRunning">
+                                <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2"
+                                    :disabled="autoRunning">
+                                    ½
+                                </button>
+                                <button class="px-3 py-1 bg-[#243B4C] rounded-md"
+                                    @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2"
+                                    :disabled="autoRunning">
+                                    2×
+                                </button>
+                            </div>
+                        </div>
 
-                    <div v-if="gameStarted && !gameOver" class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Total Profit ({{ `${multiplier}x` }})</label>
-                        <input v-model="formattedWinnings" type="number"
-                            class="flex-1 bg-[#243B4C] p-2 rounded-md text-white" disabled>
-                    </div>
-                </div>
-
-                <!-- Auto Controls -->
-                <div v-else class="space-y-4">
-                    <div class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Bet Amount</label>
-                        <div class="flex items-center gap-2">
-                            <input v-model="betAmount" type="number"
-                                class="flex-1 bg-[#243B4C] p-2 rounded-md text-white"
+                        <div class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Mines</label>
+                            <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
                                 :disabled="gameStarted || autoRunning">
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md" @click="betAmount /= 2"
-                                :disabled="autoRunning">
-                                ½
-                            </button>
-                            <button class="px-3 py-1 bg-[#243B4C] rounded-md"
-                                @click="betAmount * 2 > balance ? betAmount = balance : betAmount *= 2"
-                                :disabled="autoRunning">
-                                2×
-                            </button>
+                                <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
+                            </select>
                         </div>
-                    </div>
-
-                    <div class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Mines</label>
-                        <select v-model="numberOfMines" class="w-full bg-[#243B4C] p-2 rounded-md"
-                            :disabled="gameStarted || autoRunning">
-                            <option v-for="n in 24" :key="n" :value="n">{{ n }}</option>
-                        </select>
-                    </div>
-                    <div class="bg-[#1A2C38] p-4 rounded-lg">
-                        <label class="block text-sm text-gray-400 mb-2">Number of Games</label>
-                        <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md"
-                            :disabled="autoRunning">
-                    </div>
-
-                    <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
-                        <label class="block text-sm text-gray-400 mb-2">Reset on Win</label>
-                        <button :class="[
-                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                            resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnWin = false" :disabled="autoRunning">
-                            Reset
-                        </button>
-                        <button :class="[
-                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                            !resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnWin = true" :disabled="autoRunning">
-                            Increase By
-                        </button>
-                        <div class="flex items-center">
-                            <input v-model="increaseOnWinPercentage" type="number"
-                                class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
-                                :disabled="!resetOnWin || autoRunning">
-                            <span>%</span>
+                        <div class="bg-[#1A2C38] p-4 rounded-lg">
+                            <label class="block text-sm text-gray-400 mb-2">Number of Games</label>
+                            <input v-model="autoGames" type="number" class="w-full bg-[#243B4C] p-2 rounded-md"
+                                :disabled="autoRunning">
                         </div>
-                    </div>
-                    <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
-                        <label class="block text-sm text-gray-400 mb-2">Reset on Loss</label>
-                        <button :class="[
-                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                            resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnLoss = false" :disabled="autoRunning">
-                            Reset
-                        </button>
-                        <button :class="[
-                            'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
-                            !resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
-                        ]" @click="resetOnLoss = true" :disabled="autoRunning">
-                            Increase By
-                        </button>
-                        <div class="flex items-center">
-                            <input v-model="increaseOnLossPercentage" type="number"
-                                class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
-                                :disabled="!resetOnLoss || autoRunning">
-                            <span>%</span>
+
+                        <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
+                            <label class="block text-sm text-gray-400 mb-2">Reset on Win</label>
+                            <button :class="[
+                                'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                                resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                            ]" @click="resetOnWin = false" :disabled="autoRunning">
+                                Reset
+                            </button>
+                            <button :class="[
+                                'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                                !resetOnWin ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                            ]" @click="resetOnWin = true" :disabled="autoRunning">
+                                Increase By
+                            </button>
+                            <div class="flex items-center">
+                                <input v-model="increaseOnWinPercentage" type="number"
+                                    class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
+                                    :disabled="!resetOnWin || autoRunning">
+                                <span>%</span>
+                            </div>
+                        </div>
+                        <div class="bg-[#1A2C38] p-4 rounded-lg space-y-2">
+                            <label class="block text-sm text-gray-400 mb-2">Reset on Loss</label>
+                            <button :class="[
+                                'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                                resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                            ]" @click="resetOnLoss = false" :disabled="autoRunning">
+                                Reset
+                            </button>
+                            <button :class="[
+                                'flex-1 py-2 px-4 rounded-md transition-colors duration-200',
+                                !resetOnLoss ? 'bg-[#243B4C] text-white' : 'text-gray-400'
+                            ]" @click="resetOnLoss = true" :disabled="autoRunning">
+                                Increase By
+                            </button>
+                            <div class="flex items-center">
+                                <input v-model="increaseOnLossPercentage" type="number"
+                                    class="w-full bg-[#243B4C] disabled:bg-[#203342] disabled:text-gray-400 p-2 rounded-md"
+                                    :disabled="!resetOnLoss || autoRunning">
+                                <span>%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -289,7 +292,13 @@ const syncBalanceWithSupabase = async () => {
     } else if (supabaseLastUpdated) {
         balance.value = supabaseBalance
         lastUpdated.value = supabaseLastUpdated
-    } else {
+    } else if (localLastUpdated) {
+        balance.value = localBalance
+        lastUpdated.value = localLastUpdated
+        await updateSupabaseBalance()
+    }
+
+    else {
         const { error: insertError } = await supabase
             .from('balances')
             .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
@@ -474,7 +483,7 @@ const startAutoGame = async () => {
         gamesPlayed++;
 
         // Delay before next game
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     autoRunning.value = false;

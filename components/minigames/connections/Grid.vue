@@ -4,7 +4,7 @@
             Create four groups of four!
         </h1>
 
-        <TransitionGroup tag="div" name="list" class="relative grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-8">
+        <TransitionGroup tag="div" name="list" class="relative grid grid-cols-4 gap-2 md:gap-4 mb-8">
             <!-- Completed Groups -->
             <div v-for="group in foundGroups" :key="group.id"
                 class="col-span-2 md:col-span-4 h-[80px] flex items-center justify-center p-2 rounded-lg text-center transition-all duration-500 group-pop"

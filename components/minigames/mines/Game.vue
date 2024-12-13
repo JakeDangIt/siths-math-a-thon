@@ -283,6 +283,7 @@ const syncBalanceWithSupabase = async () => {
         } else {
             balance.value = localBalance
             lastUpdated.value = localLastUpdated
+            await updateSupabaseBalance()
         }
     } else if (supabaseLastUpdated) {
         balance.value = supabaseBalance
@@ -346,19 +347,25 @@ watch(balance, (newBalance) => {
     localStorage.setItem('last_updated', now)
 })
 
-// Lifecycle hooks
+let saveInterval;
+
 onMounted(async () => {
     if (localStorage.balance) {
-        balance.value = parseFloat(localStorage.balance)
+        balance.value = parseFloat(localStorage.balance);
     }
-    await syncBalanceWithSupabase()
-    window.addEventListener('beforeunload', handleBeforeUnload)
-})
+    await syncBalanceWithSupabase();
+
+    saveInterval = setInterval(async () => {
+        await updateSupabaseBalance();
+    }, 60000);
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+});
 
 onUnmounted(async () => {
-    await updateSupabaseBalance()
-    window.removeEventListener('beforeunload', handleBeforeUnload)
-})
+    clearInterval(saveInterval);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+});
 
 const calculateWinnings = () => {
     if (revealedCount.value === 0) return 0

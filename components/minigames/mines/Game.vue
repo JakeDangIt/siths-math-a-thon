@@ -212,6 +212,7 @@
 
 <script setup>
 import { mines } from '~/utils/mines.js'
+import betSound from '@/assets/bet.mp3';
 import bombSound from '@/assets/bomb.mp3';
 import gemSound from '@/assets/gem.mp3';
 import cashoutSound from '@/assets/cashout.mp3';
@@ -369,6 +370,9 @@ const calculateWinnings = () => {
 
 const startGame = () => {
     if (betAmount.value > balance.value) return
+
+    var audio = new Audio(betSound)
+    audio.play()
 
     chosenCells.value = []
     showWinPopup.value = false

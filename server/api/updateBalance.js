@@ -28,26 +28,16 @@ export default defineEventHandler(async (event) => {
     }
 
     if (existingData.length > 0) {
-      // Update existing row
       const { error: updateError } = await supabase
         .from('balances')
         .update({ balance, last_updated: now, gameState })
         .eq('user_id', userId);
-
-      if (updateError) {
-        console.error('Error updating balance:', updateError);
-        return { error: updateError.message };
-      }
-    } else {
-      // Insert new row
+    } 
+    
+    else {
       const { error: insertError } = await supabase
         .from('balances')
         .insert({ user_id: userId, balance, last_updated: now, gameState });
-
-      if (insertError) {
-        console.error('Error inserting balance:', insertError);
-        return { error: insertError.message };
-      }
     }
 
     return { success: true };

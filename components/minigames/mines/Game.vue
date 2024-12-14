@@ -218,11 +218,6 @@ import cashoutSound from '@/assets/cashout.mp3';
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
-if (localStorage.getItem('balance')) {
-    localStorage.removeItem('balance')
-    localStorage.removeItem('last_updated')
-}
-
 const syncLoading = ref(true)
 // Game state
 const balance = ref(1000)
@@ -291,6 +286,7 @@ const syncBalanceWithSupabase = async () => {
         supabaseLastUpdated = balanceData[0].last_updated
         supabaseBalance = balanceData[0].balance
     }
+
     if (supabaseLastUpdated) {
         balance.value = Number(supabaseBalance)
         lastUpdated.value = supabaseLastUpdated
@@ -305,20 +301,6 @@ const syncBalanceWithSupabase = async () => {
         chosenCells.value = gameState.chosenCells
         revealedCount.value = gameState.revealedCount
         winnings.value = gameState.winnings
-    }
-
-    else {
-        const { error: insertError } = await supabase
-            .from('balances')
-            .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
-
-        if (insertError) {
-            console.error('Error inserting balance:', insertError)
-        }
-
-        localStorage.setItem('balance', balance.value)
-        localStorage.setItem('last_updated', now)
-        lastUpdated.value = now
     }
 
     syncLoading.value = false

@@ -218,11 +218,6 @@ import cashoutSound from '@/assets/cashout.mp3';
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
-if (localStorage.getItem('balance')) {
-    localStorage.removeItem('balance')
-    localStorage.removeItem('last_updated')
-}
-
 const syncLoading = ref(true)
 // Game state
 const balance = ref(1000)
@@ -283,7 +278,7 @@ const syncBalanceWithSupabase = async () => {
 
     const { data: balanceData, error: fetchError } = await supabase
         .from('balances')
-        .select('balance, last_updated')
+        .select('balance, last_updated, gameState')
         .eq('user_id', user.value.id)
         .order('last_updated', { ascending: false })
 
@@ -291,24 +286,21 @@ const syncBalanceWithSupabase = async () => {
         supabaseLastUpdated = balanceData[0].last_updated
         supabaseBalance = balanceData[0].balance
     }
+
     if (supabaseLastUpdated) {
-        console.log('a')
         balance.value = Number(supabaseBalance)
         lastUpdated.value = supabaseLastUpdated
     }
-
-    else {
-        const { error: insertError } = await supabase
-            .from('balances')
-            .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
-
-        if (insertError) {
-            console.error('Error inserting balance:', insertError)
-        }
-
-        localStorage.setItem('balance', balance.value)
-        localStorage.setItem('last_updated', now)
-        lastUpdated.value = now
+    if (balanceData[0].gameState) {
+        const gameState = balanceData[0].gameState
+        betAmount.value = gameState.betAmount
+        numberOfMines.value = gameState.numberOfMines
+        gameStarted.value = gameState.gameStarted
+        gameOver.value = gameState.gameOver
+        cells.value = gameState.cells
+        chosenCells.value = gameState.chosenCells
+        revealedCount.value = gameState.revealedCount
+        winnings.value = gameState.winnings
     }
 
     syncLoading.value = false
@@ -316,32 +308,38 @@ const syncBalanceWithSupabase = async () => {
 
 // Update Supabase when unmounted
 const updateSupabaseBalance = async () => {
-    if (!user.value) return
+    if (!user.value) return;
 
-    const now = getCurrentTimestamp()
-    try {
-        // Check if the row exists
-        const { data: existingData, error: fetchError } = await supabase
-            .from('balances')
-            .select('user_id')
-            .eq('user_id', user.value.id)
-
-        if (existingData) {
-            // Update existing row
-            const { error: updateError } = await supabase
-                .from('balances')
-                .update({ balance: balance.value, last_updated: now })
-                .eq('user_id', user.value.id)
-        } else {
-            // Insert new row
-            const { error: insertError } = await supabase
-                .from('balances')
-                .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
-        }
-    } catch (err) {
-        console.error('Error updating balance in Supabase:', err)
+    const gameState = {
+        betAmount: betAmount.value,
+        numberOfMines: numberOfMines.value,
+        gameStarted: gameStarted.value,
+        gameOver: gameOver.value,
+        cells: cells.value,
+        chosenCells: chosenCells.value,
+        revealedCount: revealedCount.value,
+        winnings: winnings.value,
     }
-}
+
+    try {
+        // Use the Nuxt server API to update the balance
+        const response = await $fetch('/api/updateBalance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.value.id,
+                balance: balance.value,
+                gameState: gameStarted.value ? gameState : null,
+            }),
+            keepalive: true, // Ensure the request completes even if the page is closing
+        });
+    } catch (err) {
+        console.error('Error updating balance through Nuxt server API:', err);
+    }
+};
+
 
 const handleBeforeUnload = async () => {
     await updateSupabaseBalance()
@@ -429,7 +427,8 @@ const revealCell = (index) => {
         revealedCount.value++;
         calculateWinnings();
         var audio = new Audio(gemSound)
-        audio.play()
+
+        if (!isAutoMode.value) audio.play()
 
         // Win condition: all safe cells revealed
         if (revealedCount.value === 25 - numberOfMines.value) {

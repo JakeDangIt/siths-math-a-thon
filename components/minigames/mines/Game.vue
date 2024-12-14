@@ -283,7 +283,7 @@ const syncBalanceWithSupabase = async () => {
 
     const { data: balanceData, error: fetchError } = await supabase
         .from('balances')
-        .select('balance, last_updated')
+        .select('balance, last_updated, gameState')
         .eq('user_id', user.value.id)
         .order('last_updated', { ascending: false })
 
@@ -292,9 +292,19 @@ const syncBalanceWithSupabase = async () => {
         supabaseBalance = balanceData[0].balance
     }
     if (supabaseLastUpdated) {
-        console.log('a')
         balance.value = Number(supabaseBalance)
         lastUpdated.value = supabaseLastUpdated
+    }
+    if (balanceData[0].gameState) {
+        const gameState = balanceData[0].gameState
+        betAmount.value = gameState.betAmount
+        numberOfMines.value = gameState.numberOfMines
+        gameStarted.value = gameState.gameStarted
+        gameOver.value = gameState.gameOver
+        cells.value = gameState.cells
+        chosenCells.value = gameState.chosenCells
+        revealedCount.value = gameState.revealedCount
+        winnings.value = gameState.winnings
     }
 
     else {
@@ -318,6 +328,17 @@ const syncBalanceWithSupabase = async () => {
 const updateSupabaseBalance = async () => {
     if (!user.value) return;
 
+    const gameState = {
+        betAmount: betAmount.value,
+        numberOfMines: numberOfMines.value,
+        gameStarted: gameStarted.value,
+        gameOver: gameOver.value,
+        cells: cells.value,
+        chosenCells: chosenCells.value,
+        revealedCount: revealedCount.value,
+        winnings: winnings.value,
+    }
+
     try {
         // Use the Nuxt server API to update the balance
         const response = await $fetch('/api/updateBalance', {
@@ -328,6 +349,7 @@ const updateSupabaseBalance = async () => {
             body: JSON.stringify({
                 userId: user.value.id,
                 balance: balance.value,
+                gameState: gameStarted.value ? gameState : null,
             }),
             keepalive: true, // Ensure the request completes even if the page is closing
         });
@@ -423,7 +445,8 @@ const revealCell = (index) => {
         revealedCount.value++;
         calculateWinnings();
         var audio = new Audio(gemSound)
-        audio.play()
+
+        if (!isAutoMode.value) audio.play()
 
         // Win condition: all safe cells revealed
         if (revealedCount.value === 25 - numberOfMines.value) {

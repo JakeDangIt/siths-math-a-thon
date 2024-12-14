@@ -8,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export default defineEventHandler(async (event) => {
   // Parse request body
-  const { userId, balance } = await readBody(event);
+  const { userId, balance, gameState } = await readBody(event);
   const now = new Date().toISOString();
 
   if (!userId || balance === undefined) {
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
       // Update existing row
       const { error: updateError } = await supabase
         .from('balances')
-        .update({ balance, last_updated: now })
+        .update({ balance, last_updated: now, gameState })
         .eq('user_id', userId);
 
       if (updateError) {
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
       // Insert new row
       const { error: insertError } = await supabase
         .from('balances')
-        .insert({ user_id: userId, balance, last_updated: now });
+        .insert({ user_id: userId, balance, last_updated: now, gameState });
 
       if (insertError) {
         console.error('Error inserting balance:', insertError);

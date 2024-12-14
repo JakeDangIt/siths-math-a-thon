@@ -316,32 +316,26 @@ const syncBalanceWithSupabase = async () => {
 
 // Update Supabase when unmounted
 const updateSupabaseBalance = async () => {
-    if (!user.value) return
+    if (!user.value) return;
 
-    const now = getCurrentTimestamp()
     try {
-        // Check if the row exists
-        const { data: existingData, error: fetchError } = await supabase
-            .from('balances')
-            .select('user_id')
-            .eq('user_id', user.value.id)
-
-        if (existingData) {
-            // Update existing row
-            const { error: updateError } = await supabase
-                .from('balances')
-                .update({ balance: balance.value, last_updated: now })
-                .eq('user_id', user.value.id)
-        } else {
-            // Insert new row
-            const { error: insertError } = await supabase
-                .from('balances')
-                .insert({ user_id: user.value.id, balance: balance.value, last_updated: now })
-        }
+        // Use the Nuxt server API to update the balance
+        const response = await $fetch('/api/updateBalance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.value.id,
+                balance: balance.value,
+            }),
+            keepalive: true, // Ensure the request completes even if the page is closing
+        });
     } catch (err) {
-        console.error('Error updating balance in Supabase:', err)
+        console.error('Error updating balance through Nuxt server API:', err);
     }
-}
+};
+
 
 const handleBeforeUnload = async () => {
     await updateSupabaseBalance()

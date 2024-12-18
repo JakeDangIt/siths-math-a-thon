@@ -360,6 +360,7 @@ onMounted(async () => {
 
 onUnmounted(async () => {
     clearInterval(saveInterval);
+    await updateSupabaseBalance()
     window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 

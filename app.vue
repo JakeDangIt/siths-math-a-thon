@@ -182,7 +182,7 @@ onUnmounted(() => {
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage class="mx-2 py-4 lg:py-8" />
+    <NuxtPage class="px-2 py-4 lg:py-8" />
     <Toaster />
   </NuxtLayout>
 </template>

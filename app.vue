@@ -29,6 +29,7 @@ const isMobile = computed(() => width.value < 1024);
 
 // constants for activity tracking
 const ONE_HOUR = 60 * 60 * 1000;
+const CHECK_INTERVAL = 30 * 1000; // 30 seconds
 const LAST_ACTIVITY_KEY = 'lastActivity';
 
 const lastActivity = ref(Date.now());
@@ -52,9 +53,9 @@ const logoutUser = async () => {
 
 // event listeners for user activity
 const setupActivityListeners = () => {
-  window.addEventListener('mousemove', updateLastActivity);
-  window.addEventListener('keypress', updateLastActivity);
-  window.addEventListener('scroll', updateLastActivity);
+  ['mousemove', 'keypress', 'scroll'].forEach(event => {
+    window.addEventListener(event, updateLastActivity);
+  });
 };
 
 // set layout based on screen size and watch for changes in width
@@ -77,30 +78,34 @@ watch(
   }
 );
 
+// watch if user logs in, set the interval to check for session expiration
+watch(user, async (newUser) => {
+  const answersStore = useAnswersStore();
+  if (newUser) {
+    // Set up activity listeners to track user activity
+    setupActivityListeners();
+    // Periodically check for session expiration every 30 seconds
+    const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+
+    await answersStore.retrieveAnswers();
+  } else {
+    answersStore.answerData = [];
+  }
+});
+
 
 onMounted(async () => {
   // initialize interval id
   let intervalId;
 
-  const CHECK_INTERVAL = 30 * 1000; // 30 seconds
-
   // if session has expired, log out user if logged in
   const checkSessionExpiration = async () => {
     const lastActivityTime = localStorage.getItem(LAST_ACTIVITY_KEY);
 
-    if (user.value) {
-      // If user is logged in and no activity for 1 hour, log out
-      if (
-        lastActivityTime &&
-        Date.now() - parseInt(lastActivityTime) > ONE_HOUR
-      ) {
-        console.log('Session expired. Logging out.');
-        await logoutUser();
-
-        // clear checking interval
-        if (intervalId) {
-          clearInterval(intervalId);
-        }
+    if (user.value && lastActivityTime && Date.now() - parseInt(lastActivityTime) > ONE_HOUR) {
+      await logoutUser();
+      if (intervalId) {
+        clearInterval(intervalId);
       }
     }
   };
@@ -112,29 +117,14 @@ onMounted(async () => {
   // periodically check for session expiration every 30 seconds
   intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
 
-  // watch if user logs in, set the interval to check for session expiration
-  watch(user, async (newUser) => {
-    const answersStore = useAnswersStore();
-    if (newUser) {
-      // Set up activity listeners to track user activity
-      setupActivityListeners();
-      // Periodically check for session expiration every 30 seconds
-      const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
-
-      await answersStore.retrieveAnswers();
-    } else {
-      answersStore.answerData = [];
-    }
-  });
-
   isLoading.value = false;
 });
 
 onUnmounted(() => {
   // Remove activity listeners when component unmounts
-  window.removeEventListener('mousemove', updateLastActivity);
-  window.removeEventListener('keypress', updateLastActivity);
-  window.removeEventListener('scroll', updateLastActivity);
+  ['mousemove', 'keypress', 'scroll'].forEach(event => {
+    window.removeEventListener(event, updateLastActivity);
+  });
 });
 </script>
 

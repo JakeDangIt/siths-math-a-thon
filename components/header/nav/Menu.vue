@@ -39,7 +39,7 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
-        <HeaderNavButtonLogIn class="sm:hidden md:block" />
+        <HeaderNavButtonLogIn />
       </div>
       <div v-else class="flex justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />

@@ -23,12 +23,12 @@ const currentRouteName = computed(() =>
         </SheetTrigger>
 
         <NuxtLink to="/" aria-label="Home">
-          <div class="m-2 h-10 rounded-md bg-theme-dark-blue">
+          <div class="m-2 h-fit rounded-md bg-theme-dark-blue">
             <NuxtImg
               src="/math-a-thon-icon.png"
               alt="Math-a-Thon logo"
-              width="40px"
-              height="40px"
+              width="32px"
+              height="32px"
             />
           </div>
         </NuxtLink>
@@ -39,7 +39,7 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
-        <HeaderNavButtonLogIn />
+        <HeaderNavButtonLogIn class="hidden md:block"/>
       </div>
       <div v-else class="flex justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />

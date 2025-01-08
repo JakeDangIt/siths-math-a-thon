@@ -11,20 +11,23 @@
         <Skeleton class="h-10 w-20" />
       </CardContent>
 
-      <CardContent v-else class="flex h-full flex-col justify-between">
-        <div v-if="questionsStore.questionData.length > 0" class="mb-4 flex flex-col gap-2 overflow-clip">
+      <CardContent v-else-if="questionsStore.questionData.length > 0" class="flex h-full flex-col justify-between">
+        <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span v-html="randomQuestion?.content"></span>
-        </div>
-        <div v-else class="mb-4 flex flex-col gap-2 overflow-clip">
-          <p class="text-lg font-semibold">No questions available.</p>
-          <span>Check back later for more questions.</span>
         </div>
 
         <!-- solve now button that goes to /questions -->
         <nuxt-link to="/questions">
           <Button class="w-full">Solve Now</Button>
         </nuxt-link>
+      </CardContent>
+
+      <CardContent v-else>
+        <div class="mb-4 flex flex-col gap-2 overflow-clip">
+          <p class="text-lg font-semibold">No questions available.</p>
+          <span>Check back later for more questions.</span>
+        </div>
       </CardContent>
     </Card>
   </div>

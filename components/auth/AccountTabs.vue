@@ -55,14 +55,14 @@
                 <Input type="password" id="password" v-model="userPassword" />
               </div>
 
-              <div class="space-x-2">
+              <div class="space-x-2 flex items-center">
                 <Checkbox
                   aria-label="Payment Agreement"
                   id="agreement"
                   @update:checked="userAgreement = !userAgreement"
                 >
                 </Checkbox>
-                <Label for="agreement">I agree.</Label>
+                <Label for="agreement">I agree to pay Mrs. Asher $5 in Room 215 in order to receive participation credit.</Label>
               </div>
             </CardContent>
             <CardFooter>

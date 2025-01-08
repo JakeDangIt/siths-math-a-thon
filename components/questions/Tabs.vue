@@ -17,7 +17,7 @@
       </Button>
     </NuxtLink>
     <!-- carousel for the tabs -->
-    <Carousel class="mx-auto w-2/3" :opts="{
+    <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
       align: 'start',
       slidesToScroll: 2,
       startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
@@ -35,6 +35,17 @@
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
+
+    <div v-else>
+      <h2 class="text-2xl font-bold mb-4">Contest Starts In:</h2>
+      <div class="countdown text-4xl font-mono mb-6">
+        <span>{{ countdown.days }}</span> Days
+        <span>{{ countdown.hours }}</span> Hours
+        <span>{{ countdown.minutes }}</span> Minutes
+        <span>{{ countdown.seconds }}</span> Seconds
+      </div>
+      <p class="text-xl">Questions will be available on January 28, 2025.</p>
+    </div>
 
     <!-- content for the tabs -->
     <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
@@ -332,5 +343,34 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   // remove the event listener to avoid memory leaks
   window.removeEventListener('beforeunload', handleBeforeUnload);
+});
+
+const countdown = ref({
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+});
+
+function updateCountdown() {
+  const targetDate = new Date('January 28, 2025 00:00:00').getTime();
+  const now = new Date().getTime();
+  const distance = targetDate - now;
+
+  countdown.value.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  countdown.value.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  countdown.value.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+}
+
+let countdownInterval;
+
+onMounted(() => {
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(countdownInterval);
 });
 </script>

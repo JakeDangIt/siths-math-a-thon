@@ -12,9 +12,13 @@
       </CardContent>
 
       <CardContent v-else class="flex h-full flex-col justify-between">
-        <div class="mb-4 flex flex-col gap-2 overflow-clip">
+        <div v-if="questionsStore.questionData.length > 0" class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span v-html="randomQuestion?.content"></span>
+        </div>
+        <div v-else class="mb-4 flex flex-col gap-2 overflow-clip">
+          <p class="text-lg font-semibold">No questions available.</p>
+          <span>Check back later for more questions.</span>
         </div>
 
         <!-- solve now button that goes to /questions -->

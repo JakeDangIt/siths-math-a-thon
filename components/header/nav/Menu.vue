@@ -14,7 +14,7 @@ const currentRouteName = computed(() =>
 <template>
   <Sheet>
     <!-- header w/ hamburger icon -->
-    <header class="flex h-14 items-center justify-between bg-theme-blue">
+    <header class="flex px-2 h-14 items-center justify-between bg-theme-blue">
       <!-- left -->
       <div class="flex h-full items-center">
         <SheetTrigger aria-label="Menu">

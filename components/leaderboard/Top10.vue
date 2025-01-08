@@ -5,7 +5,7 @@
       <CardTitle>Leaderboard</CardTitle>
       <CardDescription>(ordered by total number of correct answers)</CardDescription>
     </CardHeader>
-    <CardContent class="flex flex-col">
+    <CardContent v-if="leaderboardStore.leaderboardData.length > 0" class="flex flex-col">
       <div class="flex items-end justify-center gap-2">
         <LeaderboardTop3Icon v-for="(user, index) in leaderboardStore.top10.slice(0, 3)" :key="user.id" :user="user"
           :index="index" :class="{
@@ -30,6 +30,10 @@
           </p>
         </div>
       </div>
+    </CardContent>
+    <CardContent v-else class="text-center p-8">
+      <p class="text-xl mb-4">No leaderboard data available yet.</p>
+      <p>The leaderboard will be updated once the contest begins and participants start submitting their answers.</p>
     </CardContent>
   </Card>
 </template>

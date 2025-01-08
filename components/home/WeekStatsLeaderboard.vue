@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full">
+  <div v-if="leaderboardStore.leaderboardData.length != 0" class="h-full w-full">
     <Card v-if="leaderboardStore.top3Avatars.length != 3">
       <Skeleton class="h-60 w-full" />
     </Card>

@@ -18,17 +18,24 @@ const currentRouteName = computed(() =>
       <!-- left -->
       <div class="flex h-full items-center">
         <SheetTrigger aria-label="Menu">
-          <!-- hamburger takes time to load but should be fine on initial load -->
           <HeaderHamburgerIcon />
         </SheetTrigger>
 
         <NuxtLink to="/" aria-label="Home">
           <div class="m-2 h-fit rounded-md bg-theme-dark-blue">
             <NuxtImg
+            class="md:hidden"
               src="/math-a-thon-icon.png"
               alt="Math-a-Thon logo"
               width="32px"
               height="32px"
+            />
+            <NuxtImg
+            class="hidden md:block"
+              src="/math-a-thon-icon.png"
+              alt="Math-a-Thon logo"
+              width="40px"
+              height="40px"
             />
           </div>
         </NuxtLink>

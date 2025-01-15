@@ -31,6 +31,6 @@ export const teachers = [
     name: 'Mr. Siozios',
   },
   {
-    name: 'Ms. Wellens',
+    name: 'Ms. Ravitz',
   },
 ];

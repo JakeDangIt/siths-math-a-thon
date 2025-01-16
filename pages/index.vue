@@ -4,8 +4,9 @@
       <HomeBanner />
       <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <HomeDirections class="col-span-full" />
+        <HomeMichaelsCause />
         <HomeWeekStatsLeaderboard
-          class="h-full w-full md:col-span-2 lg:col-span-1"
+          class="h-full w-full lg:col-span-2"
           :class="{ 'lg:row-span-2': user }"
         />
         <HomeActivity />

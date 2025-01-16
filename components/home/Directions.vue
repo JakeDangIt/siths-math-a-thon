@@ -13,7 +13,7 @@
           </li>
           <li>
             <span class="font-bold">Submit Payment:</span>
-            Pay the $5 registration fee to Mrs. Asher in Room 215.
+            Pay the $5 donation and registration fee to Mrs. Asher in Room 215.
           </li>
           <li>
             <span class="font-bold">Choose Questions:</span>

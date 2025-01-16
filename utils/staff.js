@@ -23,17 +23,5 @@ export const staff = [
     title: 'Media Manager & Head Designer',
     email: 'irenel36@nycstudents.net',
     special: false,
-  },
-  {
-    name: 'Bridget Feng',
-    title: 'Consultant',
-    email: 'fbridget0404@gmail.com',
-    special: true,
-  },
-  {
-    name: 'Joey Shi',
-    title: 'Former Designer, Advisor',
-    email: '',
-    special: true
   }
 ];

@@ -16,7 +16,7 @@ export const teachers = [
     name: 'Ms. Chu',
   },
   {
-    name: 'Ms. Dellagrazie',
+    name: 'Mr. Dellagrazie',
   },
   {
     name: 'Ms. Franks',
@@ -31,6 +31,6 @@ export const teachers = [
     name: 'Mr. Siozios',
   },
   {
-    name: 'Ms. Wellens',
+    name: 'Ms. Ravitz',
   },
 ];

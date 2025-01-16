@@ -4,14 +4,13 @@
       <HomeBanner />
       <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <HomeDirections class="col-span-full" />
-        <HomeMichaelsCause />
+        <HomeMichaelsCause/>
         <HomeWeekStatsLeaderboard
           class="h-full w-full lg:col-span-2"
-          :class="{ 'lg:row-span-2': user }"
         />
+        <HomeProfileSummary class="h-full" />
         <HomeActivity />
         <HomeFeaturedProblem />
-        <HomeProfileSummary class="md:col-span-2 lg:col-span-2" />
       </div>
     </div>
   </div>

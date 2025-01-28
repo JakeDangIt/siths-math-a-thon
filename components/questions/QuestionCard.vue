@@ -9,8 +9,9 @@
         <span class="text-theme-red">{{ isInvalid ? 'Please enter a valid number' : '' }}</span>
       </CardDescription>
     </CardHeader>
-    <CardContent>
-      <div v-html="props.mathContent"></div>
+    <CardContent class="flex flex-col items-center">
+      <div v-if="props.extraInfo" v-html="props.extraInfo"  class="items-center border-2 px-4 py-2 w-4/5 mb-4 border-black rounded-lg"></div>
+      <div v-if="props.mathContent" v-html="props.mathContent"></div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
         <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2" draggable="false"/>
       </div>
@@ -31,7 +32,7 @@
 <script setup>
 const answersStore = useAnswersStore();
 
-const props = defineProps(['question', 'week', 'mathContent', 'imageUrl', 'points']);
+const props = defineProps(['question', 'week', 'mathContent', 'extraInfo', 'imageUrl', 'points']);
 const question = ref(props.question);
 const week = ref(props.week);
 const points = ref(props.points);

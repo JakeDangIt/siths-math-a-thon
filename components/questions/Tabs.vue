@@ -11,40 +11,42 @@
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
 
-    <NuxtLink to="/minigames" class="block mb-2 lg:fixed lg:left-4">
-      <Button variant="secondary" class="border border-slate-500">
-        <span>Minigames</span>
-      </Button>
-    </NuxtLink>
-    <!-- carousel for the tabs -->
-    <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
-      align: 'start',
-      slidesToScroll: 2,
-      startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
-    }">
-      <CarouselContent>
-        <!-- paired into week and its bonus -->
-        <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
-          <TabsList class="w-full">
-            <TabsTrigger class="w-full" :value="week">
-              Week {{ week }}
-            </TabsTrigger>
-          </TabsList>
-        </CarouselItem>
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div class="flex">
+      <NuxtLink to="/minigames" class="block">
+        <Button variant="secondary" class="border border-slate-500">
+          <span>Minigames</span>
+        </Button>
+      </NuxtLink>
+      <!-- carousel for the tabs -->
+      <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
+        align: 'start',
+        slidesToScroll: 2,
+        startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
+      }">
+        <CarouselContent>
+          <!-- paired into week and its bonus -->
+          <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+            <TabsList class="w-full">
+              <TabsTrigger class="w-full" :value="week">
+                Week {{ week }}
+              </TabsTrigger>
+            </TabsList>
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
 
-    <div v-else>
-      <h2 class="text-2xl font-bold mb-4">Contest Starts In:</h2>
-      <div class="countdown text-4xl font-mono mb-6">
-        <span>{{ countdown.days }}</span> Days
-        <span>{{ countdown.hours }}</span> Hours
-        <span>{{ countdown.minutes }}</span> Minutes
-        <span>{{ countdown.seconds }}</span> Seconds
+      <div v-else>
+        <h2 class="text-2xl font-bold mb-4">Contest Starts In:</h2>
+        <div class="countdown text-4xl font-mono mb-6">
+          <span>{{ countdown.days }}</span> Days
+          <span>{{ countdown.hours }}</span> Hours
+          <span>{{ countdown.minutes }}</span> Minutes
+          <span>{{ countdown.seconds }}</span> Seconds
+        </div>
+        <p class="text-xl">Questions will be available on January 28, 2025.</p>
       </div>
-      <p class="text-xl">Questions will be available on January 28, 2025.</p>
     </div>
 
     <!-- content for the tabs -->
@@ -59,7 +61,7 @@
         <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
           .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl"
+          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]" :imageUrl="question.imageUrl"
           :points="question.points" />
 
         <!-- preview answer -->

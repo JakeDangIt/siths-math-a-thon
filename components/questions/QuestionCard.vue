@@ -10,21 +10,16 @@
       </CardDescription>
     </CardHeader>
     <CardContent class="flex flex-col items-center">
-      <div v-if="props.extraInfo" v-html="props.extraInfo"  class="items-center border-2 px-4 py-2 w-4/5 mb-4 border-black rounded-lg"></div>
-      <div v-if="props.mathContent" v-html="props.mathContent"></div>
+      <div v-if="props.extraInfo" v-html="props.extraInfo"
+        class="items-center border-2 px-4 py-2 w-4/5 mb-4 border-black rounded-lg"></div>
+      <div v-if="props.mathContent" v-html="props.mathContent" class="w-full text-left"></div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2" draggable="false"/>
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2" draggable="false" />
       </div>
     </CardContent>
     <CardFooter>
-      <Input
-        id="input"
-        type="text"
-        v-model="input"
-        :placeholder="'Question ' + question"
-        @input="validateAndChangeAnswer"
-        :disabled="answersStore.getAnswerLoading"
-      />
+      <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
+        @input="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
     </CardFooter>
   </Card>
 </template>

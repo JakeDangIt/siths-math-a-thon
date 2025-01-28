@@ -14,7 +14,7 @@ const currentRouteName = computed(() =>
 
 <template>
   <header
-    class="flex h-14 items-center bg-theme-blue px-4 py-1 dark:bg-theme-dark-blue"
+    class="header flex h-14 items-center bg-theme-blue px-4 py-1"
   >
     <!-- left + home -->
     <div class="flex h-full flex-1 items-center">
@@ -24,7 +24,7 @@ const currentRouteName = computed(() =>
         draggable="false"
         aria-label="Home"
       >
-        <div class="my-2 mr-2 h-10 rounded-md bg-theme-dark-blue">
+        <div class="header-img my-2 mr-2 h-10 rounded-md bg-theme-dark-blue">
           <NuxtImg
             src="/math-a-thon-icon.png"
             alt="Math-a-Thon logo"
@@ -82,3 +82,12 @@ const currentRouteName = computed(() =>
     </div>
   </header>
 </template>
+
+<style>
+.bee-mode .header {
+  background-color: #ffb930;
+}
+.bee-mode .header-img {
+  background-color: #fff3a2;
+}
+</style>

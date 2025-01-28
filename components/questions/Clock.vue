@@ -7,7 +7,13 @@
 const props = defineProps(['week'])
 const timeStore = useTimeStore();
 
-const targetWeekDate = ref(timeStore.targetDates.find((targetDate) => targetDate.week.includes(String(props.week)))?.date);
+const targetWeekDate = ref();
+
+if (props.week < 3) {
+    targetWeekDate.value = timeStore.targetDates.find((targetDate) => targetDate.week.includes(String(props.week + 1)))?.date;
+} else {
+    targetWeekDate.value = '';
+}
 
 const timeRemaining = computed(() => {
     const now = timeStore.time

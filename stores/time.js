@@ -4,14 +4,14 @@ export const useTimeStore = defineStore('time', () => {
 
   const timeRemainings = computed(() => {
     return targetDates.value.map((targetDate) => {
-      const timeRemaining = targetDate.date - time.value;
+      const timeRemaining =  time.value - targetDate.date;
       return { week: targetDate.week, timeRemaining };
     });
   });
 
   const currentWeek = computed(() => {
     return targetDates.value.find((targetDate) => {
-      return targetDate.date > time.value;
+      return targetDate.date < time.value;
     })?.week[0];
   });
   

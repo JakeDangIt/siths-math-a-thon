@@ -78,22 +78,6 @@ watch(
   }
 );
 
-// watch if user logs in, set the interval to check for session expiration
-watch(user, async (newUser) => {
-  const answersStore = useAnswersStore();
-  if (newUser) {
-    // Set up activity listeners to track user activity
-    setupActivityListeners();
-    // Periodically check for session expiration every 30 seconds
-    const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
-
-    await answersStore.retrieveAnswers();
-  } else {
-    answersStore.answerData = [];
-  }
-});
-
-
 onMounted(async () => {
   // initialize interval id
   let intervalId;
@@ -116,7 +100,18 @@ onMounted(async () => {
 
   // periodically check for session expiration every 30 seconds
   intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+  // watch if user logs in, set the interval to check for session expiration
+  watch(user, async (newUser) => {
+    const answersStore = useAnswersStore();
+    if (newUser) {
+      // Set up activity listeners to track user activity
+      setupActivityListeners();
 
+      await answersStore.retrieveAnswers();
+    } else {
+      answersStore.answerData = [];
+    }
+  });
   isLoading.value = false;
 });
 
@@ -172,7 +167,7 @@ onUnmounted(() => {
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage class="px-2 py-4 lg:py-8" />
+    <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
     <Toaster />
   </NuxtLayout>
 </template>

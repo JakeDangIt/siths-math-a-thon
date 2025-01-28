@@ -1,6 +1,6 @@
 <template>
   <!-- if submitted and checked, show all your stats in a table and graph -->
-  <div v-if="hasSubmitted && answersHaveBeenChecked" class="mt-2 space-y-2 md:w-4/5 lg:mt-0 lg:w-2/5">
+  <div v-if="hasSubmitted && answersHaveBeenChecked" class="mt-2 space-y-2 lg:mt-0 w-full md:w-4/5 lg:w-1/2 xl:w-2/5">
     <div>
       <Card>
         <CardHeader>

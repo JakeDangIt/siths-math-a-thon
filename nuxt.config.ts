@@ -14,10 +14,11 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
     '@nuxtjs/sanity',
+    "@nuxtjs/color-mode",
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@formkit/auto-animate',
-    '@pinia/nuxt',
+    '@pinia/nuxt'
   ],
   app: {
     head: {

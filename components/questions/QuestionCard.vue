@@ -12,9 +12,9 @@
     <CardContent class="flex flex-col items-center">
       <div v-if="props.extraInfo" v-html="props.extraInfo"
         class="items-center border-2 px-4 py-2 w-4/5 mb-4 border-black rounded-lg"></div>
-        {{ mathContainer?.scrollWidth }} {{ mathContainer?.clientWidth }}
       <div v-if="props.mathContent" class="w-full text-left relative">
-        <div class="text-ellipsis" :class="{'overflow-hidden': isOverflowing}" ref="mathContainer" v-html="props.mathContent"></div>
+        <div class="text-ellipsis" :class="{ 'truncate': isOverflowing }" ref="mathContainer"
+          v-html="props.mathContent"></div>
         <Button v-if="isOverflowing" class="md:hidden mt-2" @click="openDialog">
           Expand
         </Button>
@@ -31,14 +31,11 @@
     <!-- Dialog for expanded view -->
     <Dialog v-model:open="dialogVisible">
       <DialogContent>
-        <div class="relative flex items-center justify-center h-[90vh]">
+        <div class="relative flex items-center justify-center h-[95vh]">
           <div class="rotate-90 w-full">
             <div v-html="props.mathContent"></div>
           </div>
         </div>
-        <DialogFooter>
-          <Button @click="dialogVisible = false" class="w-screen">Close</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   </Card>
@@ -84,8 +81,10 @@ onMounted(() => {
     );
     input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   }
-
   nextTick(() => {
+    setTimeout(() => {
+      isOverflowing.value = mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
+    }, 300);
     isOverflowing.value = mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
   });
 });

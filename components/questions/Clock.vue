@@ -7,10 +7,11 @@
 const props = defineProps(['week'])
 const timeStore = useTimeStore();
 
+const formattedCurrentWeek = String(props.week).includes('Bonus') ? `${Number(String(props.week).replace('Bonus', '')) + 1} Bonus` : `${props.week + 1}`;
 const targetWeekDate = ref();
 
-if (props.week < 3) {
-    targetWeekDate.value = timeStore.targetDates.find((targetDate) => targetDate.week.includes(String(props.week + 1)))?.date;
+if (!formattedCurrentWeek.includes('3')) {
+    targetWeekDate.value = timeStore.targetDates.find((targetDate) => targetDate.week.includes(formattedCurrentWeek))?.date;
 } else {
     targetWeekDate.value = '';
 }

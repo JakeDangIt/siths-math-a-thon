@@ -5,7 +5,7 @@
         {{ `Question ${question}` }}
       </CardTitle>
       <CardDescription class="">
-        {{ `[${points} points]` }}
+        {{ `[${points} ${points > 1 ? 'points' : 'point'}]` }}
         <span class="text-theme-red">{{ isInvalid ? 'Please enter a valid number' : '' }}</span>
       </CardDescription>
     </CardHeader>

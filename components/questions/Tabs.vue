@@ -11,7 +11,7 @@
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
 
-    <div class="flex">
+    <div class="flex flex-col md:flex-row gap-2">
       <NuxtLink to="/minigames" class="block">
         <Button variant="secondary" class="border border-slate-500">
           <span>Minigames</span>

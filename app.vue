@@ -112,7 +112,9 @@ onMounted(async () => {
       answersStore.answerData = [];
     }
   });
+  setTimeout(() => {
   isLoading.value = false;
+  }, 1000);
 });
 
 onUnmounted(() => {
@@ -156,6 +158,7 @@ onUnmounted(() => {
     <!-- show skeleton when loading the layout -->
     <div class="h-screen overflow-hidden">
       <Skeleton class="h-[48px] w-full" />
+      <!-- <div class="loading-animation"></div> -->
       <Skeleton class="mt-2 h-screen w-full" />
     </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
@@ -171,3 +174,21 @@ onUnmounted(() => {
     <Toaster />
   </NuxtLayout>
 </template>
+
+<style>
+.loading-animation {
+  width: 50px;
+  height: 50px;
+  border: 5px solid black;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>

@@ -158,7 +158,7 @@ onUnmounted(() => {
     <!-- show skeleton when loading the layout -->
     <div class="h-screen overflow-hidden">
       <Skeleton class="h-[48px] w-full" />
-      <div class="loading-animation"></div>
+      <!-- <div class="loading-animation"></div> -->
       <Skeleton class="mt-2 h-screen w-full" />
     </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">

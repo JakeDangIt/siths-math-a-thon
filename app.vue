@@ -171,11 +171,11 @@ onUnmounted(() => {
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <SpeedInsights />
 		<Dialog v-model:open="showImportant" >
-			<DialogContent>
+			<DialogContent class="h-[50vh]">
 		    <DialogHeader>
-		      <DialogTitle>Are you absolutely sure?</DialogTitle>
+		      <DialogTitle>IMPORTANT MESSAGE</DialogTitle>
 		      <DialogDescription>
-	        Sorry for the inconvenience. There is currently no auto-saving feature. Please press the button labelled "Preview Answers" in order to save and submit your answers.
+	        We apologize for the inconvenience. There is currently no auto-saving feature. Please press the button labelled "Preview" or "Preview Answers" in order to save and submit your answers. Thank you for participating in the 2025 SITHS Math-a-Thon!
 		      </DialogDescription>
 		    </DialogHeader>
 		  </DialogContent>

@@ -293,8 +293,9 @@ function scrollUp() {
 }
 
 // function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
-function handleBeforeUnload(event) {
+async function handleBeforeUnload(event) {
   if (hasAnswersChanged.value) {
+		await saveAnswers();
     event.preventDefault();
     event.returnValue = ''; // This triggers the confirmation dialog
   }

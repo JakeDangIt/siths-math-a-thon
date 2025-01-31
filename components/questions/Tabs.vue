@@ -61,8 +61,8 @@
         <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
           .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]" :imageUrl="question.imageUrl"
-          :points="question.points" />
+          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]"
+          :imageUrl="question.imageUrl" :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>
@@ -242,9 +242,22 @@ async function saveAnswers() {
   } else if (answersStore.answerData.length == 0) {
     toastStore.changeToast('You must answer at least one question to save');
   } else {
-    await answersStore.saveAnswers();
-    initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-    toastStore.changeToast('Answers saved', 'Your answers have been saved');
+    try {
+      const response = await $fetch('/api/saveAnswers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.value.id,
+          answers: answersStore.answerData,
+        }),
+        keepalive: true,
+      });
+      initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
+      toastStore.changeToast('Answers saved', 'Your answers have been saved');
+
+    } catch (error) {
+      toastStore.changeToast('Failed to save answers', error.message);
+    }
   }
   saveLoading.value = false;
 }
@@ -293,11 +306,9 @@ function scrollUp() {
 }
 
 // function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
-async function handleBeforeUnload(event) {
+function handleBeforeUnload(event) {
   if (hasAnswersChanged.value) {
-		await saveAnswers();
-    event.preventDefault();
-    event.returnValue = ''; // This triggers the confirmation dialog
+    saveAnswers();
   }
 }
 

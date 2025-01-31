@@ -21,7 +21,7 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-.card {
+.bee-mode .card {
   background-color: #fff3a2;
 }
 </style>

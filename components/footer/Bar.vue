@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col items-center justify-center p-[2px]">
+  <div class="relative flex flex-col items-center justify-center bg-theme-red bg-opacity-20 p-[2px]">
     <img src="/assets/theme/grass.png" alt="Footer background" class="footer-image" />
 
     <div class="footer-text relative z-10 flex items-center text-center">

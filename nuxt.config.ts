@@ -90,4 +90,8 @@ export default defineNuxtConfig({
     },
     sanityToken: process.env.SANITY_TOKEN,
   },
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+  }
 });

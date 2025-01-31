@@ -25,7 +25,7 @@
     </CardContent>
     <CardFooter>
       <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
-        @input="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
+        @change="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
     </CardFooter>
 
     <!-- Dialog for expanded view -->
@@ -62,11 +62,18 @@ const mathContainer = ref(null);
 
 // Validate and update answer
 function validateAndChangeAnswer() {
-  const correspondingQuestionIndex = answersStore.answerData.findIndex(
-    (answer) => answer.week == week.value && answer.question == question.value
-  );
+  nextTick(() => {
+    const correspondingQuestionIndex = answersStore.answerData.findIndex(
+      (answer) => answer.week == week.value && answer.question == question.value
+    );
 
-  answersStore.answerData[correspondingQuestionIndex].answer = String(input.value);
+    if (correspondingQuestionIndex !== -1) {
+      answersStore.answerData.splice(correspondingQuestionIndex, 1, {
+        ...answersStore.answerData[correspondingQuestionIndex],
+        answer: String(input.value),
+      });
+    }
+  });
 }
 
 // Check if math content is overflowing

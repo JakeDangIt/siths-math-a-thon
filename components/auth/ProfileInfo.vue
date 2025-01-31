@@ -103,7 +103,7 @@
         </form>
       </CardContent>
 
-      <AuthChangeTheme />
+      <!-- <AuthChangeTheme /> -->
 
       <!-- button -->
       <CardFooter class="flex justify-between">

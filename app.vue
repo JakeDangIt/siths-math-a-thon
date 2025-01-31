@@ -23,7 +23,6 @@ if (user.value) {
 const { width } = useWindowSize();
 const layout = ref('default');
 const isLoading = ref(true);
-const showImportant = ref(true);
 
 // mobile screen is width less than 1024px
 const isMobile = computed(() => width.value < 1024);
@@ -170,16 +169,6 @@ onUnmounted(() => {
   <!-- show mobile if mobile screen, show default if larger -->
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <SpeedInsights />
-		<Dialog v-model:open="showImportant" >
-			<DialogContent class="h-[50vh]">
-		    <DialogHeader>
-		      <DialogTitle>IMPORTANT MESSAGE</DialogTitle>
-		      <DialogDescription>
-	        We apologize for the inconvenience. There is currently no auto-saving feature. Please press the button labelled "Preview" or "Preview Answers" in order to save and submit your answers. Thank you for participating in the 2025 SITHS Math-a-Thon!
-		      </DialogDescription>
-		    </DialogHeader>
-		  </DialogContent>
-		</Dialog>
     <NuxtLoadingIndicator color="#CB5D56" />
     <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
     <Toaster />

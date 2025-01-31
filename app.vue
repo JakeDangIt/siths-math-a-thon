@@ -114,7 +114,7 @@ onMounted(async () => {
   });
   setTimeout(() => {
   isLoading.value = false;
-  }, 1000);
+  }, 500);
 });
 
 onUnmounted(() => {
@@ -158,8 +158,9 @@ onUnmounted(() => {
     <!-- show skeleton when loading the layout -->
     <div class="h-screen overflow-hidden">
       <Skeleton class="h-[48px] w-full" />
-      <!-- <div class="loading-animation"></div> -->
-      <Skeleton class="mt-2 h-screen w-full" />
+      <div class="flex items-center justify-center h-full">
+        <div class="loading-animation"></div>
+      </div>
     </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
       <NuxtPage />

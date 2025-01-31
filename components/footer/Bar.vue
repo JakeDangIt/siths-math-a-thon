@@ -14,7 +14,7 @@
 
 <style>
 .footer-image {
-	display: hidden;
+	display: none;
   position: absolute;
   bottom: 0;
   left: 0;

@@ -62,10 +62,6 @@ const mathContainer = ref(null);
 
 // Validate and update answer
 function validateAndChangeAnswer() {
-  const cleanedValue = input.value.replace(/[^0-9]/g, '');
-  isInvalid.value = cleanedValue !== input.value;
-  input.value = cleanedValue;
-
   const correspondingQuestionIndex = answersStore.answerData.findIndex(
     (answer) => answer.week == week.value && answer.question == question.value
   );

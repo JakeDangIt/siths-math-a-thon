@@ -312,6 +312,12 @@ function handleBeforeUnload(event) {
   }
 }
 
+function saveAnswersBeforeExit() {
+  if (document.visibilityState === 'hidden') {
+    saveAnswers(); // Call your save function
+  }
+}
+
 // check if far down enough when the user scrolls
 watch(
   y,
@@ -352,11 +358,13 @@ onMounted(async () => {
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
+  document.addEventListener('visibilitychange', saveAnswersBeforeExit);
 });
 
 onBeforeUnmount(() => {
   // remove the event listener to avoid memory leaks
   window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', saveAnswersBeforeExit);
 });
 
 const countdown = ref({

@@ -17,6 +17,7 @@ body {
   height:auto;
   background-color: #fff;
   color: rgba(0,0,0,0.8);
+  z-index: 10;
 }
 .bee-mode body {
   background-color: #f1e7d0;

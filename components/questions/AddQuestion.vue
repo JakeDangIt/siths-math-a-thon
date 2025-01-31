@@ -21,7 +21,7 @@
         <!-- accordion for each question -->
         <Accordion type="single" collapsible class="grid grid-cols-2 gap-x-8">
           <AccordionItem
-            v-for="index in String(week).includes('Bonus') ? 12 : 20"
+            v-for="index in String(week).includes('Bonus') ? 15 : 20"
             :key="index"
             :value="'item-' + index"
           >

@@ -20,7 +20,7 @@
         </Button>
       </div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2" draggable="false" />
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg" draggable="false" />
       </div>
     </CardContent>
     <CardFooter>

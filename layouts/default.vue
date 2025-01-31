@@ -7,6 +7,7 @@ defineProps(['isLoading']);
     <Body class="flex-1">
       <HeaderNavBar v-if="!isLoading" />
       <slot />
+      <img src="/assets/theme/clouds.png" class="fixed top-10" alt="clouds">
     </Body>
     <FooterBar class="mt-auto" />
   </div>
@@ -20,7 +21,7 @@ body {
   z-index: 10;
 }
 .bee-mode body {
-  background-color: #f1e7d0;
+  background-color: #a0c4d4;
   z-index: 2;
 }
 </style>

@@ -43,7 +43,7 @@ const currentRouteName = computed(() =>
         :route-path="route.routePath"
         :route-name="route.routeName"
         variant="link"
-        class="flex justify-center text-lg hover:bg-gray-500 hover:bg-opacity-20"
+        class="flex flex-1 justify-center text-lg hover:bg-gray-500 hover:bg-opacity-20"
         :class="{ 'font-bold': currentRoutePath == route.routePath }"
       />
 
@@ -61,7 +61,7 @@ const currentRouteName = computed(() =>
               :route-path="route.routePath"
               :route-name="route.routeName"
               variant="link"
-              class="w-full text-lg"
+              class="w-full text-lg text-left"
               :class="{ 'font-bold': currentRoutePath == route.routePath }"
             />
           </DropdownMenuItem>

@@ -81,7 +81,7 @@ const currentRouteName = computed(() =>
               :route-name="route.routeName"
               :icon-name="route.iconName"
               :variant="'link'"
-              class="text-lg"
+              class="w-full text-lg text-left"
             />
           </SheetClose>
         </nav>

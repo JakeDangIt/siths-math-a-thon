@@ -106,7 +106,7 @@
       <AuthChangeTheme />
 
       <!-- button -->
-      <CardFooter class="flex justify-between">
+      <CardFooter>
         <Button
           @click="updateUser"
           :disabled="
@@ -118,7 +118,7 @@
           routePath="/auth/updatepassword"
           routeName="Change Password"
           variant="link"
-          class="text-md flex"
+          class="text-md"
         />
       </CardFooter>
     </Card>

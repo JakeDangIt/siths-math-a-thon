@@ -306,15 +306,19 @@ function scrollUp() {
 }
 
 // function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
-function handleBeforeUnload() {
+function handleBeforeUnload(event) {
   if (hasAnswersChanged.value) {
     saveAnswers();
+    event.preventDefault();
+    event.returnValue = '';
   }
 }
 
-function handleSaveBeforeExit() {
+function handleSaveBeforeExit(event) {
   if (user.value && answersStore.answerData.length > 0) {
-    saveAnswers(); // Ensure this function returns a Promise and waits for completion
+    saveAnswers();
+    event.preventDefault();
+    event.returnValue = '';
   }
 }
 

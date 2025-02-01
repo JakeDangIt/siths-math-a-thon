@@ -39,7 +39,7 @@
         </Dialog>
         <HomeActivityAddActivity v-if="roleStore.role == 'admin'" />
         <img
-          src="/assets/theme/card_accent_2.png"
+          src="/theme/card_accent_2.png"
           class="absolute right-0 top-0 h-64 w-64 object-contain"
           alt="card accent"
           draggable="false"

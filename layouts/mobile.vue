@@ -8,7 +8,7 @@ defineProps(['isLoading']);
       <HeaderNavMenu v-if="!isLoading" />
       <slot />
       <img
-        src="/assets/theme/clouds.png"
+        src="/theme/clouds.png"
         class="clouds fixed top-16"
         alt="clouds"
         draggable="false"

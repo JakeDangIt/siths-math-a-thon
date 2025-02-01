@@ -5,7 +5,7 @@
   >
     <h1 class="text-3xl font-bold">SITHS Math-a-Thon</h1>
     <img
-      src="/assets/theme/mathathon_title.png"
+      src="/theme/mathathon_title.png"
       alt="SITHS Math-a-Thon"
       draggable="false"
     />

@@ -16,7 +16,7 @@
         </p>
       </CardContent>
       <img
-        src="/assets/theme/card_accent_1.png"
+        src="/theme/card_accent_1.png"
         class="absolute bottom-0 right-0 h-64 w-64 object-contain"
         alt="card accent"
         draggable="false"

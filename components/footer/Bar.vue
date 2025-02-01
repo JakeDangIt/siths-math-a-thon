@@ -3,7 +3,7 @@
     class="footer relative flex flex-col items-center justify-center bg-theme-red bg-opacity-20 p-[2px]"
   >
     <img
-      src="/assets/theme/grass.png"
+      src="/theme/grass.png"
       alt="Footer background"
       class="footer-image"
       draggable="false"

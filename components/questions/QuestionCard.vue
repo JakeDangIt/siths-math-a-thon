@@ -4,46 +4,29 @@
       <CardTitle>
         {{ `Question ${question}` }}
       </CardTitle>
-      <CardDescription class="">
+      <CardDescription>
         {{ `[${points} ${points > 1 ? 'points' : 'point'}]` }}
-        <span class="text-theme-red">{{
-          isInvalid ? 'Please enter a valid number' : ''
-        }}</span>
+        <span class="text-theme-red">
+          {{ isInvalid ? 'Please enter a valid number' : '' }}
+        </span>
       </CardDescription>
     </CardHeader>
     <CardContent class="relative z-10 flex flex-col items-center">
-      <div
-        v-if="props.extraInfo"
-        v-html="props.extraInfo"
-        class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"
-      ></div>
+      <div v-if="props.extraInfo" v-html="props.extraInfo"
+        class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"></div>
       <div v-if="props.mathContent" class="relative w-full text-left">
-        <div
-          class="text-ellipsis"
-          :class="{ truncate: isOverflowing }"
-          ref="mathContainer"
-          v-html="props.mathContent"
-        ></div>
+        <div class="text-ellipsis" :class="{ truncate: isOverflowing }" ref="mathContainer" v-html="props.mathContent">
+        </div>
         <Button v-if="isOverflowing" class="mt-2 md:hidden" @click="openDialog">
           Expand
         </Button>
       </div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img
-          :src="props.imageUrl"
-          :alt="`Image for Question ${question}`"
-          class="max-w-1/2 rounded-lg"
-          draggable="false"
-        />
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg"
+          draggable="false" />
       </div>
-      <Input
-        id="input"
-        type="text"
-        v-model="input"
-        :placeholder="'Question ' + question"
-        @change="validateAndChangeAnswer"
-        :disabled="answersStore.getAnswerLoading"
-      />
+      <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
+        @change="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
     </CardContent>
 
     <!-- Dialog for expanded view -->
@@ -57,31 +40,25 @@
       </DialogContent>
     </Dialog>
 
-    <img
-      :src="`/_nuxt/assets/theme/card_accent_${randAccent}.png`"
-      class="accent-img absolute right-0 h-64 w-64 object-contain"
-      :class="{ 'bottom-0': randAccent != 2, 'top-0': randAccent == 2 }"
-      alt="card accent"
-      draggable="false"
-    />
+    <!-- Random accent image that only appears in bee mode -->
+    <img v-if="isBeeMode" :src="`/theme/card_accent_${randAccent}.png`"
+      class="accent-img absolute bottom-0 right-0 h-64 w-64 object-contain" alt="card accent" draggable="false" />
   </Card>
 </template>
 
 <script setup>
-const answersStore = useAnswersStore();
+import { ref, onMounted, nextTick } from "vue";
 
-const props = defineProps([
-  'question',
-  'week',
-  'mathContent',
-  'extraInfo',
-  'imageUrl',
-  'points',
-]);
+const answersStore = useAnswersStore();
+const props = defineProps(["question", "week", "mathContent", "extraInfo", "imageUrl", "points"]);
+
 const question = ref(props.question);
 const week = ref(props.week);
 const points = ref(props.points);
+
+// Random accent image (1 to 4)
 const randAccent = ref(Math.floor(Math.random() * 4) + 1);
+const isBeeMode = computed(() => document.documentElement.classList.contains("bee-mode"));
 
 // Question input
 const input = ref(null);
@@ -96,7 +73,7 @@ const mathContainer = ref(null);
 
 // Validate and update answer
 function validateAndChangeAnswer() {
-  const cleanedValue = input.value.replace(/[^0-9]/g, '');
+  const cleanedValue = input.value.replace(/[^0-9]/g, "");
   isInvalid.value = cleanedValue !== input.value;
   input.value = cleanedValue;
   nextTick(() => {
@@ -137,13 +114,5 @@ function openDialog() {
   nextTick(() => {
     useQuestionsStore().rerenderMathJax();
   });
-}
+};
 </script>
-<style scoped>
-.accent-img {
-  display: none;
-}
-.bee-mode .accent-img {
-  display: block;
-}
-</style>

@@ -38,6 +38,11 @@ export default defineNuxtConfig({
       ],
     },
   },
+  colorMode: {
+    preference: 'bee', // Set default mode to bee
+    fallback: 'light', // Fallback if bee is unavailable
+    classSuffix: '',
+  },
   icon: {
     serverBundle: {
       collections: ['material-symbols'], // <!--- this
@@ -89,9 +94,5 @@ export default defineNuxtConfig({
       supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY,
     },
     sanityToken: process.env.SANITY_TOKEN,
-  },
-  colorMode: {
-    preference: 'bee',
-    fallback: 'light',
   },
 });

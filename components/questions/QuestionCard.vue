@@ -31,14 +31,15 @@
 
     <!-- Dialog for expanded view -->
     <Dialog v-model:open="dialogVisible">
-      <DialogContent>
-        <div class="relative flex h-[95vh] items-center justify-center">
-          <div class="w-full rotate-90">
+      <DialogContent class="max-h-[80vh] w-[90vw] overflow-auto">
+        <div class="relative flex h-[80vh] items-center justify-center">
+          <div class="w-full rotate-90 whitespace-normal break-words overflow-auto p-4">
             <div v-html="props.mathContent"></div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
+
 
     <!-- Random accent image that only appears in bee mode -->
     <img v-if="isBeeMode" :src="`/theme/card_accent_${randAccent}.png`"

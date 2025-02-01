@@ -9,7 +9,7 @@ defineProps(['isLoading']);
       <slot />
       <img
         src="/theme/clouds.png"
-        class="clouds fixed top-10"
+        class="clouds fixed top-20 md:top-10"
         alt="clouds"
         draggable="false"
       />

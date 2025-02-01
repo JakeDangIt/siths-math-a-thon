@@ -20,7 +20,8 @@
         </Button>
       </div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg" draggable="false" />
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg"
+          draggable="false" />
       </div>
     </CardContent>
     <CardFooter>
@@ -62,11 +63,10 @@ const mathContainer = ref(null);
 
 // Validate and update answer
 function validateAndChangeAnswer() {
-  nextTick(() => {
-    const cleanedValue = input.value.replace(/[^0-9]/g, '');
+  const cleanedValue = input.value.replace(/[^0-9]/g, '');
   isInvalid.value = cleanedValue !== input.value;
   input.value = cleanedValue;
-    
+  nextTick(() => {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
       (answer) => answer.week == week.value && answer.question == question.value
     );

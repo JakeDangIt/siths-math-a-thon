@@ -151,10 +151,11 @@
 
                 <!-- submit and save button -->
                 <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button aria-label="Save Answers" @click="saveAnswers()" variant="secondary" :disabled="saveLoading ||
-                    answersStore.answerData.length == 0 ||
-                    !hasAnswersChanged
-                    " class="w-full">
+                  <Button aria-label="Save Answers"
+                    @click="saveAnswers(); toastStore.changeToast('Answers saved', 'Your answers have been saved');"
+                    variant="secondary" :disabled="saveLoading ||
+                      answersStore.answerData.length == 0
+                      " class="w-full">
                     Save Answers
                   </Button>
                   <Button aria-label="Submit Answers" @click="
@@ -253,7 +254,6 @@ async function saveAnswers() {
         keepalive: true,
       });
       initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-      toastStore.changeToast('Answers saved', 'Your answers have been saved');
 
     } catch (error) {
       toastStore.changeToast('Failed to save answers', error.message);
@@ -305,17 +305,10 @@ function scrollUp() {
   });
 }
 
-// function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
-function handleBeforeUnload(event) {
-  if (hasAnswersChanged.value) {
-    saveAnswers();
-  }
-}
-
 function saveAnswersBeforeExit() {
-  if (document.visibilityState === 'hidden') {
-    saveAnswers(); // Call your save function
-  }
+    if (hasAnswersChanged.value) {
+      saveAnswers();
+    }
 }
 
 // check if far down enough when the user scrolls
@@ -358,13 +351,8 @@ onMounted(async () => {
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
+  window.addEventListener("pagehide", saveAnswersBeforeExit);
   document.addEventListener('visibilitychange', saveAnswersBeforeExit);
-});
-
-onBeforeUnmount(() => {
-  // remove the event listener to avoid memory leaks
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-  document.removeEventListener('visibilitychange', saveAnswersBeforeExit);
 });
 
 const countdown = ref({

@@ -59,7 +59,7 @@ module.exports = {
         'theme-dark-red': '#973f3b',
         'theme-blue': '#B1BAD1',
         'theme-dark-blue': '#8E95A7',
-        'bee-dark-yellow': "#ffb930",
+        'bee-dark-yellow': '#ffb930',
         'bee-light-yellow': '#fff3a2',
         'bee-hover-yellow': '#ffd630',
         'connections-gray': '#efefe6',

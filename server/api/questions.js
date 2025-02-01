@@ -36,9 +36,13 @@ export default defineEventHandler(async (event) => {
           const base64String = changes.image.split(',')[1]; // Extract base64 data
           const imageBuffer = Buffer.from(base64String, 'base64');
 
-          const imageAsset = await sanityClient.assets.upload('image', streamifier.createReadStream(imageBuffer), {
-            filename: `week${questionInfo.week}_question${questionInfo.number}.png`,
-          });
+          const imageAsset = await sanityClient.assets.upload(
+            'image',
+            streamifier.createReadStream(imageBuffer),
+            {
+              filename: `week${questionInfo.week}_question${questionInfo.number}.png`,
+            }
+          );
 
           await sanityClient
             .patch(existingQuestion._id)
@@ -61,12 +65,16 @@ export default defineEventHandler(async (event) => {
       return { status: 'success', message: 'Question updated successfully' };
     } else {
       // Create new question entry
-      const newQuestion = await sanityClient.create({ 
-        ...changes, 
+      const newQuestion = await sanityClient.create({
+        ...changes,
         _type: 'questions',
       });
 
-      return { status: 'success', message: 'Question created successfully', id: newQuestion._id };
+      return {
+        status: 'success',
+        message: 'Question created successfully',
+        id: newQuestion._id,
+      };
     }
   } catch (error) {
     console.error('Error in saveQuestion API:', error);

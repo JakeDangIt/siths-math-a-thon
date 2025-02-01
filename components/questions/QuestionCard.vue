@@ -1,54 +1,87 @@
 <template>
-  <Card class="my-2">
+  <Card class="relative my-2 overflow-hidden">
     <CardHeader>
       <CardTitle>
         {{ `Question ${question}` }}
       </CardTitle>
       <CardDescription class="">
         {{ `[${points} ${points > 1 ? 'points' : 'point'}]` }}
-        <span class="text-theme-red">{{ isInvalid ? 'Please enter a valid number' : '' }}</span>
+        <span class="text-theme-red">{{
+          isInvalid ? 'Please enter a valid number' : ''
+        }}</span>
       </CardDescription>
     </CardHeader>
-    <CardContent class="flex flex-col items-center">
-      <div v-if="props.extraInfo" v-html="props.extraInfo"
-        class="items-center border-2 px-4 py-2 w-4/5 mb-4 border-black rounded-lg"></div>
-      <div v-if="props.mathContent" class="w-full text-left relative">
-        <div class="text-ellipsis" :class="{ 'truncate': isOverflowing }" ref="mathContainer"
-          v-html="props.mathContent"></div>
-        <Button v-if="isOverflowing" class="md:hidden mt-2" @click="openDialog">
+    <CardContent class="relative z-10 flex flex-col items-center">
+      <div
+        v-if="props.extraInfo"
+        v-html="props.extraInfo"
+        class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"
+      ></div>
+      <div v-if="props.mathContent" class="relative w-full text-left">
+        <div
+          class="text-ellipsis"
+          :class="{ truncate: isOverflowing }"
+          ref="mathContainer"
+          v-html="props.mathContent"
+        ></div>
+        <Button v-if="isOverflowing" class="mt-2 md:hidden" @click="openDialog">
           Expand
         </Button>
       </div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg"
-          draggable="false" />
+        <img
+          :src="props.imageUrl"
+          :alt="`Image for Question ${question}`"
+          class="max-w-1/2 rounded-lg"
+          draggable="false"
+        />
       </div>
+      <Input
+        id="input"
+        type="text"
+        v-model="input"
+        :placeholder="'Question ' + question"
+        @change="validateAndChangeAnswer"
+        :disabled="answersStore.getAnswerLoading"
+      />
     </CardContent>
-    <CardFooter>
-      <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
-        @change="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
-    </CardFooter>
 
     <!-- Dialog for expanded view -->
     <Dialog v-model:open="dialogVisible">
       <DialogContent>
-        <div class="relative flex items-center justify-center h-[95vh]">
-          <div class="rotate-90 w-full">
+        <div class="relative flex h-[95vh] items-center justify-center">
+          <div class="w-full rotate-90">
             <div v-html="props.mathContent"></div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
+
+    <img
+      :src="`/_nuxt/assets/theme/card_accent_${randAccent}.png`"
+      class="accent-img absolute right-0 h-64 w-64 object-contain"
+      :class="{ 'bottom-0': randAccent != 2, 'top-0': randAccent == 2 }"
+      alt="card accent"
+      draggable="false"
+    />
   </Card>
 </template>
 
 <script setup>
 const answersStore = useAnswersStore();
 
-const props = defineProps(['question', 'week', 'mathContent', 'extraInfo', 'imageUrl', 'points']);
+const props = defineProps([
+  'question',
+  'week',
+  'mathContent',
+  'extraInfo',
+  'imageUrl',
+  'points',
+]);
 const question = ref(props.question);
 const week = ref(props.week);
 const points = ref(props.points);
+const randAccent = ref(Math.floor(Math.random() * 4) + 1);
 
 // Question input
 const input = ref(null);
@@ -90,9 +123,11 @@ onMounted(() => {
   }
   nextTick(() => {
     setTimeout(() => {
-      isOverflowing.value = mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
+      isOverflowing.value =
+        mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
     }, 300);
-    isOverflowing.value = mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
+    isOverflowing.value =
+      mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
   });
 });
 
@@ -104,3 +139,11 @@ function openDialog() {
   });
 }
 </script>
+<style scoped>
+.accent-img {
+  display: none;
+}
+.bee-mode .accent-img {
+  display: block;
+}
+</style>

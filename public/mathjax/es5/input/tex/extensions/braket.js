@@ -182,16 +182,14 @@
             var c = !0;
             '{' === l && (t.i++, (c = !1)),
               t.Push(
-                t.itemFactory
-                  .create('braket')
-                  .setProperties({
-                    barmax: n,
-                    barcount: 0,
-                    open: a,
-                    close: r,
-                    stretchy: o,
-                    single: c,
-                  })
+                t.itemFactory.create('braket').setProperties({
+                  barmax: n,
+                  barcount: 0,
+                  open: a,
+                  close: r,
+                  stretchy: o,
+                  single: c,
+                })
               );
           }),
           (l.Bar = function (t, e) {

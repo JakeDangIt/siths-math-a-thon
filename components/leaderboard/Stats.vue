@@ -1,13 +1,19 @@
 <template>
   <!-- if submitted and checked, show all your stats in a table and graph -->
-  <div v-if="hasSubmitted && answersHaveBeenChecked" class="mt-2 space-y-2 lg:mt-0 w-full md:w-4/5 lg:w-1/2 xl:w-2/5">
+  <div
+    v-if="hasSubmitted && answersHaveBeenChecked"
+    class="mt-2 w-full space-y-2 md:w-4/5 lg:mt-0 lg:w-1/2 xl:w-2/5"
+  >
     <div>
       <Card>
         <CardHeader>
           <CardTitle>Total Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <div v-if="leaderboardStore.userAnswers.length == 0" class="space-y-1">
+          <div
+            v-if="leaderboardStore.userAnswers.length == 0"
+            class="space-y-1"
+          >
             <Skeleton class="h-6 w-1/2"></Skeleton>
             <Skeleton class="h-6 w-1/2"></Skeleton>
           </div>
@@ -21,8 +27,10 @@
             </p>
             <p>
               {{ correctPercentage }}
-              % accuracy - 
-              {{ leaderboardStore.numberOfCorrect }}/{{leaderboardStore.numberOfAnswered}}
+              % accuracy -
+              {{ leaderboardStore.numberOfCorrect }}/{{
+                leaderboardStore.numberOfAnswered
+              }}
               correct answers
             </p>
           </div>
@@ -37,12 +45,19 @@
     <!-- table of your answer data -->
     <Tabs v-else :default-value="1" class="mx-auto my-4">
       <TabsList class="mb-4 w-full">
-        <Carousel class="mx-auto w-4/5" :opts="{
-          align: 'start',
-          slidesToScroll: 2,
-        }">
+        <Carousel
+          class="mx-auto w-4/5"
+          :opts="{
+            align: 'start',
+            slidesToScroll: 2,
+          }"
+        >
           <CarouselContent>
-            <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+            <CarouselItem
+              v-for="week in presentWeekNames"
+              class="w-full basis-1/2"
+              :key="week"
+            >
               <TabsList class="w-full">
                 <TabsTrigger class="w-full" :value="week">
                   Week {{ week }}
@@ -57,7 +72,8 @@
 
       <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]">
         <Table>
-          <TableCaption v-if="weeksAnswers(weekNames[index]).length > 1">Your answers for Week {{ weekNames[index] }}
+          <TableCaption v-if="weeksAnswers(weekNames[index]).length > 1"
+            >Your answers for Week {{ weekNames[index] }}
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -67,8 +83,10 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-if="weeksAnswers(weekNames[index]).length > 1"
-              v-for="question in weeksAnswers(weekNames[index]).slice(0, -1)">
+            <TableRow
+              v-if="weeksAnswers(weekNames[index]).length > 1"
+              v-for="question in weeksAnswers(weekNames[index]).slice(0, -1)"
+            >
               <TableCell>{{ question.question }}</TableCell>
               <TableCell>{{
                 formattedResponse(question.submittedAnswer, question.isCorrect)
@@ -80,10 +98,12 @@
               <TableCell></TableCell>
               <TableCell>{{
                 weeksAnswers(weekNames[index]).at(-1).submittedAnswer
-                }}</TableCell>
+              }}</TableCell>
             </TableRow>
             <TableRow v-else>
-              <TableCell colspan="3">No answers submitted for this set of questions</TableCell>
+              <TableCell colspan="3"
+                >No answers submitted for this set of questions</TableCell
+              >
             </TableRow>
           </TableBody>
         </Table>
@@ -126,7 +146,12 @@ const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus'];
 
 const userPlace = computed(() => useOrdinalPlace(leaderboardStore.userPlace));
 const totalUsers = computed(() => leaderboardStore.leaderboardData.length);
-const correctPercentage = computed(() => ((leaderboardStore.numberOfCorrect / leaderboardStore.numberOfAnswered) * 100).toFixed(2));
+const correctPercentage = computed(() =>
+  (
+    (leaderboardStore.numberOfCorrect / leaderboardStore.numberOfAnswered) *
+    100
+  ).toFixed(2)
+);
 
 // present week names, also for the tabs, just that it filters out the weeks that don't have any questions
 const presentWeekNames = computed(() => {
@@ -146,12 +171,12 @@ function weeksAnswers(weekName) {
 
   const totalCorrect = weekAnsweredQuestions
     ? {
-      question: 'Total',
-      submittedAnswer: weekAnsweredQuestions.filter(
-        (question) => question.isCorrect
-      ).length,
-      isCorrect: '',
-    }
+        question: 'Total',
+        submittedAnswer: weekAnsweredQuestions.filter(
+          (question) => question.isCorrect
+        ).length,
+        isCorrect: '',
+      }
     : [];
 
   // last row is total, number of correct answers

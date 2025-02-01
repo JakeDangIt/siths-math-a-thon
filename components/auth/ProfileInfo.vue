@@ -13,9 +13,7 @@
           </div>
 
           <Avatar v-if="showAvatar" class="h-16 w-16">
-            <AvatarImage
-              :src="avatarImage || avatarStore.avatarImage"
-            />
+            <AvatarImage :src="avatarImage || avatarStore.avatarImage" />
           </Avatar>
           <Avatar v-else class="h-16 w-16">
             <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>

@@ -1,5 +1,8 @@
 <template>
-  <div v-if="leaderboardStore.leaderboardData.length != 0" class="h-full w-full">
+  <div
+    v-if="leaderboardStore.leaderboardData.length != 0"
+    class="h-full w-full"
+  >
     <Card v-if="leaderboardStore.top3Avatars.length != 3">
       <Skeleton class="h-60 w-full" />
     </Card>
@@ -49,10 +52,7 @@
               <span>{{ avatar?.name ?? '' }}</span>
             </div>
             <span
-              >{{
-                leaderboardStore.top10[index]?.total_points ?? 0
-              }}
-              pts</span
+              >{{ leaderboardStore.top10[index]?.total_points ?? 0 }} pts</span
             >
           </div>
         </div>

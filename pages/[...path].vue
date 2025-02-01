@@ -1,23 +1,29 @@
 <template>
-  <div class="h-full flex items-center justify-center bg-gradient-to-r from-theme-red to-theme-blue p-4">
-    <div class="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center">
+  <div
+    class="flex h-full items-center justify-center bg-gradient-to-r from-theme-red to-theme-blue p-4"
+  >
+    <div class="w-full max-w-2xl rounded-lg bg-white p-8 text-center shadow-xl">
       <div class="mb-8">
-        <h1 class="text-6xl font-bold text-gray-800 mb-4">404</h1>
+        <h1 class="mb-4 text-6xl font-bold text-gray-800">404</h1>
       </div>
 
-      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Page Not Found</h2>
-      <p class="text-gray-600 mb-8">
+      <h2 class="mb-4 text-2xl font-semibold text-gray-700">Page Not Found</h2>
+      <p class="mb-8 text-gray-600">
         Oops! It seems like you've ventured into unknown mathematical territory.
         Let's get you back to solving some real problems!
       </p>
 
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <NuxtLink to="/"
-          class="px-6 py-3 bg-gradient-to-r from-theme-red to-theme-blue text-white rounded-lg hover:opacity-90 transition-opacity">
+      <div class="flex flex-col justify-center gap-4 sm:flex-row">
+        <NuxtLink
+          to="/"
+          class="rounded-lg bg-gradient-to-r from-theme-red to-theme-blue px-6 py-3 text-white transition-opacity hover:opacity-90"
+        >
           Return Home
         </NuxtLink>
-        <NuxtLink to="/questions"
-          class="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+        <NuxtLink
+          to="/questions"
+          class="rounded-lg border-2 border-gray-300 bg-white px-6 py-3 text-gray-700 transition-colors hover:bg-gray-50"
+        >
           View Questions
         </NuxtLink>
       </div>

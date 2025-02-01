@@ -14,11 +14,11 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
     '@nuxtjs/sanity',
-    "@nuxtjs/color-mode",
+    '@nuxtjs/color-mode',
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@formkit/auto-animate',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
   ],
   app: {
     head: {
@@ -91,7 +91,7 @@ export default defineNuxtConfig({
     sanityToken: process.env.SANITY_TOKEN,
   },
   colorMode: {
-    preference: 'light',
+    preference: 'bee',
     fallback: 'light',
-  }
+  },
 });

@@ -1,6 +1,9 @@
 <template>
   <!-- skeleton for the question cards and button -->
-  <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
+  <div
+    v-if="questionsStore.isLoading || !mathJaxLoaded"
+    class="mx-auto space-y-2 lg:w-2/3"
+  >
     <Skeleton class="mb-4 h-10" />
     <Skeleton class="h-32" />
     <Skeleton class="h-32" />
@@ -8,24 +11,37 @@
   </div>
 
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-  <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
-    @update:model-value="onTabChange">
-
-    <div class="flex flex-col md:flex-row gap-2">
+  <Tabs
+    v-else
+    :default-value="Number(timeStore.currentWeek)"
+    class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+    @update:model-value="onTabChange"
+  >
+    <div class="flex flex-col gap-2 md:flex-row">
       <NuxtLink to="/minigames" class="block">
         <Button variant="secondary" class="border border-slate-500">
           <span>Minigames</span>
         </Button>
       </NuxtLink>
       <!-- carousel for the tabs -->
-      <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
-        align: 'start',
-        slidesToScroll: 2,
-        startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
-      }">
+      <Carousel
+        v-if="questionsStore.questionData.length > 0"
+        class="mx-auto w-2/3"
+        :opts="{
+          align: 'start',
+          slidesToScroll: 2,
+          startIndex: weekNames.findIndex(
+            (week) => week == timeStore.currentWeek
+          ),
+        }"
+      >
         <CarouselContent>
           <!-- paired into week and its bonus -->
-          <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+          <CarouselItem
+            v-for="week in presentWeekNames"
+            class="w-full basis-1/2"
+            :key="week"
+          >
             <TabsList class="w-full">
               <TabsTrigger class="w-full" :value="week">
                 Week {{ week }}
@@ -38,8 +54,8 @@
       </Carousel>
 
       <div v-else>
-        <h2 class="text-2xl font-bold mb-4">Contest Starts In:</h2>
-        <div class="countdown text-4xl font-mono mb-6">
+        <h2 class="mb-4 text-2xl font-bold">Contest Starts In:</h2>
+        <div class="countdown font-mono mb-6 text-4xl">
           <span>{{ countdown.days }}</span> Days
           <span>{{ countdown.hours }}</span> Hours
           <span>{{ countdown.minutes }}</span> Minutes
@@ -50,57 +66,97 @@
     </div>
 
     <!-- content for the tabs -->
-    <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
-      <div v-if="timeStore.timeRemainings.find(time => time.week.includes(String(weekNames[index]))).timeRemaining > 0">
+    <TabsContent
+      v-for="(_, index) in weekNames"
+      :value="weekNames[index]"
+      class="space-y-2"
+    >
+      <div
+        v-if="
+          timeStore.timeRemainings.find((time) =>
+            time.week.includes(String(weekNames[index]))
+          ).timeRemaining > 0
+        "
+      >
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ weekNames[index] }} Questions
           <QuestionsClock :week="weekNames[index]" />
         </h1>
 
-        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
-          .filter((question) => question.week == weekNames[index])
-          .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]"
-          :imageUrl="question.imageUrl" :points="question.points" />
+        <QuestionsQuestionCard
+          class="flex flex-col gap-2"
+          v-for="question in questionsStore.questionData
+            .filter((question) => question.week == weekNames[index])
+            .sort((a, b) => a.number - b.number)"
+          :key="question.number"
+          :question="question.number"
+          :mathContent="question.content"
+          :extraInfo="question.extraInfo"
+          :week="weekNames[index]"
+          :imageUrl="question.imageUrl"
+          :points="question.points"
+        />
 
         <!-- preview answer -->
         <Sheet>
           <!-- scroll down button and preview answer button -->
           <div>
-            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
-              :class="isFarDownEnough
-                ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-                : 'translate-x-0'
-                ">
-
+            <div
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+              :class="
+                isFarDownEnough
+                  ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
+                  : 'translate-x-0'
+              "
+            >
               <Button aria-label="Scroll Down" @click="scrollDown()">
-                <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
+                <Icon
+                  name="material-symbols:arrow-downward"
+                  class="h-full w-6"
+                ></Icon>
               </Button>
 
-              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
+              <QuestionsAddQuestion
+                v-if="roleStore.role == 'admin'"
+                :week="weekNames[index]"
+              />
               <!-- to save space, 'Answers' is omitted on mobile -->
               <SheetTrigger>
-                <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
+                <Button aria-label="Preview Answers"
+                  >Preview {{ width > 1024 ? 'Answers' : '' }}</Button
+                >
               </SheetTrigger>
             </div>
 
-            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
-              :class="isFarDownEnough
-                ? 'translate-x-0'
-                : 'translate-x-[14rem] lg:translate-x-[-14rem]'
-                ">
-
+            <div
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+              :class="
+                isFarDownEnough
+                  ? 'translate-x-0'
+                  : 'translate-x-[14rem] lg:translate-x-[-14rem]'
+              "
+            >
               <Button aria-label="Scroll Up" @click="scrollUp()">
-                <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
+                <Icon
+                  name="material-symbols:arrow-upward"
+                  class="h-full w-6"
+                ></Icon>
               </Button>
 
-              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
+              <QuestionsAddQuestion
+                v-if="roleStore.role == 'admin'"
+                :week="weekNames[index]"
+              />
             </div>
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
+          <SheetTrigger
+            ><Button aria-label="Preview Answers"
+              >Preview Answers</Button
+            ></SheetTrigger
+          >
 
           <!-- preview answer content -->
           <SheetContent>
@@ -112,15 +168,27 @@
             </SheetHeader>
 
             <!-- another tabs, basically the same as the one outside -->
-            <Tabs :default-value="Number(timeStore.currentWeek)" class="mx-auto my-4">
-              <Carousel class="mx-auto w-2/3" :opts="{
-                align: 'start',
-                slidesToScroll: 2,
-                startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
-              }">
+            <Tabs
+              :default-value="Number(timeStore.currentWeek)"
+              class="mx-auto my-4"
+            >
+              <Carousel
+                class="mx-auto w-2/3"
+                :opts="{
+                  align: 'start',
+                  slidesToScroll: 2,
+                  startIndex: weekNames.findIndex(
+                    (week) => week == timeStore.currentWeek
+                  ),
+                }"
+              >
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
-                  <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+                  <CarouselItem
+                    v-for="week in presentWeekNames"
+                    class="w-full basis-1/2"
+                    :key="week"
+                  >
                     <TabsList class="w-full">
                       <TabsTrigger :value="week">
                         {{ width > 640 ? 'Week ' : 'W' }}{{ week }}
@@ -133,43 +201,73 @@
               </Carousel>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
-              <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
-                class="grid grid-cols-2 lg:grid-cols-1">
+              <TabsContent
+                v-for="(_, index) in weekNames"
+                :value="weekNames[index]"
+                class="grid grid-cols-2 lg:grid-cols-1"
+              >
                 <!-- each answer, sorted, with a remove button -->
-                <div v-for="answer in answersStore.answerData
-                  .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
+                <div
+                  v-for="answer in answersStore.answerData
+                    .filter((answer) => answer.week == weekNames[index])
+                    .sort((a, b) => a.question - b.question)"
+                  class="group flex justify-between px-2 hover:bg-slate-200"
+                >
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
                   </p>
-                  <button aria-label="Remove Answer" @click="removeAnswer(weekNames[index], answer.question)"
-                    class="flex items-center opacity-0 transition-all group-hover:opacity-100">
-                    <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
+                  <button
+                    aria-label="Remove Answer"
+                    @click="removeAnswer(weekNames[index], answer.question)"
+                    class="flex items-center opacity-0 transition-all group-hover:opacity-100"
+                  >
+                    <Icon
+                      v-if="answer.answer !== ''"
+                      name="material-symbols:cancel-outline"
+                    ></Icon>
                   </button>
                 </div>
 
                 <!-- submit and save button -->
-                <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button aria-label="Save Answers"
-                    @click="saveAnswers(); toastStore.changeToast('Answers saved', 'Your answers have been saved');"
-                    variant="secondary" :disabled="saveLoading ||
-                      answersStore.answerData.length == 0
-                      " class="w-full">
+                <div
+                  class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto"
+                >
+                  <Button
+                    aria-label="Save Answers"
+                    @click="
+                      saveAnswers();
+                      toastStore.changeToast(
+                        'Answers saved',
+                        'Your answers have been saved'
+                      );
+                    "
+                    variant="secondary"
+                    :disabled="
+                      saveLoading || answersStore.answerData.length == 0
+                    "
+                    class="w-full"
+                  >
                     Save Answers
                   </Button>
-                  <Button aria-label="Submit Answers" @click="
-                    submitAnswers(
-                      weekNames[index],
-                      answersStore.answerData.filter(
-                        (answer) => answer.week == weekNames[index]
+                  <Button
+                    aria-label="Submit Answers"
+                    @click="
+                      submitAnswers(
+                        weekNames[index],
+                        answersStore.answerData.filter(
+                          (answer) => answer.week == weekNames[index]
+                        )
                       )
-                    )
-                    " :disabled="submitLoading ||
+                    "
+                    :disabled="
+                      submitLoading ||
                       answersStore.answerData.filter(
                         (answer) => answer.week == weekNames[index]
                       ).length == 0
-                      " class="w-full">
+                    "
+                    class="w-full"
+                  >
                     Submit Week
                     {{ weekNames[index] }}
                   </Button>
@@ -253,8 +351,9 @@ async function saveAnswers() {
         }),
         keepalive: true,
       });
-      initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-
+      initialAnswers.value = JSON.parse(
+        JSON.stringify(answersStore.answerData)
+      );
     } catch (error) {
       toastStore.changeToast('Failed to save answers', error.message);
     }
@@ -362,26 +461,26 @@ onMounted(async () => {
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
       handleSaveBeforeExit();
     }
   });
-  window.addEventListener("pagehide", handleSaveBeforeExit);
+  window.addEventListener('pagehide', handleSaveBeforeExit);
 });
 
 onBeforeUnmount(() => {
   // remove the event listener to avoid memory leaks
   window.removeEventListener('beforeunload', handleBeforeUnload);
   document.removeEventListener('visibilitychange', handleSaveBeforeExit);
-  window.removeEventListener("pagehide", handleSaveBeforeExit);
+  window.removeEventListener('pagehide', handleSaveBeforeExit);
 });
 
 onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload);
   document.removeEventListener('visibilitychange', handleSaveBeforeExit);
-  window.removeEventListener("pagehide", handleSaveBeforeExit);
-})
+  window.removeEventListener('pagehide', handleSaveBeforeExit);
+});
 
 const countdown = ref({
   days: 0,
@@ -396,8 +495,12 @@ function updateCountdown() {
   const distance = targetDate - now;
 
   countdown.value.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  countdown.value.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  countdown.value.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  countdown.value.hours = Math.floor(
+    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  countdown.value.minutes = Math.floor(
+    (distance % (1000 * 60 * 60)) / (1000 * 60)
+  );
   countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000);
 }
 

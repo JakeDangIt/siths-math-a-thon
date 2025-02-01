@@ -36,13 +36,20 @@ export const useQuestionsStore = defineStore('questions', () => {
       return question;
     });
 
-    questionData.value = questionsWithImages.filter((question) => !question.title.includes('Time'));
-    questionTimeData.value = questionsWithImages.filter((question) => question.title.includes('Time'));
+    questionData.value = questionsWithImages.filter(
+      (question) => !question.title.includes('Time')
+    );
+    questionTimeData.value = questionsWithImages.filter((question) =>
+      question.title.includes('Time')
+    );
 
     // update time store with new time data
     timeStore.targetDates = questionTimeData.value.map((question) => {
       const targetDate = new Date(question.content);
-      return { week: [question.week, question.week + ' Bonus'], date: targetDate };
+      return {
+        week: [question.week, question.week + ' Bonus'],
+        date: targetDate,
+      };
     });
 
     await rerenderMathJax();
@@ -70,5 +77,12 @@ export const useQuestionsStore = defineStore('questions', () => {
     });
   });
 
-  return { questionData, questionTimeData, isLoading, getQuestions, rerenderMathJax, buildImageUrl };
+  return {
+    questionData,
+    questionTimeData,
+    isLoading,
+    getQuestions,
+    rerenderMathJax,
+    buildImageUrl,
+  };
 });

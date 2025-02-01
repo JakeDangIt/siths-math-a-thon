@@ -22,10 +22,17 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   // these two is your number of correct answers and number of answered questions
   const numberOfCorrect = computed(() =>
-    userAnswers.value.reduce((sum, week) => sum + week.correct_answers.filter((answer) => answer.isCorrect).length, 0)
+    userAnswers.value.reduce(
+      (sum, week) =>
+        sum + week.correct_answers.filter((answer) => answer.isCorrect).length,
+      0
+    )
   );
   const numberOfAnswered = computed(() =>
-    userAnswers.value.reduce((sum, week) => sum + week.correct_answers.length, 0)
+    userAnswers.value.reduce(
+      (sum, week) => sum + week.correct_answers.length,
+      0
+    )
   );
 
   // get the data from the top 10

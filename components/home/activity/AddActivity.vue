@@ -11,9 +11,16 @@
         <SheetDescription> Add and edit the activity section </SheetDescription>
       </SheetHeader>
       <div class="flex flex-col items-center">
-        <div class="flex w-full items-center gap-2 p-1" v-for="(activity, index) in last3Activities" :key="index">
+        <div
+          class="flex w-full items-center gap-2 p-1"
+          v-for="(activity, index) in last3Activities"
+          :key="index"
+        >
           <p>{{ formatDate(activity.date) }}</p>
-          <Input v-model="activity.content" placeholder="Enter activity content" />
+          <Input
+            v-model="activity.content"
+            placeholder="Enter activity content"
+          />
         </div>
         <Button @click="addActivity">
           <Icon name="material-symbols:add" class="h-5 w-5"></Icon>
@@ -80,7 +87,6 @@ async function saveActivities() {
       }
     })
   );
-
 
   // After successful save, update the original state and remove the isNew flag
   last3Activities.value.forEach((activity) => {

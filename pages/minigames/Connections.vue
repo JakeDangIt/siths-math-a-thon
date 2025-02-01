@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <MinigamesRedirectButton />
-        <MinigamesConnectionsGrid />
-    </div>
+  <div>
+    <MinigamesRedirectButton />
+    <MinigamesConnectionsGrid />
+  </div>
 </template>

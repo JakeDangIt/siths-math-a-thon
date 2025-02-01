@@ -14,7 +14,9 @@ const currentRouteName = computed(() =>
 <template>
   <Sheet>
     <!-- header w/ hamburger icon -->
-    <header class="flex px-2 h-14 items-center justify-between bg-theme-blue">
+    <header
+      class="header flex h-14 items-center justify-between bg-theme-blue px-2"
+    >
       <!-- left -->
       <div class="flex h-full items-center">
         <SheetTrigger aria-label="Menu">
@@ -22,16 +24,16 @@ const currentRouteName = computed(() =>
         </SheetTrigger>
 
         <NuxtLink to="/" aria-label="Home">
-          <div class="m-2 h-fit rounded-md bg-theme-dark-blue">
+          <div class="header-img m-2 h-fit rounded-md bg-theme-dark-blue">
             <NuxtImg
-            class="md:hidden"
+              class="md:hidden"
               src="/math-a-thon-icon.png"
               alt="Math-a-Thon logo"
               width="32px"
               height="32px"
             />
             <NuxtImg
-            class="hidden md:block"
+              class="hidden md:block"
               src="/math-a-thon-icon.png"
               alt="Math-a-Thon logo"
               width="40px"
@@ -46,7 +48,7 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
-        <HeaderNavButtonLogIn class="hidden md:block"/>
+        <HeaderNavButtonLogIn class="hidden md:block" />
       </div>
       <div v-else class="flex justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />
@@ -81,7 +83,7 @@ const currentRouteName = computed(() =>
               :route-name="route.routeName"
               :icon-name="route.iconName"
               :variant="'link'"
-              class="w-full text-lg text-left"
+              class="w-full text-left text-lg"
             />
           </SheetClose>
         </nav>
@@ -89,6 +91,7 @@ const currentRouteName = computed(() =>
 
       <SheetFooter class="flex-col gap-4 sm:flex-col">
         <div class="flex flex-col items-center justify-center">
+          <AuthChangeTheme />
           <div v-if="user?.role !== 'authenticated'" class="flex gap-4">
             <SheetClose>
               <HeaderNavButtonSignUp />
@@ -111,3 +114,11 @@ const currentRouteName = computed(() =>
     </SheetContent>
   </Sheet>
 </template>
+<style scoped>
+.bee-mode .header {
+  background-color: #ffb930;
+}
+.bee-mode .header-img {
+  background-color: #fff3a2;
+}
+</style>

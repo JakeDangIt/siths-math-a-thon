@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- featured problem, which is just a random problem from the list of questions -->
-    <Card class="flex h-full flex-col">
+    <Card class="relative flex h-full flex-col">
       <CardHeader>
         <CardTitle>Featured Problem</CardTitle>
       </CardHeader>
@@ -11,7 +11,10 @@
         <Skeleton class="h-10 w-20" />
       </CardContent>
 
-      <CardContent v-else-if="questionsStore.questionData.length > 0" class="flex h-full flex-col justify-between">
+      <CardContent
+        v-else-if="questionsStore.questionData.length > 0"
+        class="relative z-10 flex h-full flex-col justify-between"
+      >
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span v-html="randomQuestion?.content"></span>
@@ -29,6 +32,12 @@
           <span>Check back later for more questions.</span>
         </div>
       </CardContent>
+      <img
+        src="/assets/theme/card_accent_4.png"
+        class="absolute bottom-0 right-0 h-64 w-64 object-contain"
+        alt="card accent"
+        draggable="false"
+      />
     </Card>
   </div>
 </template>
@@ -63,3 +72,11 @@ onMounted(async () => {
   }
 });
 </script>
+<style scoped>
+img {
+  display: none;
+}
+.bee-mode img {
+  display: block;
+}
+</style>

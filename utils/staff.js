@@ -23,5 +23,5 @@ export const staff = [
     title: 'Media Manager & Head Designer',
     email: 'irenel36@nycstudents.net',
     special: false,
-  }
+  },
 ];

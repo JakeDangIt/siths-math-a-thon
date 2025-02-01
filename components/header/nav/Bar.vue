@@ -13,9 +13,7 @@ const currentRouteName = computed(() =>
 </script>
 
 <template>
-  <header
-    class="header flex h-14 items-center bg-theme-blue px-4 py-1"
-  >
+  <header class="header flex h-14 items-center bg-theme-blue px-4 py-1">
     <!-- left + home -->
     <div class="flex h-full flex-1 items-center">
       <nuxt-link
@@ -42,9 +40,9 @@ const currentRouteName = computed(() =>
         v-for="route in routes.slice(1, 3)"
         :route-path="route.routePath"
         :route-name="route.routeName"
+        :currentRoutePath="currentRoutePath"
         variant="link"
-        class="flex flex-1 justify-center text-lg hover:bg-gray-500 hover:bg-opacity-20"
-        :class="{ 'font-bold': currentRoutePath == route.routePath }"
+        class="bar-links flex flex-1 justify-center text-lg hover:bg-gray-500 hover:bg-opacity-20"
       />
 
       <DropdownMenu>
@@ -61,7 +59,7 @@ const currentRouteName = computed(() =>
               :route-path="route.routePath"
               :route-name="route.routeName"
               variant="link"
-              class="w-full text-lg text-left"
+              class="w-full text-left text-lg"
               :class="{ 'font-bold': currentRoutePath == route.routePath }"
             />
           </DropdownMenuItem>
@@ -71,6 +69,7 @@ const currentRouteName = computed(() =>
 
     <!-- right buttons -->
     <div class="flex flex-1 items-center justify-end gap-2">
+      <AuthChangeTheme />
       <div v-if="user?.role !== 'authenticated'" class="flex gap-2">
         <HeaderNavButtonSignUp />
         <HeaderNavButtonLogIn />
@@ -89,5 +88,10 @@ const currentRouteName = computed(() =>
 }
 .bee-mode .header-img {
   background-color: #fff3a2;
+}
+.bee-mode .bar-links:hover {
+  background-color: #a77840;
+  border-radius: 0.5rem;
+  transition: all 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 </style>

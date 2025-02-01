@@ -117,7 +117,7 @@ export const useAnswersStore = defineStore('answers', () => {
         'Answers submitted',
         'Thank you for submitting your answers'
       );
-      
+
       await leaderboardStore.getUserAnswers();
     }
   }

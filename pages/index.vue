@@ -4,10 +4,8 @@
       <HomeBanner />
       <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <HomeDirections class="col-span-full" />
-        <HomeMichaelsCause/>
-        <HomeWeekStatsLeaderboard
-          class="h-full w-full lg:col-span-2"
-        />
+        <HomeMichaelsCause />
+        <HomeWeekStatsLeaderboard class="h-full w-full lg:col-span-2" />
         <HomeProfileSummary class="h-full" />
         <HomeActivity />
         <HomeFeaturedProblem />

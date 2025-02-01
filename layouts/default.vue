@@ -7,24 +7,29 @@ defineProps(['isLoading']);
     <Body class="flex-1">
       <HeaderNavBar v-if="!isLoading" />
       <slot />
-      <img src="/assets/theme/clouds.png" class="clouds fixed top-10" alt="clouds">
+      <img
+        src="/assets/theme/clouds.png"
+        class="clouds fixed top-10"
+        alt="clouds"
+        draggable="false"
+      />
     </Body>
     <FooterBar class="mt-auto" />
   </div>
 </template>
-  
+
 <style>
 body {
-  height:auto;
+  height: auto;
   background-color: #fff;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
   z-index: 10;
 }
 .clouds {
   display: none;
 }
 .bee-mode .clouds {
-  display: block
+  display: block;
 }
 .bee-mode body {
   background-color: #a0c4d4;

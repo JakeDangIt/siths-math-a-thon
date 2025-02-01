@@ -1,10 +1,10 @@
 export const useTimeStore = defineStore('time', () => {
   const time = ref(new Date());
-  const targetDates = ref([])
+  const targetDates = ref([]);
 
   const timeRemainings = computed(() => {
     return targetDates.value.map((targetDate) => {
-      const timeRemaining =  time.value - targetDate.date;
+      const timeRemaining = time.value - targetDate.date;
       return { week: targetDate.week, timeRemaining };
     });
   });
@@ -14,12 +14,12 @@ export const useTimeStore = defineStore('time', () => {
       return targetDate.date < time.value;
     })?.week[0];
   });
-  
+
   onMounted(() => {
     setInterval(() => {
       time.value = new Date();
     }, 1000);
-  })
+  });
 
   return { time, targetDates, timeRemainings, currentWeek };
 });

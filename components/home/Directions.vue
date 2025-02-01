@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- directions -->
-    <Card>
+    <Card class="relative overflow-hidden">
       <CardHeader>
         <CardTitle>How to Compete</CardTitle>
       </CardHeader>
@@ -28,7 +28,21 @@
             Save your progress and submit your answers before the deadline.
           </li>
         </ol>
+        <img
+          src="/assets/theme/card_accent_3.png"
+          class="absolute bottom-0 right-0 h-64 w-64 object-contain"
+          alt="card accent"
+          draggable="false"
+        />
       </CardContent>
     </Card>
   </div>
 </template>
+<style scoped>
+img {
+  display: none;
+}
+.bee-mode img {
+  display: block;
+}
+</style>

@@ -414,7 +414,7 @@ function handleBeforeUnload(event) {
 }
 
 function handleSaveBeforeExit(event) {
-  if (user.value && answersStore.answerData.length > 0) {
+  if (user.value && answersStore.answerData.length > 0 && hasAnswersChanged.value) {
     saveAnswers();
     event.preventDefault();
     event.returnValue = '';

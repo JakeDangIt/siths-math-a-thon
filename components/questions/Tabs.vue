@@ -305,10 +305,21 @@ function scrollUp() {
   });
 }
 
-function saveAnswersBeforeExit() {
-    if (hasAnswersChanged.value) {
-      saveAnswers();
-    }
+// function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
+function handleBeforeUnload(event) {
+  if (hasAnswersChanged.value) {
+    saveAnswers();
+    event.preventDefault();
+    event.returnValue = '';
+  }
+}
+
+function handleSaveBeforeExit(event) {
+  if (user.value && answersStore.answerData.length > 0) {
+    saveAnswers();
+    event.preventDefault();
+    event.returnValue = '';
+  }
 }
 
 // check if far down enough when the user scrolls
@@ -351,9 +362,26 @@ onMounted(async () => {
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
-  window.addEventListener("pagehide", saveAnswersBeforeExit);
-  document.addEventListener('visibilitychange', saveAnswersBeforeExit);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      handleSaveBeforeExit();
+    }
+  });
+  window.addEventListener("pagehide", handleSaveBeforeExit);
 });
+
+onBeforeUnmount(() => {
+  // remove the event listener to avoid memory leaks
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', handleSaveBeforeExit);
+  window.removeEventListener("pagehide", handleSaveBeforeExit);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', handleSaveBeforeExit);
+  window.removeEventListener("pagehide", handleSaveBeforeExit);
+})
 
 const countdown = ref({
   days: 0,

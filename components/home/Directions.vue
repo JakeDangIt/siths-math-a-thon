@@ -5,7 +5,7 @@
       <CardHeader>
         <CardTitle>How to Compete</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent class="relative z-10">
         <ol class="list-decimal pl-5">
           <li>
             <span class="font-bold">Sign up:</span>

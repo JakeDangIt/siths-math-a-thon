@@ -42,7 +42,7 @@
 
 
     <!-- Random accent image that only appears in bee mode -->
-    <img v-if="isBeeMode" :src="`/theme/card_accent_${randAccent}.png`"
+    <img :src="`/theme/card_accent_${randAccent}.png`"
       class="accent-img absolute bottom-0 right-0 h-64 w-64 object-contain" alt="card accent" draggable="false" />
   </Card>
 </template>
@@ -59,7 +59,6 @@ const points = ref(props.points);
 
 // Random accent image (1 to 4)
 const randAccent = ref(Math.floor(Math.random() * 4) + 1);
-const isBeeMode = computed(() => document.documentElement.classList.contains("bee-mode"));
 
 // Question input
 const input = ref(null);
@@ -91,6 +90,13 @@ function validateAndChangeAnswer() {
   });
 }
 
+function openDialog() {
+  dialogVisible.value = true;
+  nextTick(() => {
+    useQuestionsStore().rerenderMathJax();
+  });
+};
+
 // Check if math content is overflowing
 onMounted(() => {
   if (answersStore.answerData.length > 0) {
@@ -108,12 +114,13 @@ onMounted(() => {
       mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
   });
 });
-
-// Open the dialog
-function openDialog() {
-  dialogVisible.value = true;
-  nextTick(() => {
-    useQuestionsStore().rerenderMathJax();
-  });
-};
 </script>
+
+<style scoped>
+.accent-img {
+  display: none;
+}
+.bee-mode .accent-img {
+  display: block;
+}
+</style>

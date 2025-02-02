@@ -64,8 +64,6 @@
 </template>
 
 <script setup>
-import { useToastStore } from '@/stores/toast';
-
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const toastStore = useToastStore();

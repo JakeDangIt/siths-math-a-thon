@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex h-full items-center justify-center bg-gradient-to-r from-theme-red to-theme-blue p-4"
+    class="flex h-screen items-center justify-center bg-gradient-to-r from-theme-red to-theme-blue p-4"
   >
     <div class="w-full max-w-2xl rounded-lg bg-white p-8 text-center shadow-xl">
       <div class="mb-8">

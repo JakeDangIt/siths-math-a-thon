@@ -65,7 +65,7 @@ export const useAnswersStore = defineStore('answers', () => {
 
     const currentWeekUserAnswers = leaderboardStore.userAnswers.find(
       (weekAnswers) =>
-        weekAnswers.correct_answers.some((answers) => answers.week == '1')
+        weekAnswers.correct_answers.some((answers) => answers.week == week)
     );
 
     if (currentWeekUserAnswers) {

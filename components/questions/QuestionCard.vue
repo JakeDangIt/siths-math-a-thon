@@ -48,8 +48,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
-
 const answersStore = useAnswersStore();
 const props = defineProps(["question", "week", "mathContent", "extraInfo", "imageUrl", "points"]);
 

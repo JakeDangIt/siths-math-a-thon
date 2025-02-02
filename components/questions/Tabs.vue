@@ -11,7 +11,7 @@
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
     <div class="flex flex-col gap-2 md:flex-row">
-      <NuxtLink to="/minigames" class="block flex w-fit">
+      <NuxtLink to="/minigames" class="flex w-fit">
         <Button variant="secondary" class="border border-slate-500">
           <span>Minigames</span>
         </Button>
@@ -73,10 +73,11 @@
         <Sheet>
           <!-- scroll down button and preview answer button -->
           <div>
-            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20"
+            <div
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20"
               :class="isFarDownEnough
-                  ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-                  : 'translate-x-0'
+                ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
+                : 'translate-x-0'
                 ">
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
@@ -89,11 +90,10 @@
               </SheetTrigger>
             </div>
 
-            <div
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
               :class="isFarDownEnough
-                  ? 'translate-x-0'
-                  : 'translate-x-[14rem] lg:translate-x-[-14rem]'
+                ? 'translate-x-0'
+                : 'translate-x-[14rem] lg:translate-x-[-14rem]'
                 ">
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
@@ -104,7 +104,8 @@
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
+          <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>
+          </SheetTrigger>
 
           <!-- preview answer content -->
           <SheetContent>
@@ -144,8 +145,7 @@
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)"
-                  class="group flex justify-between px-2 hover:bg-slate-200">
+                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
                   <p>
                     <span class="font-bold">Q{{ answer.question }}.</span>
                     {{ answer.answer }}
@@ -165,7 +165,7 @@
                     'Your answers have been saved'
                   );
                   " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
-                      " class="w-full">
+                    " class="w-full">
                     Save Answers
                   </Button>
                   <Button aria-label="Submit Answers" @click="

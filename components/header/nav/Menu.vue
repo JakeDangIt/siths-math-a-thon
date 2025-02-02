@@ -62,7 +62,7 @@ const currentRouteName = computed(() =>
         <SheetTitle class="w-full">
           <div class="rounded-md">
             <NuxtImg
-              src="/math-a-thon-icon.png"
+              src="/math-a-thon-icon.webp"
               alt="Math-a-Thon logo"
               width="92px"
               height="92px"
@@ -82,6 +82,7 @@ const currentRouteName = computed(() =>
               :route-path="route.routePath"
               :route-name="route.routeName"
               :icon-name="route.iconName"
+              :currentRoutePath="currentRoutePath"
               :variant="'link'"
               class="w-full text-left text-lg"
             />

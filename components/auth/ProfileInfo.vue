@@ -101,8 +101,6 @@
         </form>
       </CardContent>
 
-      <AuthChangeTheme />
-
       <!-- button -->
       <CardFooter>
         <Button

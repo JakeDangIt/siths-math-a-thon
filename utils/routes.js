@@ -50,4 +50,16 @@ export const routes = [
     routePath: '/auth/updatepassword',
     routeName: 'Update Password',
   },
+  {
+    routePath: '/minigames',
+    routeName: 'Minigames',
+  },
+  {
+    routePath: '/minigames/connections',
+    routeName: 'Connections',
+  },
+  {
+    routePath: '/minigames/mines',
+    routeName: 'Mines',
+  },
 ];

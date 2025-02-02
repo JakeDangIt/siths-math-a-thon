@@ -11,7 +11,7 @@
         </span>
       </CardDescription>
     </CardHeader>
-    <CardContent class="relative z-10 flex flex-col items-center">
+    <CardContent class="relative z-10 flex flex-col gap-2 items-center">
       <div v-if="props.extraInfo" v-html="props.extraInfo"
         class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"></div>
       <div v-if="props.mathContent" class="relative w-full text-left">

@@ -11,7 +11,7 @@
         </span>
       </CardDescription>
     </CardHeader>
-    <CardContent class="relative z-10 flex flex-col items-center">
+    <CardContent class="relative z-10 flex flex-col gap-2 items-center">
       <div v-if="props.extraInfo" v-html="props.extraInfo"
         class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"></div>
       <div v-if="props.mathContent" class="relative w-full text-left">
@@ -31,14 +31,15 @@
 
     <!-- Dialog for expanded view -->
     <Dialog v-model:open="dialogVisible">
-      <DialogContent>
-        <div class="relative flex h-[95vh] items-center justify-center">
-          <div class="w-full rotate-90">
+      <DialogContent class="max-h-[80vh] w-[90vw] overflow-auto">
+        <div class="relative flex h-[80vh] items-center justify-center">
+          <div class="w-full rotate-90 whitespace-normal break-words overflow-auto p-4">
             <div v-html="props.mathContent"></div>
           </div>
         </div>
       </DialogContent>
     </Dialog>
+
 
     <!-- Random accent image that only appears in bee mode -->
     <img v-if="isBeeMode" :src="`/theme/card_accent_${randAccent}.png`"

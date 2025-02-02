@@ -259,35 +259,34 @@ const userLoginEmail = ref('');
 const userLoginPassword = ref('');
 
 async function handleSignup() {
-  // loading and sign up user
   signupLoading.value = true;
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
-  const { data, error } = await supabase.auth.signUp({
-    email: userEmail.value,
-    password: userPassword.value,
-    options: {
-      data: {
-        name: userName.value,
-        osis: userOSIS.value,
-        teacher: userTeacher.value,
-        grade: userGrade.value,
-        profile_complete: false,
-      },
-    },
+  const response = await fetch('/api/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: userEmail.value,
+      password: userPassword.value,
+      name: userName.value,
+      osis: userOSIS.value,
+      teacher: userTeacher.value,
+      grade: userGrade.value,
+    }),
   });
-  if (error) {
-    toastStore.changeToast('Error signing up', error.message);
+
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error signing up', result.error);
   } else {
-    toastStore.changeToast(
-      'Success',
-      'You have successfully signed up. Please confirm in your email.'
-    );
+    toastStore.changeToast('Success', result.message);
   }
 
   isDialogOpen.value = false;
   signupLoading.value = false;
 }
+
 
 async function handleLogin() {
   // load and login user

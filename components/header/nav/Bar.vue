@@ -58,9 +58,9 @@ const currentRouteName = computed(() =>
             <HeaderNavLink
               :route-path="route.routePath"
               :route-name="route.routeName"
+              :currentRoutePath="currentRoutePath"
               variant="link"
               class="w-full text-left text-lg"
-              :class="{ 'font-bold': currentRoutePath == route.routePath }"
             />
           </DropdownMenuItem>
         </DropdownMenuContent>

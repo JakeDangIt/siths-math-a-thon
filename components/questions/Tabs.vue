@@ -276,14 +276,33 @@ async function saveAnswers() {
 // function to submit answers, checks if user is logged in
 async function submitAnswers(week, answers) {
   submitLoading.value = true;
-  if (user.value === null) {
+
+  if (!user.value) {
     toastStore.changeToast('You must be logged in to submit answers');
   } else if (answers.every((answer) => answer.answer === '')) {
     toastStore.changeToast('You must answer at least one question to submit');
   } else {
-    await answersStore.saveAnswers();
-    await answersStore.submitAnswers(week, answers);
+    await saveAnswers();
+
+    const response = await fetch('/api/submitAnswers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        uid: user.value.id,
+        week,
+        answers,
+      }),
+    });
+
+    const result = await response.json();
+    if (result.error) {
+      toastStore.changeToast('Failed to submit answers', result.error);
+    } else {
+      toastStore.changeToast('Answers submitted', result.message);
+      await answersStore.submitAnswers(week, answers);
+    }
   }
+
   submitLoading.value = false;
 }
 

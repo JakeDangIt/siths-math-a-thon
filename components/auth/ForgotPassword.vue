@@ -12,7 +12,7 @@
 
       <!-- email -->
       <CardContent class="mr-4 flex flex-col">
-        <div class="space-y-1">
+        <form class="space-y-1">
           <Label
             for="email"
             :class="{ 'text-theme-red': !emailValid && email.length > 0 }"
@@ -24,7 +24,7 @@
             }}</Label
           >
           <Input id="email" type="email" v-model="email" />
-        </div>
+        </form>
       </CardContent>
 
       <!-- send button -->
@@ -53,21 +53,23 @@ const emailValid = computed(() => email.value.includes('@nycstudents.net'));
 // send reset password email
 async function sendResetPassword() {
   sendResetPasswordLoading.value = true;
-  const { data, error } = await supabase.auth.resetPasswordForEmail(
-    email.value,
-    {
-      redirectTo: 'http://math-a-thon-25.vercel.app/auth/updatepassword',
-    }
-  );
-  if (error) {
-    toastStore.changeToast('Error sending reset password email', error.message);
+
+  const response = await fetch('/api/sendResetPassword', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.value }),
+  });
+
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error sending reset email', result.error);
   } else {
-    toastStore.changeToast(
-      'Reset password email sent',
-      'Please check your email for the reset password link.'
-    );
+    toastStore.changeToast('Success', 'Check your email for the reset link.');
   }
+
   email.value = '';
   sendResetPasswordLoading.value = false;
 }
+
 </script>

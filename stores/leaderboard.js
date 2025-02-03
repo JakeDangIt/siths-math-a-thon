@@ -46,7 +46,8 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
       if (result.error) {
         toastStore.changeToast('Failed to retrieve leaderboard', result.error);
       } else {
-        top10.value = result.leaderboard;
+        leaderboardData.value = result.leaderboard;
+        top10.value = result.leaderboard.slice(0, 10);
       }
     } catch (error) {
       toastStore.changeToast('Error fetching leaderboard', error.message);

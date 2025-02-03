@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center gap-2">
     <p>Theme:</p>
     <div>
-      <Select v-model="colorMode.preference">
+      <Select v-model="$colorMode.preference">
         <SelectTrigger>
           <SelectValue :placeholder="$colorMode.value" />
         </SelectTrigger>
@@ -18,5 +18,10 @@
 </template>
 
 <script setup>
-const colorMode = useColorMode();
+const colorMode = useColorMode()
+onMounted(() => {
+  if (!localStorage.getItem('nuxt-color-mode')) {
+    colorMode.preference = 'bee'; // Ensure bee is applied initially
+  }
+})
 </script>

@@ -16,13 +16,9 @@ const formattedCurrentWeek = String(props.week).includes('Bonus')
   : `${props.week + 1}`;
 const targetWeekDate = ref();
 
-if (!formattedCurrentWeek.includes('3')) {
-  targetWeekDate.value = timeStore.targetDates.find((targetDate) =>
-    targetDate.week.includes(formattedCurrentWeek)
-  )?.date;
-} else {
-  targetWeekDate.value = '';
-}
+targetWeekDate.value = timeStore.targetDates.find((targetDate) =>
+  targetDate.week.includes(formattedCurrentWeek)
+)?.date;
 
 const timeRemaining = computed(() => {
   const now = timeStore.time;

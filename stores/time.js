@@ -10,9 +10,12 @@ export const useTimeStore = defineStore('time', () => {
   });
 
   const currentWeek = computed(() => {
-    return targetDates.value.find((targetDate) => {
-      return targetDate.date < time.value;
-    })?.week[0];
+    return targetDates.value
+      .slice()
+      .sort((a, b) => b.date - a.date)
+      .find((targetDate) => {
+        return targetDate.date < time.value;
+      })?.week[0];
   });
 
   onMounted(() => {

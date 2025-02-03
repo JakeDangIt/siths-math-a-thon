@@ -24,10 +24,10 @@ export default defineEventHandler(async (event) => {
         })
         .commit();
 
-      return { status: 'success', message: 'Question updated successfully' };
+      return { status: 'success', message: 'Activity updated successfully' };
     } else {
       await sanityClient.create({ ...changes, _type: 'activity' });
-      return { status: 'success', message: 'Question created successfully' };
+      return { status: 'success', message: 'Activity created successfully' };
     }
   } catch (error) {
     return { status: 'error', message: error.message };

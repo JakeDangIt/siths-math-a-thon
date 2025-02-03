@@ -54,8 +54,10 @@
     <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
       <div v-if="
         timeStore.timeRemainings.find((time) =>
-          time.week.includes(String(weekNames[index]))
-        ).timeRemaining > 0
+          time.week.includes(String(weekNames[index]).includes('Bonus')
+            ? `${Number(String(weekNames[index]).replace('Bonus', '')) + 1} Bonus`
+            : `${weekNames[index] + 1}`)
+        ).timeRemaining < 0
       ">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
@@ -411,38 +413,5 @@ onUnmounted(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload);
   document.removeEventListener('visibilitychange', handleSaveBeforeExit);
   window.removeEventListener('pagehide', handleSaveBeforeExit);
-});
-
-const countdown = ref({
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-});
-
-function updateCountdown() {
-  const targetDate = new Date('January 28, 2025 00:00:00').getTime();
-  const now = new Date().getTime();
-  const distance = targetDate - now;
-
-  countdown.value.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  countdown.value.hours = Math.floor(
-    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  countdown.value.minutes = Math.floor(
-    (distance % (1000 * 60 * 60)) / (1000 * 60)
-  );
-  countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000);
-}
-
-let countdownInterval;
-
-onMounted(() => {
-  updateCountdown();
-  countdownInterval = setInterval(updateCountdown, 1000);
-});
-
-onBeforeUnmount(() => {
-  clearInterval(countdownInterval);
 });
 </script>

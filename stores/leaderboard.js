@@ -22,93 +22,79 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   // these two is your number of correct answers and number of answered questions
   const numberOfCorrect = computed(() =>
-    userAnswers.value.reduce((sum, week) => sum + week.correct_answers.filter((answer) => answer.isCorrect).length, 0)
+    userAnswers.value.reduce(
+      (sum, week) =>
+        sum + week.correct_answers.filter((answer) => answer.isCorrect).length,
+      0
+    )
   );
   const numberOfAnswered = computed(() =>
-    userAnswers.value.reduce((sum, week) => sum + week.correct_answers.length, 0)
+    userAnswers.value.reduce(
+      (sum, week) => sum + week.correct_answers.length,
+      0
+    )
   );
 
   // get the data from the top 10
   async function retrieveLeaderboard() {
-    const { data: top10Data, error } = await supabase
-      .from('leaderboard')
-      .select('*')
-      .order('total_points', { ascending: false })
-      .limit(10);
+    isLoading.value = true;
 
-    if (error) {
-      toastStore.changeToast('Failed to retrieve leaderboard', error.message);
-    } else {
-      top10.value = top10Data;
+    try {
+      const response = await fetch('/api/retreiveLeaderboard');
+      const result = await response.json();
+
+      if (result.error) {
+        toastStore.changeToast('Failed to retrieve leaderboard', result.error);
+      } else {
+        leaderboardData.value = result.leaderboard;
+        top10.value = result.leaderboard.slice(0, 10);
+      }
+    } catch (error) {
+      toastStore.changeToast('Error fetching leaderboard', error.message);
     }
 
     isLoading.value = false;
   }
 
-  // get your user place
   async function getUserPlace() {
-    const { data, error } = await supabase
-      .from('leaderboard')
-      .select('uid, correct_answers')
-      .order('total_points', { ascending: false });
+    placeLoading.value = true;
 
-    if (error) {
-      toastStore.changeToast('Failed to retrieve leaderboard', error.message);
-    } else {
-      leaderboardData.value = data;
-
-      const userIndex = data.findIndex((user) => user.uid == user_id.value);
-      userPlace.value = userIndex + 1;
+    if (!user_id.value) {
+      toastStore.changeToast('User not logged in');
       placeLoading.value = false;
+      return;
     }
+
+    try {
+      const response = await fetch(`/api/userPlace?uid=${user_id.value}`);
+      const result = await response.json();
+
+      if (result.error) {
+        toastStore.changeToast('Failed to retrieve user place', result.error);
+      } else {
+        userPlace.value = result.place;
+      }
+    } catch (error) {
+      toastStore.changeToast('Error fetching user place', error.message);
+    }
+
+    placeLoading.value = false;
   }
 
   // get the top 3 user avatars
   async function getTop3UserAvatars() {
-    // extract the top 3 UIDs
-    const top3UIDs = top10.value.slice(0, 3).map((user) => user.uid);
+    avatarLoading.value = true;
 
-    // query Supabase once to get all top 3 profiles
-    const { data: profiles, error } = await supabase
-      .from('profiles')
-      .select('avatar, name, uid')
-      .in('uid', top3UIDs);
+    const response = await fetch('/api/top3Avatars');
+    const result = await response.json();
 
-    profiles.sort((a, b) => top3UIDs.indexOf(a.uid) - top3UIDs.indexOf(b.uid));
-
-    if (error) {
-      console.error('Error fetching profiles:', error);
+    if (result.error) {
+      console.error('Error fetching avatars:', result.error);
       avatarLoading.value = false;
       return;
     }
 
-    // map each profile to top3Avatars with avatar download if it exists
-    profiles.forEach(async (profile, index) => {
-      if (profile.avatar) {
-        const { data: avatarData, error: avatarError } = await supabase.storage
-          .from('avatars')
-          .download(profile.avatar);
-
-        if (avatarError) {
-          console.error('Error downloading avatar:', avatarError);
-          top3Avatars.value[index] = {
-            name: profile.name,
-            image: null,
-          };
-        } else {
-          top3Avatars.value[index] = {
-            name: profile.name,
-            image: URL.createObjectURL(avatarData),
-          };
-        }
-      } else {
-        top3Avatars.value[index] = {
-          name: profile.name,
-          image: null,
-        };
-      }
-    });
-
+    top3Avatars.value = result;
     avatarLoading.value = false;
   }
 

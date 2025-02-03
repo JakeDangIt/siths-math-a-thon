@@ -1,7 +1,7 @@
 <template>
-    <div class="absolute top-14 left-0 w-screen bg-[#0F212E] text-white p-4 sm:p-6">
+    <div class="absolute top-14 left-0 w-screen h-screen bg-[#0F212E] text-white p-4 sm:p-6">
         <MinigamesRedirectButton :color="'white'" class="mt-2 ml-[-1rem]" />
-        <div class="max-w-6xl mx-auto flex flex-col-reverse md:grid md:grid-cols-[320px,1fr] gap-3">
+        <div class="max-w-5xl mx-auto flex flex-col-reverse md:grid md:grid-cols-[320px,1fr] gap-3">
             <!-- Controls Panel -->
             <div class="flex flex-col-reverse md:flex-col space-y-2 md:space-y-4 mb-6 lg:mb-0">
                 <div class="space-y-2">
@@ -269,43 +269,41 @@ const getCurrentTimestamp = () => new Date().toISOString()
 
 // Sync balance with Supabase and localStorage
 const syncBalanceWithSupabase = async () => {
-    if (!user.value) return
+  if (!user.value) return;
 
-    syncLoading.value = true
-    let now = getCurrentTimestamp()
+  syncLoading.value = true;
 
-    let supabaseLastUpdated = null
-    let supabaseBalance = null
+  const response = await fetch('/api/syncBalance', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: user.value.id }),
+  });
 
-    const { data: balanceData, error: fetchError } = await supabase
-        .from('balances')
-        .select('balance, last_updated, gameState')
-        .eq('user_id', user.value.id)
-        .order('last_updated', { ascending: false })
+  const result = await response.json();
 
-    if (balanceData.length > 0) {
-        supabaseLastUpdated = balanceData[0].last_updated
-        supabaseBalance = balanceData[0].balance
+  if (result.error) {
+    console.error(result.error);
+  } else {
+    const balanceData = result.balanceData;
+    balance.value = Number(balanceData.balance);
+    lastUpdated.value = balanceData.last_updated;
+
+    if (balanceData.gameState) {
+      const gameState = balanceData.gameState;
+      betAmount.value = gameState.betAmount;
+      numberOfMines.value = gameState.numberOfMines;
+      gameStarted.value = gameState.gameStarted;
+      gameOver.value = gameState.gameOver;
+      cells.value = gameState.cells;
+      chosenCells.value = gameState.chosenCells;
+      revealedCount.value = gameState.revealedCount;
+      winnings.value = gameState.winnings;
     }
+  }
 
-    if (supabaseLastUpdated) {
-        balance.value = Number(supabaseBalance)
-        lastUpdated.value = supabaseLastUpdated
-    }
-    if (balanceData[0].gameState) {
-        const gameState = balanceData[0].gameState
-        betAmount.value = gameState.betAmount
-        numberOfMines.value = gameState.numberOfMines
-        gameStarted.value = gameState.gameStarted
-        gameOver.value = gameState.gameOver
-        cells.value = gameState.cells
-        chosenCells.value = gameState.chosenCells
-        revealedCount.value = gameState.revealedCount
-        winnings.value = gameState.winnings
-    }
+  syncLoading.value = false;
+};
 
-    syncLoading.value = false
-}
 
 // Update Supabase when unmounted
 const updateSupabaseBalance = async () => {

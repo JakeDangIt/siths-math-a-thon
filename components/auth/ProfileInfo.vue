@@ -13,9 +13,7 @@
           </div>
 
           <Avatar v-if="showAvatar" class="h-16 w-16">
-            <AvatarImage
-              :src="avatarImage || avatarStore.avatarImage"
-            />
+            <AvatarImage :src="avatarImage || avatarStore.avatarImage" />
           </Avatar>
           <Avatar v-else class="h-16 w-16">
             <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
@@ -104,7 +102,7 @@
       </CardContent>
 
       <!-- button -->
-      <CardFooter class="flex justify-between">
+      <CardFooter>
         <Button
           @click="updateUser"
           :disabled="
@@ -116,7 +114,7 @@
           routePath="/auth/updatepassword"
           routeName="Change Password"
           variant="link"
-          class="text-md flex"
+          class="text-md"
         />
       </CardFooter>
     </Card>
@@ -182,7 +180,7 @@ async function updateUser() {
     'Please wait while we update your information.'
   );
 
-  // prevent updating to null
+  // Prevent updating to null
   const previousInfo = {
     name: name.value,
     osis: osis.value,
@@ -190,7 +188,7 @@ async function updateUser() {
     grade: grade.value,
   };
 
-  // user info thats been updated
+  // Prepare updated user information
   const updates = {
     name: newName.value !== '' ? newName.value : name.value,
     osis: newOsis.value !== '' ? newOsis.value : osis.value,
@@ -198,48 +196,36 @@ async function updateUser() {
     grade: newGrade.value !== '' ? newGrade.value : grade.value,
   };
 
-  // if there are no updates in the fields, remove them from the updates object
-  Object.entries(updates).forEach(([key, value]) =>
-    previousInfo[key] == value ? delete updates[key] : null
-  );
+  // Remove unchanged fields
+  Object.entries(updates).forEach(([key, value]) => {
+    if (previousInfo[key] === value) delete updates[key];
+  });
 
-  // if there are updates, update the user
-  if (Object.values(updates).length > 0 || avatarFile.value) {
-    // if avatar changed, update the avatar path and upload file of the avatar (cropped image)
-    if (avatarFile.value) {
-      // remove the old avatar
-      await avatarStore.removeAvatar();
+  // Prepare avatar upload
+  let avatarData = null;
+  if (avatarFile.value) {
+    avatarData = {
+      avatarFile: avatarFile.value,
+      avatarPath: avatarPath.value,
+    };
+  }
 
-      // set the avatar image and path
-      avatarStore.avatarImage = avatarImage.value;
-      avatarStore.avatarPath = avatarPath.value;
-
-      // and also store it
-      localStorage.setItem('avatarImage', avatarImage.value);
-      localStorage.setItem('avatarPath', avatarPath.value);
-
-      updates.avatar = avatarPath.value;
-
-      // just to super clarify, the avatarPath is the generated path of the cropped image and the avatarFile is the file (NOT DATAURL) of the cropped image
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(avatarPath.value, avatarFile.value);
-      if (uploadError) {
-        toastStore.changeToast('Error uploading avatar', uploadError.message);
-        return;
-      }
-    }
-
-    // update metadata and profile
-    const { data, error } = await supabase.auth.updateUser({
-      data: updates,
+  if (Object.keys(updates).length > 0 || avatarData) {
+    // Send update request to the server
+    const response = await fetch('/api/updateUser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: user.value.id,
+        updates,
+        ...avatarData,
+      }),
     });
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('uid', user.value.id);
-    if (error) {
-      toastStore.changeToast('Error updating user', error.message);
+
+    const result = await response.json();
+
+    if (result.error) {
+      toastStore.changeToast('Error updating user', result.error);
     } else {
       toastStore.changeToast(
         'User updated',
@@ -247,15 +233,13 @@ async function updateUser() {
       );
     }
 
-    // clear all fields
+    // Clear input fields
     setTimeout(() => {
       newName.value = '';
       newOsis.value = '';
       newTeacher.value = '';
       newGrade.value = '';
     }, 400);
-
-    updateLoading.value = false;
   } else {
     toastStore.changeToast(
       'No changes made',
@@ -263,4 +247,5 @@ async function updateUser() {
     );
   }
 }
+
 </script>

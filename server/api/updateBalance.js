@@ -32,9 +32,7 @@ export default defineEventHandler(async (event) => {
         .from('balances')
         .update({ balance, last_updated: now, gameState })
         .eq('user_id', userId);
-    } 
-    
-    else {
+    } else {
       const { error: insertError } = await supabase
         .from('balances')
         .insert({ user_id: userId, balance, last_updated: now, gameState });

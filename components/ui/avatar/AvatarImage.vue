@@ -5,5 +5,9 @@ const props = defineProps<AvatarImageProps>();
 </script>
 
 <template>
-  <AvatarImage draggable="false" v-bind="props" class="h-full w-full object-cover" />
+  <AvatarImage
+    draggable="false"
+    v-bind="props"
+    class="h-full w-full object-cover"
+  />
 </template>

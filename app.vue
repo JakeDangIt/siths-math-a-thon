@@ -53,7 +53,7 @@ const logoutUser = async () => {
 
 // event listeners for user activity
 const setupActivityListeners = () => {
-  ['mousemove', 'keypress', 'scroll'].forEach(event => {
+  ['mousemove', 'keypress', 'scroll'].forEach((event) => {
     window.addEventListener(event, updateLastActivity);
   });
 };
@@ -78,22 +78,6 @@ watch(
   }
 );
 
-// watch if user logs in, set the interval to check for session expiration
-watch(user, async (newUser) => {
-  const answersStore = useAnswersStore();
-  if (newUser) {
-    // Set up activity listeners to track user activity
-    setupActivityListeners();
-    // Periodically check for session expiration every 30 seconds
-    const intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
-
-    await answersStore.retrieveAnswers();
-  } else {
-    answersStore.answerData = [];
-  }
-});
-
-
 onMounted(async () => {
   // initialize interval id
   let intervalId;
@@ -102,7 +86,11 @@ onMounted(async () => {
   const checkSessionExpiration = async () => {
     const lastActivityTime = localStorage.getItem(LAST_ACTIVITY_KEY);
 
-    if (user.value && lastActivityTime && Date.now() - parseInt(lastActivityTime) > ONE_HOUR) {
+    if (
+      user.value &&
+      lastActivityTime &&
+      Date.now() - parseInt(lastActivityTime) > ONE_HOUR
+    ) {
       await logoutUser();
       if (intervalId) {
         clearInterval(intervalId);
@@ -116,29 +104,45 @@ onMounted(async () => {
 
   // periodically check for session expiration every 30 seconds
   intervalId = setInterval(checkSessionExpiration, CHECK_INTERVAL);
+  // watch if user logs in, set the interval to check for session expiration
+  watch(user, async (newUser) => {
+    const answersStore = useAnswersStore();
+    if (newUser) {
+      // Set up activity listeners to track user activity
+      setupActivityListeners();
 
-  isLoading.value = false;
+      await answersStore.retrieveAnswers();
+    } else {
+      answersStore.answerData = [];
+    }
+  });
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 500);
 });
 
 onUnmounted(() => {
   // Remove activity listeners when component unmounts
-  ['mousemove', 'keypress', 'scroll'].forEach(event => {
+  ['mousemove', 'keypress', 'scroll'].forEach((event) => {
     window.removeEventListener(event, updateLastActivity);
   });
 });
 </script>
 
 <template>
-
   <Head>
     <Title>SITHS Math-a-Thon</Title>
 
     <!-- meta -->
     <Meta name="application-name" content="SITHS Math-a-Thon" />
-    <Meta name="description"
-      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
-    <Meta name="keywords"
-      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School" />
+    <Meta
+      name="description"
+      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity"
+    />
+    <Meta
+      name="keywords"
+      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School"
+    />
     <Meta name="author" content="SITHS" />
     <Meta name="robots" content="index, follow" />
     <Meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -152,7 +156,8 @@ onUnmounted(() => {
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet" />
+      rel="stylesheet"
+    />
   </Head>
 
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 
@@ -161,7 +166,9 @@ onUnmounted(() => {
     <!-- show skeleton when loading the layout -->
     <div class="h-screen overflow-hidden">
       <Skeleton class="h-[48px] w-full" />
-      <Skeleton class="mt-2 h-screen w-full" />
+      <div class="flex h-full items-center justify-center">
+        <div class="loading-animation"></div>
+      </div>
     </div>
     <NuxtLayout :name="layout" fallback="default" :is-loading="isLoading">
       <NuxtPage />
@@ -172,7 +179,29 @@ onUnmounted(() => {
   <NuxtLayout v-else :name="layout" fallback="default" :is-loading="isLoading">
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
-    <NuxtPage class="px-2 py-4 lg:py-8" />
+    <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
     <Toaster />
   </NuxtLayout>
 </template>
+
+<style>
+.loading-animation {
+  width: 50px;
+  height: 50px;
+  border: 5px solid black;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>

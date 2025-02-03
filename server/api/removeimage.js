@@ -23,11 +23,15 @@ export default defineEventHandler(async (event) => {
     }
 
     const updatedQuestion = await sanityClient
-      .patch(existingQuestion._id) 
-      .unset([`image`])    
+      .patch(existingQuestion._id)
+      .unset([`image`])
       .commit();
 
-    return { status: 'success', message: 'Image reference removed successfully', data: updatedQuestion };
+    return {
+      status: 'success',
+      message: 'Image reference removed successfully',
+      data: updatedQuestion,
+    };
   } catch (error) {
     return { status: 'error', message: error.message };
   }

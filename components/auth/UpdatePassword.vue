@@ -8,8 +8,7 @@
       <CardHeader class="flex">
         <CardTitle>Update Password</CardTitle>
         <CardDescription
-          >Enter your email and follow the reset password link in your
-          email.</CardDescription
+          >Enter your new password.</CardDescription
         >
       </CardHeader>
 
@@ -64,8 +63,6 @@
 </template>
 
 <script setup>
-import { useToastStore } from '@/stores/toast';
-
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const toastStore = useToastStore();
@@ -81,22 +78,26 @@ const confirmPassword = ref('');
 async function changePassword() {
   changePasswordLoading.value = true;
 
-  // update the user's password
-  const { data, error } = await supabase.auth.updateUser({
-    password: password.value,
+  const response = await fetch('/api/changePassword', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId: user.value.id,
+      newPassword: password.value,
+    }),
   });
-  if (error) {
-    toastStore.changeToast('Error', error.message);
+
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error', result.error);
   } else {
-    toastStore.changeToast(
-      'Success',
-      'Your password has been changed successfully.'
-    );
+    toastStore.changeToast('Success', 'Your password has been changed.');
   }
 
   password.value = '';
   confirmPassword.value = '';
-
   changePasswordLoading.value = false;
 }
+
 </script>

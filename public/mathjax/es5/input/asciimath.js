@@ -3059,13 +3059,11 @@
                     '' !== e.open &&
                       (this.SetData(
                         'open',
-                        t
-                          .mo(e.open)
-                          .With({
-                            fence: !0,
-                            form: t.FORM.PREFIX,
-                            texClass: t.TEXCLASS.OPEN,
-                          })
+                        t.mo(e.open).With({
+                          fence: !0,
+                          form: t.FORM.PREFIX,
+                          texClass: t.TEXCLASS.OPEN,
+                        })
                       ),
                       (this.data.open.useMMLspacing = 0)),
                     '' !== e.separators)
@@ -3087,13 +3085,11 @@
                   '' !== e.close &&
                     (this.SetData(
                       'close',
-                      t
-                        .mo(e.close)
-                        .With({
-                          fence: !0,
-                          form: t.FORM.POSTFIX,
-                          texClass: t.TEXCLASS.CLOSE,
-                        })
+                      t.mo(e.close).With({
+                        fence: !0,
+                        form: t.FORM.POSTFIX,
+                        texClass: t.TEXCLASS.CLOSE,
+                      })
                     ),
                     (this.data.close.useMMLspacing = 0));
                 },

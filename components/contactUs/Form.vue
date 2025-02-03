@@ -103,31 +103,33 @@ const timeDisableForm = ref(false);
 async function submitForm() {
   formLoading.value = true;
 
-  // submitting
-  const { data, error } = await supabase.from('contact').insert([
-    {
+  const response = await fetch('/api/submitContactForm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
       name: formName.value,
       email: formEmail.value,
       subject: formSubject.value,
       body: formBody.value,
-    },
-  ]);
+    }),
+  });
 
-  if (error) {
-    toastStore.changeToast('Error submitting', error.message);
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error submitting', result.error);
   } else {
     toastStore.changeToast('Form submitted', 'Thank you for reaching out!');
-
     formName.value = '';
     formEmail.value = '';
     formSubject.value = '';
     formBody.value = '';
-
-    // has to be set in localstorage to prevent spamming for unauthenticated users
     localStorage.setItem('timeSubmitted', Date.now());
   }
+
   formLoading.value = false;
 }
+
 
 // disable form if you submitted a form in the last hour
 onMounted(() => {

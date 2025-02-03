@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
     '@nuxtjs/sanity',
+    '@nuxtjs/color-mode',
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@formkit/auto-animate',
@@ -36,6 +37,10 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+  colorMode: {
+    preference: 'bee', // Set default mode to bee
+    fallback: 'light', // Fallback if bee is unavailable
   },
   icon: {
     serverBundle: {

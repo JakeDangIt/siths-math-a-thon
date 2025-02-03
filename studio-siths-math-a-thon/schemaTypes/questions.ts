@@ -18,6 +18,10 @@ export const questionsType = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'extraInfo',
+      type: 'string',
+    }),
+    defineField({
       name: 'author',
       type: 'string',
     }),

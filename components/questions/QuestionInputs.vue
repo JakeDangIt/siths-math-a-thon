@@ -7,25 +7,47 @@
     </span>
 
     <div>
-
       <Label for="content">Content</Label>
-      <Textarea id="content" :placeholder="questionInfo.content" v-model="content"></Textarea>
+      <Textarea
+        id="content"
+        :placeholder="questionInfo.content"
+        v-model="content"
+      ></Textarea>
 
       <Label for="author">Author</Label>
-      <Input id="author" :placeholder="questionInfo.author" v-model="author"></Input>
+      <Input
+        id="author"
+        :placeholder="questionInfo.author"
+        v-model="author"
+      ></Input>
 
       <Label for="image">Image</Label>
       <div class="flex gap-2">
-        <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
-        <Button v-if="questionInfo.image" @click="removeImage" :disabled="removeLoading">Remove Image</Button>
+        <Input
+          id="image"
+          type="file"
+          accept="image/*"
+          @change="handleImageUpload"
+        />
+        <Button
+          v-if="questionInfo.image"
+          @click="removeImage"
+          :disabled="removeLoading"
+          >Remove Image</Button
+        >
       </div>
 
       <Label for="points">Points</Label>
-      <Input id="points" type="number" :placeholder="questionInfo.points" v-model="points" />
-
+      <Input
+        id="points"
+        type="number"
+        :placeholder="questionInfo.points"
+        v-model="points"
+      />
     </div>
-    <Button :disabled="buttonDisabled" @click="createOrUpdateQuestion">Confirm
-      Changes</Button>
+    <Button :disabled="buttonDisabled" @click="createOrUpdateQuestion"
+      >Confirm Changes</Button
+    >
   </div>
 </template>
 
@@ -38,12 +60,15 @@ const toastStore = useToastStore();
 
 const matchedQuestion = questionsStore.questionData.find(
   (question) =>
-    question.week == questionInfo.value.week && question.number == questionInfo.value.number
+    question.week == questionInfo.value.week &&
+    question.number == questionInfo.value.number
 );
 
 const createLoading = ref(false);
 const removeLoading = ref(false);
-const buttonDisabled = computed(() => author.value == '' || content.value == '' || createLoading.value);
+const buttonDisabled = computed(
+  () => author.value == '' || content.value == '' || createLoading.value
+);
 
 // constructed title for easier reading in Sanity
 const title = computed(
@@ -68,7 +93,6 @@ const changes = ref({
   _type: 'questions',
 });
 
-
 // Helper to handle the image file conversion
 function handleImageUpload(event) {
   const file = event.target.files[0];
@@ -92,7 +116,10 @@ async function removeImage() {
   });
 
   if (response.status === 'success') {
-    toastStore.changeToast('Image removed', 'The image has been removed successfully');
+    toastStore.changeToast(
+      'Image removed',
+      'The image has been removed successfully'
+    );
     matchedQuestion.image = null;
     matchedQuestion.imageUrl = '';
   } else {
@@ -144,5 +171,4 @@ async function createOrUpdateQuestion() {
   }
   createLoading.value = false;
 }
-
 </script>

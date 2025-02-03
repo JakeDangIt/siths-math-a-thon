@@ -10,46 +10,55 @@
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
+    <div class="flex flex-col gap-2 md:flex-row">
+      <NuxtLink to="/minigames" class="flex w-fit">
+        <Button variant="secondary" class="border border-slate-500">
+          <span>Minigames</span>
+        </Button>
+      </NuxtLink>
+      <!-- carousel for the tabs -->
+      <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
+        align: 'start',
+        slidesToScroll: 2,
+        startIndex: weekNames.findIndex(
+          (week) => week == timeStore.currentWeek
+        ),
+      }">
+        <CarouselContent>
+          <!-- paired into week and its bonus -->
+          <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
+            <TabsList class="w-full">
+              <TabsTrigger class="w-full" :value="week">
+                Week {{ week }}
+              </TabsTrigger>
+            </TabsList>
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
 
-    <NuxtLink to="/minigames" class="block mb-2 lg:fixed lg:left-4">
-      <Button variant="secondary" class="border border-slate-500">
-        <span>Minigames</span>
-      </Button>
-    </NuxtLink>
-    <!-- carousel for the tabs -->
-    <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
-      align: 'start',
-      slidesToScroll: 2,
-      startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
-    }">
-      <CarouselContent>
-        <!-- paired into week and its bonus -->
-        <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
-          <TabsList class="w-full">
-            <TabsTrigger class="w-full" :value="week">
-              Week {{ week }}
-            </TabsTrigger>
-          </TabsList>
-        </CarouselItem>
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-
-    <div v-else>
-      <h2 class="text-2xl font-bold mb-4">Contest Starts In:</h2>
-      <div class="countdown text-4xl font-mono mb-6">
-        <span>{{ countdown.days }}</span> Days
-        <span>{{ countdown.hours }}</span> Hours
-        <span>{{ countdown.minutes }}</span> Minutes
-        <span>{{ countdown.seconds }}</span> Seconds
+      <div v-else>
+        <h2 class="mb-4 text-2xl font-bold">Contest Starts In:</h2>
+        <div class="countdown font-mono mb-6 text-4xl">
+          <span>{{ countdown.days }}</span> Days
+          <span>{{ countdown.hours }}</span> Hours
+          <span>{{ countdown.minutes }}</span> Minutes
+          <span>{{ countdown.seconds }}</span> Seconds
+        </div>
+        <p class="text-xl">Questions will be available on January 28, 2025.</p>
       </div>
-      <p class="text-xl">Questions will be available on January 28, 2025.</p>
     </div>
 
     <!-- content for the tabs -->
     <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
-      <div v-if="timeStore.timeRemainings.find(time => time.week.includes(String(weekNames[index]))).timeRemaining > 0">
+      <div v-if="
+        timeStore.timeRemainings.find((time) =>
+          time.week.includes(String(weekNames[index]).includes('Bonus')
+            ? `${Number(String(weekNames[index]).replace('Bonus', '')) + 1} Bonus`
+            : `${weekNames[index] + 1}`)
+        ).timeRemaining < 0
+      ">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ weekNames[index] }} Questions
@@ -59,19 +68,19 @@
         <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
           .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :week="weekNames[index]" :imageUrl="question.imageUrl"
-          :points="question.points" />
+          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]"
+          :imageUrl="question.imageUrl" :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>
           <!-- scroll down button and preview answer button -->
           <div>
-            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
+            <div
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20"
               :class="isFarDownEnough
                 ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
                 : 'translate-x-0'
                 ">
-
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
@@ -88,7 +97,6 @@
                 ? 'translate-x-0'
                 : 'translate-x-[14rem] lg:translate-x-[-14rem]'
                 ">
-
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
@@ -98,7 +106,8 @@
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button aria-label="Preview Answers">Preview Answers</Button></SheetTrigger>
+          <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>
+          </SheetTrigger>
 
           <!-- preview answer content -->
           <SheetContent>
@@ -114,11 +123,13 @@
               <Carousel class="mx-auto w-2/3" :opts="{
                 align: 'start',
                 slidesToScroll: 2,
-                startIndex: weekNames.findIndex((week) => week == timeStore.currentWeek),
+                startIndex: weekNames.findIndex(
+                  (week) => week == timeStore.currentWeek
+                ),
               }">
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
-                  <CarouselItem v-for="week in presentWeekNames" class="basis-1/2 w-full" :key="week">
+                  <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
                     <TabsList class="w-full">
                       <TabsTrigger :value="week">
                         {{ width > 640 ? 'Week ' : 'W' }}{{ week }}
@@ -149,9 +160,13 @@
 
                 <!-- submit and save button -->
                 <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button aria-label="Save Answers" @click="saveAnswers()" variant="secondary" :disabled="saveLoading ||
-                    answersStore.answerData.length == 0 ||
-                    !hasAnswersChanged
+                  <Button aria-label="Save Answers" @click="
+                    saveAnswers();
+                  toastStore.changeToast(
+                    'Answers saved',
+                    'Your answers have been saved'
+                  );
+                  " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
                     " class="w-full">
                     Save Answers
                   </Button>
@@ -240,9 +255,22 @@ async function saveAnswers() {
   } else if (answersStore.answerData.length == 0) {
     toastStore.changeToast('You must answer at least one question to save');
   } else {
-    await answersStore.saveAnswers();
-    initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-    toastStore.changeToast('Answers saved', 'Your answers have been saved');
+    try {
+      const response = await $fetch('/api/saveAnswers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.value.id,
+          answers: answersStore.answerData,
+        }),
+        keepalive: true,
+      });
+      initialAnswers.value = JSON.parse(
+        JSON.stringify(answersStore.answerData)
+      );
+    } catch (error) {
+      toastStore.changeToast('Failed to save answers', error.message);
+    }
   }
   saveLoading.value = false;
 }
@@ -250,14 +278,33 @@ async function saveAnswers() {
 // function to submit answers, checks if user is logged in
 async function submitAnswers(week, answers) {
   submitLoading.value = true;
-  if (user.value === null) {
+
+  if (!user.value) {
     toastStore.changeToast('You must be logged in to submit answers');
   } else if (answers.every((answer) => answer.answer === '')) {
     toastStore.changeToast('You must answer at least one question to submit');
   } else {
-    await answersStore.saveAnswers();
-    await answersStore.submitAnswers(week, answers);
+    await saveAnswers();
+
+    const response = await fetch('/api/submitAnswers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        uid: user.value.id,
+        week,
+        answers,
+      }),
+    });
+
+    const result = await response.json();
+    if (result.error) {
+      toastStore.changeToast('Failed to submit answers', result.error);
+    } else {
+      toastStore.changeToast('Answers submitted', result.message);
+      await answersStore.submitAnswers(week, answers);
+    }
   }
+
   submitLoading.value = false;
 }
 
@@ -293,8 +340,17 @@ function scrollUp() {
 // function to handle the beforeunload event, which triggers a confirmation dialog if the user has unsaved changes
 function handleBeforeUnload(event) {
   if (hasAnswersChanged.value) {
+    saveAnswers();
     event.preventDefault();
-    event.returnValue = ''; // This triggers the confirmation dialog
+    event.returnValue = '';
+  }
+}
+
+function handleSaveBeforeExit(event) {
+  if (user.value && answersStore.answerData.length > 0 && hasAnswersChanged.value) {
+    saveAnswers();
+    event.preventDefault();
+    event.returnValue = '';
   }
 }
 
@@ -338,39 +394,24 @@ onMounted(async () => {
   }
   // event listener to check if the user has unsaved changes when they try to leave the page
   window.addEventListener('beforeunload', handleBeforeUnload);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      handleSaveBeforeExit();
+    }
+  });
+  window.addEventListener('pagehide', handleSaveBeforeExit);
 });
 
 onBeforeUnmount(() => {
   // remove the event listener to avoid memory leaks
   window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', handleSaveBeforeExit);
+  window.removeEventListener('pagehide', handleSaveBeforeExit);
 });
 
-const countdown = ref({
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-});
-
-function updateCountdown() {
-  const targetDate = new Date('January 28, 2025 00:00:00').getTime();
-  const now = new Date().getTime();
-  const distance = targetDate - now;
-
-  countdown.value.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  countdown.value.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  countdown.value.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  countdown.value.seconds = Math.floor((distance % (1000 * 60)) / 1000);
-}
-
-let countdownInterval;
-
-onMounted(() => {
-  updateCountdown();
-  countdownInterval = setInterval(updateCountdown, 1000);
-});
-
-onBeforeUnmount(() => {
-  clearInterval(countdownInterval);
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', handleSaveBeforeExit);
+  window.removeEventListener('pagehide', handleSaveBeforeExit);
 });
 </script>

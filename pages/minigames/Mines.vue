@@ -1,5 +1,5 @@
 <template>
-    <div>
-        <MinigamesMinesGame />
-    </div>
+  <div>
+    <MinigamesMinesGame />
+  </div>
 </template>

@@ -13,7 +13,6 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
-import { useLeaderboardStore } from '@/stores/leaderboard';
 
 // just the functions and data needed to create the chart
 function extractWeekNumber(week) {

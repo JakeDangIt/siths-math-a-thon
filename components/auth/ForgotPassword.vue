@@ -12,7 +12,7 @@
 
       <!-- email -->
       <CardContent class="mr-4 flex flex-col">
-        <div class="space-y-1">
+        <form class="space-y-1">
           <Label
             for="email"
             :class="{ 'text-theme-red': !emailValid && email.length > 0 }"
@@ -24,7 +24,7 @@
             }}</Label
           >
           <Input id="email" type="email" v-model="email" />
-        </div>
+        </form>
       </CardContent>
 
       <!-- send button -->
@@ -40,8 +40,6 @@
 </template>
 
 <script setup>
-import { useToastStore } from '@/stores/toast';
-
 const supabase = useSupabaseClient();
 const toastStore = useToastStore();
 
@@ -58,7 +56,7 @@ async function sendResetPassword() {
   const { data, error } = await supabase.auth.resetPasswordForEmail(
     email.value,
     {
-      redirectTo: 'http://math-a-thon-25.vercel.app/auth/updatepassword',
+      redirectTo: 'http://siths-mathathon.com/auth/updatepassword',
     }
   );
   if (error) {

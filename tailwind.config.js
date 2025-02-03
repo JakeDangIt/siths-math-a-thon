@@ -59,6 +59,9 @@ module.exports = {
         'theme-dark-red': '#973f3b',
         'theme-blue': '#B1BAD1',
         'theme-dark-blue': '#8E95A7',
+        'bee-dark-yellow': '#ffb930',
+        'bee-light-yellow': '#fff3a2',
+        'bee-hover-yellow': '#ffd630',
         'connections-gray': '#efefe6',
         'connections-dark-gray': '#5a594e',
         bronze: '#D9A962',
@@ -95,6 +98,11 @@ module.exports = {
         'collapsible-down': 'collapsible-down 0.2s ease-in-out',
         'collapsible-up': 'collapsible-up 0.2s ease-in-out',
       },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundColor: ['bee'], // Apply your custom theme to specific utilities
     },
   },
   plugins: [animate],

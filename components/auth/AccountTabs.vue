@@ -55,14 +55,17 @@
                 <Input type="password" id="password" v-model="userPassword" />
               </div>
 
-              <div class="space-x-2 flex items-center">
+              <div class="flex items-center space-x-2">
                 <Checkbox
                   aria-label="Payment Agreement"
                   id="agreement"
                   @update:checked="userAgreement = !userAgreement"
                 >
                 </Checkbox>
-                <Label for="agreement">I agree to pay Mrs. Asher $5 in Room 215 in order to receive participation credit.</Label>
+                <Label for="agreement"
+                  >I agree to pay Mrs. Asher $5 in Room 215 in order to receive
+                  participation credit.</Label
+                >
               </div>
             </CardContent>
             <CardFooter>
@@ -256,35 +259,34 @@ const userLoginEmail = ref('');
 const userLoginPassword = ref('');
 
 async function handleSignup() {
-  // loading and sign up user
   signupLoading.value = true;
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
-  const { data, error } = await supabase.auth.signUp({
-    email: userEmail.value,
-    password: userPassword.value,
-    options: {
-      data: {
-        name: userName.value,
-        osis: userOSIS.value,
-        teacher: userTeacher.value,
-        grade: userGrade.value,
-        profile_complete: false,
-      },
-    },
+  const response = await fetch('/api/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: userEmail.value,
+      password: userPassword.value,
+      name: userName.value,
+      osis: userOSIS.value,
+      teacher: userTeacher.value,
+      grade: userGrade.value,
+    }),
   });
-  if (error) {
-    toastStore.changeToast('Error signing up', error.message);
+
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error signing up', result.error);
   } else {
-    toastStore.changeToast(
-      'Success',
-      'You have successfully signed up. Please confirm in your email.'
-    );
+    toastStore.changeToast('Success', result.message);
   }
 
   isDialogOpen.value = false;
   signupLoading.value = false;
 }
+
 
 async function handleLogin() {
   // load and login user

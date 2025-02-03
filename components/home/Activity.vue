@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- recent activity but idk how i wanna actually put the activity -->
-    <Card class="flex h-full flex-col">
+    <Card class="relative flex h-full flex-col">
       <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
+        <CardTitle class="relative z-10">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent class="flex-1">
-        <div v-for="activity in activities" className="space-y-2">
+        <div v-for="activity in activities" class="relative z-10 space-y-2">
           <p>
             <span class="font-bold">{{ formatDate(activity.date) }}</span> -
             {{ activity.content }}
@@ -23,9 +23,14 @@
               <DialogTitle class="text-2xl">All Activity</DialogTitle>
             </DialogHeader>
             <div>
-              <div v-for="activity in activityStore.activityData" class="space-y-2">
+              <div
+                v-for="activity in activityStore.activityData"
+                class="space-y-2"
+              >
                 <p>
-                  <span class="font-bold">{{ formatDate(activity.date) }} -</span>
+                  <span class="font-bold"
+                    >{{ formatDate(activity.date) }} -</span
+                  >
                   {{ activity.content }}
                 </p>
               </div>
@@ -33,6 +38,12 @@
           </DialogScrollContent>
         </Dialog>
         <HomeActivityAddActivity v-if="roleStore.role == 'admin'" />
+        <img
+          src="/theme/card_accent_2.png"
+          class="absolute right-0 top-0 h-64 w-64 object-contain"
+          alt="card accent"
+          draggable="false"
+        />
       </CardFooter>
     </Card>
   </div>
@@ -42,12 +53,18 @@
 const roleStore = useRoleStore();
 const activityStore = useActivityStore();
 
-const activities = computed(() =>
-  activityStore.activityData
-    .slice(0, 3)
-);
+const activities = computed(() => activityStore.activityData.slice(0, 3));
 
 function formatDate(date) {
   return new Date(date).toLocaleString().split(',')[0];
 }
 </script>
+
+<style scoped>
+img {
+  display: none;
+}
+.bee-mode img {
+  display: block;
+}
+</style>

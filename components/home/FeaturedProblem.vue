@@ -11,10 +11,8 @@
         <Skeleton class="h-10 w-20" />
       </CardContent>
 
-      <CardContent
-        v-else-if="questionsStore.questionData.length > 0"
-        class="relative z-10 flex h-full flex-col justify-between"
-      >
+      <CardContent v-else-if="questionsStore.questionData.length > 0"
+        class="relative z-10 flex h-full flex-col justify-between">
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
           <span v-html="randomQuestion?.content"></span>
@@ -32,24 +30,25 @@
           <span>Check back later for more questions.</span>
         </div>
       </CardContent>
-      <img
-        src="/theme/card_accent_4.png"
-        class="absolute bottom-0 right-0 h-64 w-64 object-contain"
-        alt="card accent"
-        draggable="false"
-      />
+      <img src="/theme/card_accent_4.png" class="absolute bottom-0 right-0 h-64 w-64 object-contain" alt="card accent"
+        draggable="false" />
     </Card>
   </div>
 </template>
 
 <script setup>
+const timeStore = useTimeStore();
 const questionsStore = useQuestionsStore();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
+const currentWeekQuestions = computed(() => {
+  return questionsStore.questionData.filter((question) => question.week == timeStore.currentWeek || question.week == timeStore.currentWeek + ' Bonus');
+});
+
 // random question
 const randomQuestion = computed(() => {
-  return questionsStore.questionData[
-    Math.floor(Math.random() * questionsStore.questionData.length)
+  return currentWeekQuestions.value[
+    Math.floor(Math.random() * currentWeekQuestions.value.length)
   ];
 });
 
@@ -76,6 +75,7 @@ onMounted(async () => {
 img {
   display: none;
 }
+
 .bee-mode img {
   display: block;
 }

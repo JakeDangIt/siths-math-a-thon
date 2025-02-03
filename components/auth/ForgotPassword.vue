@@ -53,23 +53,21 @@ const emailValid = computed(() => email.value.includes('@nycstudents.net'));
 // send reset password email
 async function sendResetPassword() {
   sendResetPasswordLoading.value = true;
-
-  const response = await fetch('/api/sendResetPassword', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email.value }),
-  });
-
-  const result = await response.json();
-
-  if (result.error) {
-    toastStore.changeToast('Error sending reset email', result.error);
+  const { data, error } = await supabase.auth.resetPasswordForEmail(
+    email.value,
+    {
+      redirectTo: 'http://siths-mathathon.com/auth/updatepassword',
+    }
+  );
+  if (error) {
+    toastStore.changeToast('Error sending reset password email', error.message);
   } else {
-    toastStore.changeToast('Success', 'Check your email for the reset link.');
+    toastStore.changeToast(
+      'Reset password email sent',
+      'Please check your email for the reset password link.'
+    );
   }
-
   email.value = '';
   sendResetPasswordLoading.value = false;
 }
-
 </script>

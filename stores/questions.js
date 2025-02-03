@@ -37,11 +37,12 @@ export const useQuestionsStore = defineStore('questions', () => {
     });
 
     questionData.value = questionsWithImages.filter(
-      (question) => !question.title.includes('Time')
-    );
-    questionTimeData.value = questionsWithImages.filter((question) =>
-      question.title.includes('Time')
-    );
+  (question) => question?.title && !question.title.includes('Time')
+);
+
+questionTimeData.value = questionsWithImages.filter(
+  (question) => question?.title && question.title.includes('Time')
+);
 
     // update time store with new time data
     timeStore.targetDates = questionTimeData.value.map((question) => {

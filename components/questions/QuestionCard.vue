@@ -22,7 +22,7 @@
         </Button>
       </div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-1/2 rounded-lg"
+        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="max-w-[50%] rounded-lg"
           draggable="false" />
       </div>
       <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"

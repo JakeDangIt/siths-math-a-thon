@@ -56,7 +56,7 @@ async function sendResetPassword() {
   const { data, error } = await supabase.auth.resetPasswordForEmail(
     email.value,
     {
-      redirectTo: 'http://siths-mathathon.com/auth/updatepassword',
+      redirectTo: 'https://siths-mathathon.com/auth/updatepassword',
     }
   );
   if (error) {

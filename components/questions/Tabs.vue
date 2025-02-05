@@ -58,6 +58,7 @@
             ? `${Number(String(weekNames[index]).replace('Bonus', '')) + 1} Bonus`
             : `${weekNames[index] + 1}`)
         ).timeRemaining < 0
+        || roleStore.role !== 'member'
       ">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">

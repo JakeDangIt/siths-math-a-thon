@@ -79,14 +79,7 @@ watch(
 );
 
 onMounted(async () => {
-
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      console.log('User is logged in:', session.user);
-    }
-    console.log(event, session);
-  });
-
+  
   // initialize interval id
   let intervalId;
 

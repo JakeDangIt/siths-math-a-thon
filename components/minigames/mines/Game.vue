@@ -216,8 +216,9 @@ import betSound from '@/assets/bet.mp3';
 import bombSound from '@/assets/bomb.mp3';
 import gemSound from '@/assets/gem.mp3';
 import cashoutSound from '@/assets/cashout.mp3';
-const supabase = useSupabaseClient()
+const session = useSupabaseSession()
 const user = useSupabaseUser()
+const toastStore = useToastStore()
 
 const syncLoading = ref(true)
 // Game state
@@ -264,50 +265,57 @@ const initializeCells = () => {
 
 const lastUpdated = ref(null)
 
-// Helper to get the current timestamp
-const getCurrentTimestamp = () => new Date().toISOString()
-
 // Sync balance with Supabase and localStorage
 const syncBalanceWithSupabase = async () => {
-  if (!user.value) return;
+    if (!user.value || !session.value) return;
 
-  syncLoading.value = true;
+    syncLoading.value = true;
+    const token = session.value.access_token;
 
-  const response = await fetch('/api/syncBalance', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId: user.value.id }),
-  });
+    try {
+        const response = await $fetch('/api/syncBalance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
 
-  const result = await response.json();
+        if (response.error) {
+            console.error(response.error);
+            toastStore.changeToast('Failed to sync balance');
+        } else {
+            const balanceData = response.balanceData;
+            balance.value = Number(balanceData.balance);
+            lastUpdated.value = balanceData.last_updated;
 
-  if (result.error) {
-    console.error(result.error);
-  } else {
-    const balanceData = result.balanceData;
-    balance.value = Number(balanceData.balance);
-    lastUpdated.value = balanceData.last_updated;
-
-    if (balanceData.gameState) {
-      const gameState = balanceData.gameState;
-      betAmount.value = gameState.betAmount;
-      numberOfMines.value = gameState.numberOfMines;
-      gameStarted.value = gameState.gameStarted;
-      gameOver.value = gameState.gameOver;
-      cells.value = gameState.cells;
-      chosenCells.value = gameState.chosenCells;
-      revealedCount.value = gameState.revealedCount;
-      winnings.value = gameState.winnings;
+            if (balanceData.gameState) {
+                const gameState = balanceData.gameState;
+                betAmount.value = gameState.betAmount;
+                numberOfMines.value = gameState.numberOfMines;
+                gameStarted.value = gameState.gameStarted;
+                gameOver.value = gameState.gameOver;
+                cells.value = gameState.cells;
+                chosenCells.value = gameState.chosenCells;
+                revealedCount.value = gameState.revealedCount;
+                winnings.value = gameState.winnings;
+            }
+        }
+    } catch (err) {
+        console.error('Error syncing balance:', err);
+        toastStore.changeToast('Unexpected error syncing balance');
+    } finally {
+        syncLoading.value = false;
     }
-  }
-
-  syncLoading.value = false;
 };
+
 
 
 // Update Supabase when unmounted
 const updateSupabaseBalance = async () => {
-    if (!user.value) return;
+    if (!user.value || !session.value) return;
+
+    const token = session.value.access_token;
 
     const gameState = {
         betAmount: betAmount.value,
@@ -318,26 +326,30 @@ const updateSupabaseBalance = async () => {
         chosenCells: chosenCells.value,
         revealedCount: revealedCount.value,
         winnings: winnings.value,
-    }
+    };
 
     try {
-        // Use the Nuxt server API to update the balance
         const response = await $fetch('/api/updateBalance', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
-                userId: user.value.id,
                 balance: balance.value,
                 gameState: gameStarted.value ? gameState : null,
             }),
-            keepalive: true, // Ensure the request completes even if the page is closing
+            keepalive: true,
         });
+
+        if (response.error) {
+            console.error('Failed to update balance:', response.error);
+        }
     } catch (err) {
-        console.error('Error updating balance through Nuxt server API:', err);
+        console.error('Error updating balance:', err);
     }
 };
+
 
 
 const handleBeforeUnload = async () => {

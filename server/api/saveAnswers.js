@@ -1,22 +1,28 @@
 // server/api/saveAnswers.js
 import { createClient } from '@supabase/supabase-js';
+import jwt from 'jsonwebtoken';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export default defineEventHandler(async (event) => {
-  // Parse request body
-  const { userId, answers } = await readBody(event);
+  const token = getHeader(event, 'authorization')?.replace('Bearer ', '');
+  const { answers } = await readBody(event);
   const now = new Date().toISOString();
 
-  if (!userId || !answers) {
+  if (!token || !answers) {
     return { error: 'Invalid parameters' };
   }
 
   try {
-    // Check if the user already has saved answers
+    // Verify JWT with Supabase secret (or public key)
+    const decoded = jwt.verify(token, process.env.SUPABASE_JWT_SECRET);
+    const userId = decoded.sub;
+
+    if (!userId) return { error: 'Unauthorized' };
+
+    // Check if user already has saved answers
     const { data: existingData, error: fetchError } = await supabase
       .from('saved_answers')
       .select('uid')
@@ -52,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
     return { success: true };
   } catch (err) {
-    console.error('Error saving answers in Supabase:', err);
-    return { error: 'Internal server error' };
+    console.error('Authorization or Database Error:', err);
+    return { error: 'Unauthorized or Internal server error' };
   }
 });

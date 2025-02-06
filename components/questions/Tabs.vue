@@ -163,10 +163,6 @@
                 <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
                   <Button aria-label="Save Answers" @click="
                     saveAnswers();
-                  toastStore.changeToast(
-                    'Answers saved',
-                    'Your answers have been saved'
-                  );
                   " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
                     " class="w-full">
                     Save Answers
@@ -210,6 +206,7 @@ const roleStore = useRoleStore();
 const timeStore = useTimeStore();
 
 const user = useSupabaseUser();
+const session = useSupabaseSession();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
 // track if answers have changed
@@ -257,18 +254,29 @@ async function saveAnswers() {
     toastStore.changeToast('You must answer at least one question to save');
   } else {
     try {
+      if (!session.value) return
+      const token = session.value.access_token;
       const response = await $fetch('/api/saveAnswers', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({
-          userId: user.value.id,
           answers: answersStore.answerData,
         }),
         keepalive: true,
       });
-      initialAnswers.value = JSON.parse(
-        JSON.stringify(answersStore.answerData)
-      );
+
+      if (response.error) {
+        toastStore.changeToast('Failed to save answers', error.message);
+      } else {
+        initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
+        toastStore.changeToast(
+          'Answers saved',
+          'Your answers have been saved'
+        );
+      }
     } catch (error) {
       toastStore.changeToast('Failed to save answers', error.message);
     }
@@ -276,38 +284,54 @@ async function saveAnswers() {
   saveLoading.value = false;
 }
 
+
 // function to submit answers, checks if user is logged in
 async function submitAnswers(week, answers) {
   submitLoading.value = true;
 
   if (!user.value) {
     toastStore.changeToast('You must be logged in to submit answers');
-  } else if (answers.every((answer) => answer.answer === '')) {
-    toastStore.changeToast('You must answer at least one question to submit');
-  } else {
-    await saveAnswers();
-
-    const response = await fetch('/api/submitAnswers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        uid: user.value.id,
-        week,
-        answers,
-      }),
-    });
-
-    const result = await response.json();
-    if (result.error) {
-      toastStore.changeToast('Failed to submit answers', result.error);
-    } else {
-      toastStore.changeToast('Answers submitted', result.message);
-      await answersStore.submitAnswers(week, answers);
-    }
+    submitLoading.value = false;
+    return;
   }
 
-  submitLoading.value = false;
+  if (answers.every((answer) => answer.answer === '')) {
+    toastStore.changeToast('You must answer at least one question to submit');
+    submitLoading.value = false;
+    return;
+  }
+
+  if (!session.value) {
+    toastStore.changeToast('Session expired, please log in again');
+    submitLoading.value = false;
+    return;
+  }
+
+  const token = session.value.access_token;
+
+  try {
+    const response = await $fetch('/api/submitAnswers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ week, answers }),
+    });
+
+    if (response.error) {
+      toastStore.changeToast('Failed to submit answers: ', response.error);
+    } else {
+      toastStore.changeToast('Answers submitted successfully');
+    }
+  } catch (err) {
+    console.error('Error submitting answers:', err);
+    toastStore.changeToast('Unexpected error submitting answers');
+  } finally {
+    submitLoading.value = false;
+  }
 }
+
 
 // function to remove an answer from the store (not the input, which is done in the QuestionCard component)
 function removeAnswer(week, question) {

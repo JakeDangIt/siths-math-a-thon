@@ -36,6 +36,7 @@
 <script setup>
 const toastStore = useToastStore();
 const activityStore = useActivityStore();
+const session = useSupabaseSession();
 const last3Activities = ref([...activityStore.activityData.slice(0, 3)]);
 const originalActivities = ref([]);
 
@@ -60,6 +61,13 @@ function addActivity() {
 
 // Function to check for changes and save updated or new activities
 async function saveActivities() {
+  if (!session.value) {
+    toastStore.changeToast('You must be logged in to save activities');
+    return;
+  }
+
+  const token = session.value.access_token;
+
   const changes = last3Activities.value.filter((activity, index) => {
     const original = originalActivities.value[index];
     return (
@@ -71,27 +79,37 @@ async function saveActivities() {
   // Process changes by making API calls
   const results = await Promise.all(
     changes.map(async (activity) => {
-      // Create new activity
-      const response = await $fetch('/api/activity', {
-        method: 'POST',
-        body: {
-          _id: activity._id,
-          changes: {
-            content: activity.content,
-            date: activity.date,
+      try {
+        const response = await $fetch('/api/activity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
-        },
-      });
-      if (response.status == 'success') {
-        toastStore.changeToast('Activity saved successfully', response.message);
+          body: {
+            _id: activity._id,
+            changes: {
+              content: activity.content,
+              date: activity.date,
+            },
+          },
+        });
+
+        if (response.status === 'success') {
+          toastStore.changeToast('Activity saved successfully', response.message);
+        } else {
+          toastStore.changeToast('Failed to save activity', response.message);
+        }
+      } catch (error) {
+        toastStore.changeToast('Failed to save activity', error.message);
       }
     })
   );
 
-  // After successful save, update the original state and remove the isNew flag
   last3Activities.value.forEach((activity) => {
     activity.isNew = false;
   });
   originalActivities.value = JSON.parse(JSON.stringify(last3Activities.value));
 }
+
 </script>

@@ -8,46 +8,21 @@
 
     <div>
       <Label for="content">Content</Label>
-      <Textarea
-        id="content"
-        :placeholder="questionInfo.content"
-        v-model="content"
-      ></Textarea>
+      <Textarea id="content" :placeholder="questionInfo.content" v-model="content"></Textarea>
 
       <Label for="author">Author</Label>
-      <Input
-        id="author"
-        :placeholder="questionInfo.author"
-        v-model="author"
-      ></Input>
+      <Input id="author" :placeholder="questionInfo.author" v-model="author"></Input>
 
       <Label for="image">Image</Label>
       <div class="flex gap-2">
-        <Input
-          id="image"
-          type="file"
-          accept="image/*"
-          @change="handleImageUpload"
-        />
-        <Button
-          v-if="questionInfo.image"
-          @click="removeImage"
-          :disabled="removeLoading"
-          >Remove Image</Button
-        >
+        <Input id="image" type="file" accept="image/*" @change="handleImageUpload" />
+        <Button v-if="questionInfo.image" @click="removeImage" :disabled="removeLoading">Remove Image</Button>
       </div>
 
       <Label for="points">Points</Label>
-      <Input
-        id="points"
-        type="number"
-        :placeholder="questionInfo.points"
-        v-model="points"
-      />
+      <Input id="points" type="number" :placeholder="questionInfo.points" v-model="points" />
     </div>
-    <Button :disabled="buttonDisabled" @click="createOrUpdateQuestion"
-      >Confirm Changes</Button
-    >
+    <Button :disabled="buttonDisabled" @click="createOrUpdateQuestion">Confirm Changes</Button>
   </div>
 </template>
 
@@ -57,6 +32,7 @@ const questionInfo = ref(props.questionInfo);
 
 const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
+const session = useSupabaseSession();
 
 const matchedQuestion = questionsStore.questionData.find(
   (question) =>
@@ -108,8 +84,18 @@ function handleImageUpload(event) {
 // remove the image from the question
 async function removeImage() {
   removeLoading.value = true;
+  if (!session.value) {
+    toastStore.changeToast('You must be logged in to save activities');
+    return;
+  }
+
+  const token = session.value.access_token;
   const response = await $fetch('/api/removeImage', {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
     body: {
       questionInfo: questionInfo.value,
     },
@@ -132,6 +118,12 @@ async function removeImage() {
 async function createOrUpdateQuestion() {
   try {
     createLoading.value = true;
+    if (!session.value) {
+      toastStore.changeToast('You must be logged in to save activities');
+      return;
+    }
+
+    const token = session.value.access_token;
 
     const confirmedChanges = {
       title: title.value,
@@ -146,6 +138,10 @@ async function createOrUpdateQuestion() {
 
     const response = await $fetch('/api/questions', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
       body: {
         changes: confirmedChanges,
         questionInfo: questionInfo.value,

@@ -262,7 +262,6 @@ const initializeCells = () => {
         }
     }
 }
-
 const lastUpdated = ref(null)
 
 // Sync balance with Supabase and localStorage
@@ -524,6 +523,14 @@ const getCellClasses = (cell, index) => {
 onMounted(() => {
     initializeCells()
 })
+
+watch(balance, (newValue) => {
+    balance.value = parseFloat(newValue.toFixed(2));
+});
+
+watch(betAmount, (newValue) => {
+    betAmount.value = parseFloat(newValue.toFixed(2));
+});
 </script>
 
 <style scoped>

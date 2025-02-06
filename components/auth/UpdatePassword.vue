@@ -1,15 +1,10 @@
 <template>
   <!-- show the form if youre logged in  -->
-  <div
-    v-if="showPasswordChange"
-    class="flex flex-col justify-center gap-8 lg:flex-row"
-  >
+  <div v-if="showPasswordChange" class="flex flex-col justify-center gap-8 lg:flex-row">
     <Card class="mx-4 lg:w-1/3">
       <CardHeader class="flex">
         <CardTitle>Update Password</CardTitle>
-        <CardDescription
-          >Enter your new password.</CardDescription
-        >
+        <CardDescription>Enter your new password.</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -21,11 +16,7 @@
           </div>
           <div class="space-y-1">
             <Label for="confirmPassword">Confirm Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              v-model="confirmPassword"
-            />
+            <Input id="confirmPassword" type="password" v-model="confirmPassword" />
           </div>
         </form>
         <Label class="space-y-1 text-theme-red">{{
@@ -37,16 +28,11 @@
 
       <!-- button -->
       <CardFooter class="flex justify-between">
-        <Button
-          @click="changePassword"
-          :disabled="
-            changePasswordLoading ||
-            password !== confirmPassword ||
-            password.length < 8 ||
-            confirmPassword.length < 8
-          "
-          >Update</Button
-        >
+        <Button @click="changePassword" :disabled="changePasswordLoading ||
+          password !== confirmPassword ||
+          password.length < 8 ||
+          confirmPassword.length < 8
+          ">Update</Button>
       </CardFooter>
     </Card>
   </div>
@@ -77,27 +63,24 @@ const confirmPassword = ref('');
 
 async function changePassword() {
   changePasswordLoading.value = true;
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: password.value
+    });
 
-  const response = await fetch('/api/changePassword', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      userId: user.value.id,
-      newPassword: password.value,
-    }),
-  });
-
-  const result = await response.json();
-
-  if (result.error) {
-    toastStore.changeToast('Error', result.error);
-  } else {
-    toastStore.changeToast('Success', 'Your password has been changed.');
+    if (error) {
+      toastStore.changeToast('Error', error.message);
+    } else {
+      toastStore.changeToast('Success', 'Password updated successfully');
+      // Clear the form
+      password.value = '';
+      confirmPassword.value = '';
+    }
+  } catch (error) {
+    toastStore.changeToast('Error', 'An unexpected error occurred');
+    console.error('Password change error:', error);
+  } finally {
+    changePasswordLoading.value = false;
   }
-
-  password.value = '';
-  confirmPassword.value = '';
-  changePasswordLoading.value = false;
 }
-
 </script>

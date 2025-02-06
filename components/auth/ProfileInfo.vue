@@ -175,76 +175,86 @@ function handleAvatarRemove() {
 
 // update user
 async function updateUser() {
-  toastStore.changeToast(
-    'Updating user',
-    'Please wait while we update your information.'
-  );
+  try {
+    const supabase = useSupabaseClient();
+    const user = useSupabaseUser();
 
-  // Prevent updating to null
-  const previousInfo = {
-    name: name.value,
-    osis: osis.value,
-    teacher: teacher.value,
-    grade: grade.value,
-  };
-
-  // Prepare updated user information
-  const updates = {
-    name: newName.value !== '' ? newName.value : name.value,
-    osis: newOsis.value !== '' ? newOsis.value : osis.value,
-    teacher: newTeacher.value !== '' ? newTeacher.value : teacher.value,
-    grade: newGrade.value !== '' ? newGrade.value : grade.value,
-  };
-
-  // Remove unchanged fields
-  Object.entries(updates).forEach(([key, value]) => {
-    if (previousInfo[key] === value) delete updates[key];
-  });
-
-  // Prepare avatar upload
-  let avatarData = null;
-  if (avatarFile.value) {
-    avatarData = {
-      avatarFile: avatarFile.value,
-      avatarPath: avatarPath.value,
-    };
-  }
-
-  if (Object.keys(updates).length > 0 || avatarData) {
-    // Send update request to the server
-    const response = await fetch('/api/updateUser', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: user.value.id,
-        updates,
-        ...avatarData,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (result.error) {
-      toastStore.changeToast('Error updating user', result.error);
-    } else {
-      toastStore.changeToast(
-        'User updated',
-        'Your information has been updated.'
-      );
+    if (!user.value) {
+      throw new Error('Authentication required');
     }
 
-    // Clear input fields
-    setTimeout(() => {
+    toastStore.changeToast(
+      'Updating user',
+      'Please wait while we update your information.'
+    );
+
+    // Prepare updated user information (only changed fields)
+    const updates = {};
+    if (newName.value !== '' && newName.value !== name.value) updates.name = newName.value;
+    if (newOsis.value !== '' && newOsis.value !== osis.value) updates.osis = newOsis.value;
+    if (newTeacher.value !== '' && newTeacher.value !== teacher.value) updates.teacher = newTeacher.value;
+    if (newGrade.value !== '' && newGrade.value !== grade.value) updates.grade = newGrade.value;
+
+    // Handle avatar upload if exists
+    if (avatarFile.value) {
+      const fileExt = avatarFile.value.name.split('.').pop();
+      const filePath = `${user.value.id}/avatar-${Date.now()}.${fileExt}`;
+
+      // Delete existing avatar if present
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('avatar')
+        .eq('uid', user.value.id)
+        .single();
+
+      if (existingProfile?.avatar) {
+        await supabase.storage.from('avatars').remove([existingProfile.avatar]);
+      }
+
+      // Upload new avatar
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, avatarFile.value, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        throw new Error(`Avatar upload failed: ${uploadError.message}`);
+      }
+
+      updates.avatar = filePath;
+    }
+
+    // Update profile if there are changes
+    if (Object.keys(updates).length > 0) {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('uid', user.value.id);
+
+      if (updateError) {
+        // If profile update fails and we uploaded an avatar, clean it up
+        if (updates.avatar) {
+          await supabase.storage.from('avatars').remove([updates.avatar]);
+        }
+        throw new Error(`Profile update failed: ${updateError.message}`);
+      }
+
+      toastStore.changeToast('Success', 'Your information has been updated');
+      
+      // Clear input fields
       newName.value = '';
       newOsis.value = '';
       newTeacher.value = '';
       newGrade.value = '';
-    }, 400);
-  } else {
-    toastStore.changeToast(
-      'No changes made',
-      'Please fill out your information to update.'
-    );
+      avatarFile.value = null;
+    } else {
+      toastStore.changeToast('No changes', 'No changes were detected to update');
+    }
+  } catch (error) {
+    console.error('Update user error:', error);
+    toastStore.changeToast('Error', error.message);
   }
 }
 

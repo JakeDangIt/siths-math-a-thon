@@ -120,6 +120,33 @@ onMounted(async () => {
   setTimeout(() => {
     isLoading.value = false;
   }, 500);
+
+  if (user.value) {
+      if (!user.value.user_metadata.profile_complete) {
+      const { error: uploadError } = await supabase.from('profiles').insert({
+        uid: user.value.id,
+        name: user.value.user_metadata.name,
+        email: user.value.email,
+        osis: Number(user.value.user_metadata.osis),
+        teacher: user.value.user_metadata.teacher,
+        grade: user.value.user_metadata.grade,
+      });
+      if (uploadError) {
+        toastStore.changeToast('Error uploading profile', uploadError.message);
+        return;
+      }
+
+      // actual update metadata
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+          profile_complete: true,
+        },
+      });
+      if (updateError) {
+        toastStore.changeToast('Error updating user', updateError.message);
+      }
+    }
+  }
 });
 
 onUnmounted(() => {

@@ -108,7 +108,7 @@ function handleImageUpload(event) {
 // remove the image from the question
 async function removeImage() {
   removeLoading.value = true;
-  const response = await $fetch('/api/removeimage', {
+  const response = await $fetch('/api/removeImage', {
     method: 'DELETE',
     body: {
       questionInfo: questionInfo.value,

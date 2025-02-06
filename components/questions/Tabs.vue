@@ -253,32 +253,28 @@ async function saveAnswers() {
   } else if (answersStore.answerData.length == 0) {
     toastStore.changeToast('You must answer at least one question to save');
   } else {
-    try {
-      if (!session.value) return
-      const token = session.value.access_token;
-      const response = await $fetch('/api/saveAnswers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          answers: answersStore.answerData,
-        }),
-        keepalive: true,
-      });
+    if (!session.value) return
+    const token = session.value.access_token;
+    const response = await $fetch('/api/saveAnswers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        answers: answersStore.answerData,
+      }),
+      keepalive: true,
+    });
 
-      if (response.error) {
-        toastStore.changeToast('Failed to save answers', error.message);
-      } else {
-        initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-        toastStore.changeToast(
-          'Answers saved',
-          'Your answers have been saved'
-        );
-      }
-    } catch (error) {
+    if (response.error) {
       toastStore.changeToast('Failed to save answers', error.message);
+    } else {
+      initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
+      toastStore.changeToast(
+        'Answers saved',
+        'Your answers have been saved'
+      );
     }
   }
   saveLoading.value = false;

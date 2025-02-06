@@ -6,6 +6,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export default defineEventHandler(async (event) => {
+    return
   const { userId, newPassword } = await readBody(event);
 
   if (!userId || !newPassword) {

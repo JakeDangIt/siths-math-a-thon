@@ -1,41 +1,32 @@
 <template>
   <div class="flex flex-col justify-center gap-8 lg:flex-row">
     <!-- just a form to get a reset link (which doesnt actually reset, the link logs you in and then redirects to update password) -->
-    <Card class="mx-4 lg:w-1/3">
-      <CardHeader class="flex">
-        <CardTitle>Forgot Password</CardTitle>
-        <CardDescription
-          >Enter your email and follow the reset password link in your
-          email.</CardDescription
-        >
-      </CardHeader>
 
-      <!-- email -->
-      <CardContent class="mr-4 flex flex-col">
-        <form class="space-y-1">
-          <Label
-            for="email"
-            :class="{ 'text-theme-red': !emailValid && email.length > 0 }"
-          >
+    <form class="space-y-1">
+      <Card class="mx-4">
+        <CardHeader class="flex">
+          <CardTitle>Forgot Password</CardTitle>
+          <CardDescription>Enter your email and follow the reset password link in your
+            email.</CardDescription>
+        </CardHeader>
+
+        <!-- email -->
+        <CardContent class="mr-4 flex flex-col space-y-1">
+          <Label for="email" :class="{ 'text-theme-red': !emailValid && email.length > 0 }">
             {{
               !emailValid && email.length > 0
                 ? 'Please enter a valid NYCDOE email'
                 : 'Email (NYCDOE)'
-            }}</Label
-          >
+            }}</Label>
           <Input id="email" type="email" v-model="email" />
-        </form>
-      </CardContent>
+        </CardContent>
 
-      <!-- send button -->
-      <CardFooter class="flex justify-between">
-        <Button
-          @click="sendResetPassword"
-          :disabled="sendResetPasswordLoading || !emailValid"
-          >Send link</Button
-        >
-      </CardFooter>
-    </Card>
+        <!-- send button -->
+        <CardFooter class="flex justify-between">
+          <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading || !emailValid">Send link</Button>
+        </CardFooter>
+      </Card>
+    </form>
   </div>
 </template>
 
@@ -56,7 +47,9 @@ async function sendResetPassword() {
   const { data, error } = await supabase.auth.resetPasswordForEmail(
     email.value,
     {
-      redirectTo: 'https://siths-mathathon.com/auth/updatepassword',
+      redirectTo: process.env.NODE_ENV === 'production'
+        ? 'https://siths-mathathon.com/auth/updatepassword'
+        : 'http://localhost:3000/auth/updatepassword'
     }
   );
   if (error) {

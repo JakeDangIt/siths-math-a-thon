@@ -316,9 +316,9 @@ async function submitAnswers(week, answers) {
     });
 
     if (response.error) {
-      toastStore.changeToast('Failed to submit answers: ', response.error);
+      toastStore.changeToast('Answers submitted already: ', response.error);
     } else {
-      toastStore.changeToast('Answers submitted successfully');
+      toastStore.changeToast('Submitted successfully', 'Your answers have been submitted');
     }
   } catch (err) {
     console.error('Error submitting answers:', err);

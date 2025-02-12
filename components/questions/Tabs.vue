@@ -177,8 +177,7 @@
                         (answer) => answer.week == weekNames[index]
                       ).length == 0
                       " class="w-full">
-                    Submit Week
-                    {{ weekNames[index] }}
+                    Submit {{ width > 640 ? 'Week ' : 'W' }}{{ week }}{{ weekNames[index] }}
                   </Button>
                 </div>
               </TabsContent>

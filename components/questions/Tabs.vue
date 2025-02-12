@@ -75,36 +75,34 @@
         <!-- preview answer -->
         <Sheet>
           <!-- scroll down button and preview answer button -->
-          <div>
-            <div
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20"
-              :class="isFarDownEnough
-                ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-                : 'translate-x-0'
-                ">
+          <TransitionGroup tag="div" name="fade" class="buttons">
+            <div :class="isFarDownEnough
+              ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
+              : 'translate-x-0'
+              " key="scroll-down"
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
-
               <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
-              <!-- to save space, 'Answers' is omitted on mobile -->
               <SheetTrigger>
                 <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
             </div>
 
-            <div class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto"
-              :class="isFarDownEnough
-                ? 'translate-x-0'
-                : 'translate-x-[14rem] lg:translate-x-[-14rem]'
-                ">
+            <div :class="isFarDownEnough
+              ? 'translate-x-0'
+              : 'translate-x-[20rem] lg:translate-x-[-20rem]'
+              " key="scroll-up"
+              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-
               <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
             </div>
-          </div>
+          </TransitionGroup>
 
           <!-- another preview button -->
           <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>
@@ -336,9 +334,9 @@ function removeAnswer(week, question) {
 
 // function to check if the user has scrolled far enough down to put away the scroll and preview answer buttons
 function checkIsFarDownEnough() {
-  if (document.body.scrollHeight - window.innerHeight * 1.5 > 0) {
+  if (document.body.scrollHeight - window.innerHeight * 2 > 0) {
     isFarDownEnough.value =
-      y.value > document.body.scrollHeight - window.innerHeight * 1.5;
+      y.value > document.body.scrollHeight - window.innerHeight * 2;
   }
 }
 
@@ -436,3 +434,16 @@ onUnmounted(() => {
   window.removeEventListener('pagehide', handleSaveBeforeExit);
 });
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>

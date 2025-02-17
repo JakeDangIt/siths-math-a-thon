@@ -142,7 +142,7 @@
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
               <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
-                class="grid grid-cols-2 lg:grid-cols-1">
+                class="grid grid-cols-2">
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])

@@ -14,13 +14,7 @@
     <CardContent class="relative z-10 flex flex-col gap-2 items-center">
       <div v-if="props.extraInfo" v-html="props.extraInfo"
         class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"></div>
-      <div v-if="props.mathContent" class="relative w-full text-left">
-        <div class="text-ellipsis" :class="{ truncate: isOverflowing }" ref="mathContainer" v-html="props.mathContent">
-        </div>
-        <Button v-if="isOverflowing" class="mt-2 md:hidden" @click="openDialog">
-          Expand
-        </Button>
-      </div>
+      <div v-if="props.mathContent" v-html="props.mathContent" class="relative w-full text-left overflow-x-auto"></div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
         <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full md:max-w-[50%] rounded-lg"
           draggable="false" />
@@ -28,18 +22,6 @@
       <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
         @change="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
     </CardContent>
-
-    <!-- Dialog for expanded view -->
-    <Dialog v-model:open="dialogVisible">
-      <DialogContent class="max-h-[80vh] w-[90vw] overflow-auto">
-        <div class="relative flex h-[80vh] items-center justify-center">
-          <div class="w-full rotate-90 whitespace-normal break-words overflow-auto p-4">
-            <div v-html="props.mathContent"></div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-
 
     <!-- Random accent image that only appears in bee mode -->
     <img :src="`/theme/card_accent_${randAccent}.png`"
@@ -62,18 +44,12 @@ const randAccent = ref(Math.floor(Math.random() * 4) + 1);
 const input = ref(null);
 const isInvalid = ref(false);
 
-// For dialog state
-const dialogVisible = ref(false);
-const isOverflowing = ref(false);
-
-// Reference for the math container to check overflow
-const mathContainer = ref(null);
-
 // Validate and update answer
 function validateAndChangeAnswer() {
-  const cleanedValue = input.value.replace(/[^0-9]/g, "");
+  const cleanedValue = input.value.match(/^-?\d*$/)?.[0] || "";
   isInvalid.value = cleanedValue !== input.value;
   input.value = cleanedValue;
+  
   nextTick(() => {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
       (answer) => answer.week == week.value && answer.question == question.value
@@ -88,13 +64,6 @@ function validateAndChangeAnswer() {
   });
 }
 
-function openDialog() {
-  dialogVisible.value = true;
-  nextTick(() => {
-    useQuestionsStore().rerenderMathJax();
-  });
-};
-
 // Check if math content is overflowing
 onMounted(() => {
   if (answersStore.answerData.length > 0) {
@@ -103,14 +72,6 @@ onMounted(() => {
     );
     input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   }
-  nextTick(() => {
-    setTimeout(() => {
-      isOverflowing.value =
-        mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
-    }, 300);
-    isOverflowing.value =
-      mathContainer.value?.scrollWidth > mathContainer.value?.clientWidth;
-  });
 });
 </script>
 

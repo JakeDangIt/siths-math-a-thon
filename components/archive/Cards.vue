@@ -13,8 +13,9 @@
     v-else
     class="flex flex-col flex-wrap items-center justify-center gap-4 lg:flex-row lg:items-start"
   >
-    <!-- card for each year -->
-    <ArchiveCard :filesYear="archiveStore.files2024" year="2024" />
+  <!-- card for each year -->
+  <ArchiveCard :filesYear="archiveStore.files2025" year="2025" />
+  <ArchiveCard :filesYear="archiveStore.files2024" year="2024" />
     <ArchiveCard :filesYear="archiveStore.files2023" year="2023" />
   </div>
 </template>

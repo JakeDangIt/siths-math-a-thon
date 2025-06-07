@@ -3,6 +3,7 @@ import streamifier from 'streamifier';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
+  return
   const token = getHeader(event, 'authorization')?.replace('Bearer ', '');
   if (!token) return { status: 'error', message: 'Unauthorized' };
 

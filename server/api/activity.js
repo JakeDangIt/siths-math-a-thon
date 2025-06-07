@@ -2,6 +2,7 @@ import { createClient } from '@sanity/client';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
+  return
   try {
     const token = getHeader(event, 'authorization')?.replace('Bearer ', '');
     if (!token) return { status: 'error', message: 'Unauthorized' };

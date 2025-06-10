@@ -12,7 +12,8 @@ export default defineEventHandler(async (event) => {
   const { data, error } = await supabase
     .from('leaderboard')
     .select('uid, user_name, total_points')
-    .order('total_points', { ascending: false });
+    .order('total_points', { ascending: false })
+    .limit(10);
 
   if (error) {
     return { error: error.message };

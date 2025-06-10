@@ -7,7 +7,7 @@
         <HomeMichaelsCause />
         <HomeWeekStatsLeaderboard class="h-full w-full lg:col-span-2" />
         <HomeProfileSummary class="h-full" />
-        <!-- <HomeActivity />
+        <!--
         <HomeFeaturedProblem /> -->
       </div>
     </div>

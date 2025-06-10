@@ -42,7 +42,6 @@
             ? `${Number(String(weekNames[index]).replace('Bonus', '')) + 1} Bonus`
             : `${weekNames[index] + 1}`)
         ).timeRemaining < 0
-        || roleStore.role !== 'member'
       ">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
@@ -68,7 +67,6 @@
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
-              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
               <SheetTrigger>
                 <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
@@ -83,7 +81,6 @@
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <QuestionsAddQuestion v-if="roleStore.role == 'admin'" :week="weekNames[index]" />
               <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
             </div>
           </TransitionGroup>
@@ -183,7 +180,6 @@
 const answersStore = useAnswersStore();
 const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
-const roleStore = useRoleStore();
 const timeStore = useTimeStore();
 
 const user = useSupabaseUser();

@@ -22,10 +22,9 @@
       <!-- user info -->
       <div class="mt-4 flex flex-col items-center justify-center lg:mt-10">
         <Avatar class="lg:h-20 lg:w-20">
-          <AvatarImage v-if="userAvatar" :src="userAvatar" />
-          <AvatarFallback class="text-[16px] lg:text-[24px]">{{
+          <Avatar class="text-[16px] lg:text-[24px]">{{
             firstName[0]
-          }}</AvatarFallback>
+          }}</Avatar>
         </Avatar>
         <h1 class="text-[30px] lg:text-[40px]">{{ index }}</h1>
         <p class="lg:text-lg">{{ user.user_name }}</p>
@@ -48,9 +47,6 @@ const { width } = useWindowSize();
 const top3 = ref(leaderboardStore.top10.slice(0, 3));
 const user = ref(props.user);
 const index = ref(props.index + 1);
-const userAvatar = computed(
-  () => leaderboardStore.top3Avatars[props.index]?.image
-);
 const firstName = useFirstName(user.value.user_name);
 
 // some stats

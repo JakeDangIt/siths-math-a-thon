@@ -1,28 +1,10 @@
-import imageUrlBuilder from '@sanity/image-url';
-import { createClient } from '@sanity/client';
-
-// Sanity client configuration
-const sanityClient = createClient({
-  projectId: 'ferer2d9',
-  dataset: 'production',
-  apiVersion: '2021-08-31',
-  useCdn: true,
-});
-
-// Image URL builder
-const builder = imageUrlBuilder(sanityClient);
-
-function urlFor(source) {
-  return builder.image(source).url();
-}
-
 export const useQuestionsStore = defineStore('questions', () => {
   const timeStore = useTimeStore();
 
   // question data and loading state
   const questionData = ref([]);
   const questionTimeData = ref([]);
-  const isLoading = ref(true);
+  const isLoading = ref(false);
 
   // get questions
   async function getQuestions() {
@@ -37,12 +19,12 @@ export const useQuestionsStore = defineStore('questions', () => {
     });
 
     questionData.value = questionsWithImages.filter(
-  (question) => question?.title && !question.title.includes('Time')
-);
+      (question) => question?.title && !question.title.includes('Time')
+    );
 
-questionTimeData.value = questionsWithImages.filter(
-  (question) => question?.title && question.title.includes('Time')
-);
+    questionTimeData.value = questionsWithImages.filter(
+      (question) => question?.title && question.title.includes('Time')
+    );
 
     // update time store with new time data
     timeStore.targetDates = questionTimeData.value.map((question) => {
@@ -68,15 +50,15 @@ questionTimeData.value = questionsWithImages.filter(
   }
 
   // get questions on mount and load MathJax (which renders it on load)
-  onMounted(async () => {
-    await getQuestions().then(async () => {
-      await rerenderMathJax();
-      setTimeout(async () => {
-        await rerenderMathJax();
-      }, 100);
-      isLoading.value = false;
-    });
-  });
+  // onMounted(async () => {
+  //   await getQuestions().then(async () => {
+  //     await rerenderMathJax();
+  //     setTimeout(async () => {
+  //       await rerenderMathJax();
+  //     }, 100);
+  //     isLoading.value = false;
+  //   });
+  // });
 
   return {
     questionData,

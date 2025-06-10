@@ -180,7 +180,6 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 
 const toastStore = useToastStore();
-const avatarStore = useAvatarStore();
 const routesStore = useRoutesStore();
 
 // signup fields
@@ -287,10 +286,6 @@ async function handleLogin() {
       }
     }
     toastStore.changeToast('Success', 'You have successfully logged in.');
-
-    // get the new data to update avatar
-    await avatarStore.refreshUser();
-    await avatarStore.retrieveAvatar();
 
     // redirect to last page that wasnt login or signup
     await routesStore.redirectToLast();

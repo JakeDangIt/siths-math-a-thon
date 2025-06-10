@@ -32,17 +32,6 @@
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-
-      <div v-else>
-        <h2 class="mb-4 text-2xl font-bold">Contest Starts In:</h2>
-        <div class="countdown font-mono mb-6 text-4xl">
-          <span>{{ countdown.days }}</span> Days
-          <span>{{ countdown.hours }}</span> Hours
-          <span>{{ countdown.minutes }}</span> Minutes
-          <span>{{ countdown.seconds }}</span> Seconds
-        </div>
-        <p class="text-xl">Questions will be available on January 28, 2025.</p>
-      </div>
     </div>
 
     <!-- content for the tabs -->

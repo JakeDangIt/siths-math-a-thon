@@ -76,7 +76,6 @@
 </template>
 
 <script setup>
-const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 
 // for autofilling form

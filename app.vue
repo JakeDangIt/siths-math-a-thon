@@ -79,7 +79,7 @@ watch(
 );
 
 onMounted(async () => {
-  
+
   // initialize interval id
   let intervalId;
 
@@ -122,7 +122,7 @@ onMounted(async () => {
   }, 500);
 
   if (user.value) {
-      if (!user.value.user_metadata.profile_complete) {
+    if (!user.value.user_metadata.profile_complete) {
       const { error: uploadError } = await supabase.from('profiles').insert({
         uid: user.value.id,
         name: user.value.user_metadata.name,
@@ -158,19 +158,16 @@ onUnmounted(() => {
 </script>
 
 <template>
+
   <Head>
     <Title>SITHS Math-a-Thon</Title>
 
     <!-- meta -->
     <Meta name="application-name" content="SITHS Math-a-Thon" />
-    <Meta
-      name="description"
-      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity"
-    />
-    <Meta
-      name="keywords"
-      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School"
-    />
+    <Meta name="description"
+      content="Staten Island Technical High School's very own Math-a-thon, a student-led schoolwide competition dedicated to charity" />
+    <Meta name="keywords"
+      content="SITHS, Math-a-Thon, Math, Competition, Charity, Staten Island Technical High School" />
     <Meta name="author" content="SITHS" />
     <Meta name="robots" content="index, follow" />
     <Meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -184,8 +181,7 @@ onUnmounted(() => {
     <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <Link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </Head>
 
   <!-- nuxt is weird and throws warnings if v-else is used w nuxt-layout, 
@@ -208,6 +204,17 @@ onUnmounted(() => {
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
     <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
+    <Dialog :open="true">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Maintenance</DialogTitle>
+          <DialogDescription>
+            Dear all users and visitors, we are currently undergoing maintenance to improve your experience. We apologize for any inconvenience this may cause and appreciate your patience. Please check back later. You will not be able to close this dialog until the maintenance is complete.
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+
     <Toaster />
   </NuxtLayout>
 </template>
@@ -228,6 +235,7 @@ onUnmounted(() => {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

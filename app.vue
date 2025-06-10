@@ -16,7 +16,6 @@ useRoutesStore();
 useActivityStore();
 if (user.value) {
   useAnswersStore();
-  useRoleStore();
 }
 
 // reactive vars

@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
-    '@nuxtjs/sanity',
     '@nuxtjs/color-mode',
     'shadcn-nuxt',
     '@vueuse/nuxt',
@@ -74,24 +73,5 @@ export default defineNuxtConfig({
       include: ['/auth/profile'],
       exclude: [],
     },
-  },
-  runtimeConfig: {
-    sanity: {
-      token: process.env.SANITY_TOKEN,
-      projectId: 'ferer2d9',
-      dataset: 'production',
-      useCdn: true,
-    },
-    public: {
-      sanity: {
-        projectId: 'ferer2d9',
-        dataset: 'production',
-        useCdn: true,
-      },
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
-      supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY,
-    },
-    sanityToken: process.env.SANITY_TOKEN,
   },
 });

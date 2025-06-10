@@ -223,32 +223,38 @@ async function handleSignup() {
   signupLoading.value = true;
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
-  const { data, error } = await supabase.auth.signUp({
-    email: userEmail.value,
-    password: userPassword.value,
-    options: {
-      data: {
+  try {
+    const res = await $fetch('/api/auth/signup', {
+      method: 'POST',
+      body: {
+        email: userEmail.value,
+        password: userPassword.value,
         name: userName.value,
-        osis: userOSIS.value,
+        osis: String(userOSIS.value),
         teacher: userTeacher.value,
         grade: userGrade.value,
-        profile_complete: false,
-      },
-    },
-  });
-  if (error) {
-    toastStore.changeToast('Error signing up', error.message);
-  } else {
-    toastStore.changeToast(
-      'Success',
-      'You have successfully signed up. Please confirm in your email.'
-    )
+        agreement: userAgreement.value
+      }
+    });
+
+    console.log('Signup response:', res);
+    // Handle if API returns { success: false } instead of throwing
+    if (!res?.success) {
+      throw new Error(res?.message || 'Signup failed.');
+    }
+
+    // Show success toast if sign up actually succeeded
+    toastStore.changeToast('Success', 'Check your email to confirm your signup!');
+    isDialogOpen.value = false;
+
+  } catch (err) {
+    // Capture both thrown errors and response errors
+    const message = err?.data?.statusMessage || err?.message || 'Something went wrong.';
+    toastStore.changeToast('Error signing up', message);
+  } finally {
+    signupLoading.value = false;
   }
-
-  isDialogOpen.value = false;
-  signupLoading.value = false;
 }
-
 
 async function handleLogin() {
   // load and login user

@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth/login',
       callback: '/',
-      include: ['/auth/profile', '/minigames/*'],
+      include: ['/auth/profile'],
       exclude: [],
     },
   },

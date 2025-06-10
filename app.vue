@@ -204,17 +204,6 @@ onUnmounted(() => {
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
     <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
-    <Dialog :open="true">
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Maintenance</DialogTitle>
-          <DialogDescription>
-            Dear all users and visitors, we are currently undergoing maintenance to improve your experience. We apologize for any inconvenience this may cause and appreciate your patience. Please check back later. You will not be able to close this dialog until the maintenance is complete.
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
-
     <Toaster />
   </NuxtLayout>
 </template>

@@ -1,7 +1,6 @@
 <template>
   <Card class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-4/5">
     <CardHeader>
-      {{ session.access_token }}
       <CardTitle>Contact us</CardTitle>
       <CardDescription>Have any questions? Fill out your information and let us
         know!</CardDescription>
@@ -86,6 +85,20 @@ async function submitForm() {
     }),
   });
 
+  const result = await response.json();
+
+  if (result.error) {
+    toastStore.changeToast('Error submitting', result.error);
+  } else {
+    toastStore.changeToast('Form submitted', 'Thank you for reaching out!');
+    formName.value = '';
+    formEmail.value = '';
+    formSubject.value = '';
+    formBody.value = '';
+    localStorage.setItem('timeSubmitted', Date.now());
+  }
+
+  timeDisableForm.value = true;
   formLoading.value = false;
 }
 

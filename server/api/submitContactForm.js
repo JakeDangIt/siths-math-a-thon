@@ -28,6 +28,28 @@ export default defineEventHandler(async (event) => {
     return { error: 'All fields are required' };
   }
 
+  const { data: recentSubmissions, error: checkError } = await supabase
+    .from('contact')
+    .select('created_at')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (checkError) {
+    return { error: 'Error checking recent submissions.' };
+  }
+
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  if (
+    recentSubmissions.length > 0 &&
+    new Date(recentSubmissions[0].created_at) > oneHourAgo
+  ) {
+    return {
+      error:
+        'You have already submitted a form in the last hour. Please wait before trying again.',
+    };
+  }
+
   const { error } = await supabase
     .from('contact')
     .insert([{ name, email, subject, body }]);

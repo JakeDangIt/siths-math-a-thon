@@ -144,47 +144,60 @@ const updateLoading = ref(false);
 // update user
 async function updateUser() {
   try {
-    const supabase = useSupabaseClient();
-    const user = useSupabaseUser();
-
-    if (!user.value) {
-      throw new Error('Authentication required');
-    }
-
-    toastStore.changeToast(
-      'Updating user',
-      'Please wait while we update your information.'
-    );
-
-    // Prepare updated user information (only changed fields)
     const updates = {};
-    if (newName.value !== '' && newName.value !== name.value) updates.name = newName.value;
-    if (newOsis.value !== '' && newOsis.value !== osis.value) updates.osis = newOsis.value;
-    if (newTeacher.value !== '' && newTeacher.value !== teacher.value) updates.teacher = newTeacher.value;
-    if (newGrade.value !== '' && newGrade.value !== grade.value) updates.grade = newGrade.value;
+    if (newName.value && newName.value !== name.value) updates.name = newName.value;
+    if (newOsis.value && newOsis.value !== osis.value) updates.osis = String(newOsis.value);
+    if (newTeacher.value && newTeacher.value !== teacher.value) updates.teacher = newTeacher.value;
+    if (newGrade.value && newGrade.value !== grade.value) updates.grade = newGrade.value;
 
-
-    // Update profile if there are changes
-    if (Object.keys(updates).length > 0) {
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('uid', user.value.id);
-
-      toastStore.changeToast('Success', 'Your information has been updated');
-      
-      // Clear input fields
-      newName.value = '';
-      newOsis.value = '';
-      newTeacher.value = '';
-      newGrade.value = '';
-    } else {
+    if (Object.keys(updates).length === 0) {
       toastStore.changeToast('No changes', 'No changes were detected to update');
+      return;
     }
-  } catch (error) {
-    console.error('Update user error:', error);
-    toastStore.changeToast('Error', error.message);
+
+    updateLoading.value = true;
+    toastStore.changeToast('Updating', 'Saving your changes...');
+
+    const res = await useFetch('/api/changeProfile', {
+      method: 'POST',
+      body: updates
+    });
+
+    if (!res.data.value.success) {
+      console.error('Update error:', res.statusMessage);
+      toastStore.changeToast('Error', 'Failed to update profile');
+      return;
+    }
+
+    const supabase = useSupabaseClient();
+    const { error: metadataError } = await supabase.auth.updateUser({
+      data: updates
+    });
+
+    if (metadataError) {
+      console.error('Metadata update error:', metadataError);
+      toastStore.changeToast('Error', 'Profile saved, but user info sync failed');
+      return;
+    }
+
+    toastStore.changeToast('Success', 'Your information has been updated');
+
+    newName.value = '';
+    newOsis.value = '';
+    newTeacher.value = '';
+    newGrade.value = '';
+  } catch (err) {
+    console.error('Update user error:', err);
+    toastStore.changeToast('Error', 'Something went wrong');
+  } finally {
+    updateLoading.value = false;
   }
 }
 
+onMounted(() => {
+  newName.value = name.value;
+  newOsis.value = osis.value;
+  newTeacher.value = teacher.value;
+  newGrade.value = grade.value;
+});
 </script>

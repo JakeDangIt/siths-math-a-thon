@@ -204,8 +204,11 @@ onUnmounted(() => {
     <SpeedInsights />
     <NuxtLoadingIndicator color="#CB5D56" />
     <NuxtPage class="z-10 px-2 py-4 lg:py-8" />
-    <Toaster />
   </NuxtLayout>
+
+  <ClientOnly>
+    <Toaster />
+  </ClientOnly>
 </template>
 
 <style>

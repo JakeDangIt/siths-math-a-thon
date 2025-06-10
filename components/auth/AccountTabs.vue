@@ -236,8 +236,6 @@ async function handleSignup() {
         agreement: userAgreement.value
       }
     });
-
-    console.log('Signup response:', res);
     // Handle if API returns { success: false } instead of throwing
     if (!res?.success) {
       throw new Error(res?.message || 'Signup failed.');

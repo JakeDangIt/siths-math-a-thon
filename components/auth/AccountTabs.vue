@@ -29,10 +29,10 @@
                 <Label for="email" :class="{
                   'text-theme-red': !emailValid && userEmail.length > 0,
                 }">{{
-                    !emailValid && userEmail.length > 0
-                      ? 'Please enter a valid NYCDOE email'
-                      : 'Email (NYCDOE)'
-                  }}
+                  !emailValid && userEmail.length > 0
+                    ? 'Please enter a valid NYCDOE email'
+                    : 'Email (NYCDOE)'
+                }}
                 </Label>
                 <Input type="email" id="email" v-model="userEmail" />
               </div>
@@ -224,7 +224,7 @@ async function handleSignup() {
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
   try {
-    const res = await $fetch('/api/auth/signup', {
+    const res = await $fetch('/api/signup', {
       method: 'POST',
       body: {
         email: userEmail.value,
@@ -236,6 +236,7 @@ async function handleSignup() {
         agreement: userAgreement.value
       }
     });
+    
     // Handle if API returns { success: false } instead of throwing
     if (!res?.success) {
       throw new Error(res?.message || 'Signup failed.');

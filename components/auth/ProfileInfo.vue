@@ -12,18 +12,10 @@
             >
           </div>
 
-          <Avatar v-if="showAvatar" class="h-16 w-16">
-            <AvatarImage :src="avatarImage || avatarStore.avatarImage" />
-          </Avatar>
-          <Avatar v-else class="h-16 w-16">
-            <AvatarFallback class="text-xl">{{ firstName[0] }}</AvatarFallback>
+          <Avatar class="h-16 w-16">
+            <Avatar class="text-xl">{{ firstName[0] }}</Avatar>
           </Avatar>
         </div>
-
-        <AuthChangeAvatar
-          @avatarUploaded="handleAvatarUploaded"
-          @avatarRemoval="handleAvatarRemove"
-        />
       </CardHeader>
 
       <CardContent>
@@ -124,8 +116,6 @@
 <script setup>
 import { teachers } from '../../utils/teachers.js';
 const user = useSupabaseUser();
-const supabase = useSupabaseClient();
-const avatarStore = useAvatarStore();
 const toastStore = useToastStore();
 
 // user info
@@ -146,32 +136,10 @@ const osisValid = computed(
   () => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value))
 );
 
-// avatar info
-const showAvatar = computed(
-  () => avatarStore.avatarImage !== null || avatarImage.value !== ''
-);
-const avatarFile = ref(null);
-const avatarPath = ref('');
-const avatarImage = ref('');
+
 
 const updateLoading = ref(false);
 
-function handleAvatarUploaded(imagePath, file, dataURL) {
-  // watch for changes in the avatar path and file (after user uploads a new avatar)
-  // this btw is the cropped image path and file
-  watch([imagePath, file], ([newPath, newFile]) => {
-    avatarPath.value = newPath;
-    avatarFile.value = newFile;
-    avatarImage.value = dataURL;
-  });
-}
-
-// remove avatar
-function handleAvatarRemove() {
-  avatarPath.value = '';
-  avatarFile.value = null;
-  avatarImage.value = '';
-}
 
 // update user
 async function updateUser() {
@@ -195,36 +163,6 @@ async function updateUser() {
     if (newTeacher.value !== '' && newTeacher.value !== teacher.value) updates.teacher = newTeacher.value;
     if (newGrade.value !== '' && newGrade.value !== grade.value) updates.grade = newGrade.value;
 
-    // Handle avatar upload if exists
-    if (avatarFile.value) {
-      const fileExt = avatarFile.value.name.split('.').pop();
-      const filePath = `${user.value.id}/avatar-${Date.now()}.${fileExt}`;
-
-      // Delete existing avatar if present
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('avatar')
-        .eq('uid', user.value.id)
-        .single();
-
-      if (existingProfile?.avatar) {
-        await supabase.storage.from('avatars').remove([existingProfile.avatar]);
-      }
-
-      // Upload new avatar
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, avatarFile.value, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        throw new Error(`Avatar upload failed: ${uploadError.message}`);
-      }
-
-      updates.avatar = filePath;
-    }
 
     // Update profile if there are changes
     if (Object.keys(updates).length > 0) {
@@ -233,14 +171,6 @@ async function updateUser() {
         .update(updates)
         .eq('uid', user.value.id);
 
-      if (updateError) {
-        // If profile update fails and we uploaded an avatar, clean it up
-        if (updates.avatar) {
-          await supabase.storage.from('avatars').remove([updates.avatar]);
-        }
-        throw new Error(`Profile update failed: ${updateError.message}`);
-      }
-
       toastStore.changeToast('Success', 'Your information has been updated');
       
       // Clear input fields
@@ -248,7 +178,6 @@ async function updateUser() {
       newOsis.value = '';
       newTeacher.value = '';
       newGrade.value = '';
-      avatarFile.value = null;
     } else {
       toastStore.changeToast('No changes', 'No changes were detected to update');
     }

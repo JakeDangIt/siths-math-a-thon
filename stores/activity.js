@@ -1,6 +1,6 @@
 export const useActivityStore = defineStore('activity', () => {
   const activityData = ref([]);
-  const isLoading = ref(true);
+  const isLoading = ref(false);
 
   async function getActivity() {
     const ACTIVITY_QUERY = groq`*[_type == "activity"]`;
@@ -11,10 +11,10 @@ export const useActivityStore = defineStore('activity', () => {
     );
   }
 
-  onMounted(async () => {
-    await getActivity();
-    isLoading.value = false;
-  });
+  // onMounted(async () => {
+  //   await getActivity();
+  //   isLoading.value = false;
+  // });
 
   return { activityData, isLoading, getActivity };
 });

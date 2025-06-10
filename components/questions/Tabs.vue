@@ -11,11 +11,6 @@
   <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange">
     <div class="flex flex-col gap-2 md:flex-row">
-      <NuxtLink to="/minigames" class="flex w-fit">
-        <Button variant="secondary" class="border border-slate-500">
-          <span>Minigames</span>
-        </Button>
-      </NuxtLink>
       <!-- carousel for the tabs -->
       <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
         align: 'start',
@@ -37,17 +32,6 @@
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-
-      <div v-else>
-        <h2 class="mb-4 text-2xl font-bold">Contest Starts In:</h2>
-        <div class="countdown font-mono mb-6 text-4xl">
-          <span>{{ countdown.days }}</span> Days
-          <span>{{ countdown.hours }}</span> Hours
-          <span>{{ countdown.minutes }}</span> Minutes
-          <span>{{ countdown.seconds }}</span> Seconds
-        </div>
-        <p class="text-xl">Questions will be available on January 28, 2025.</p>
-      </div>
     </div>
 
     <!-- content for the tabs -->

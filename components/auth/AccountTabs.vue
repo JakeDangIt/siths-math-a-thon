@@ -29,10 +29,10 @@
                 <Label for="email" :class="{
                   'text-theme-red': !emailValid && userEmail.length > 0,
                 }">{{
-                    !emailValid && userEmail.length > 0
-                      ? 'Please enter a valid NYCDOE email'
-                      : 'Email (NYCDOE)'
-                  }}
+                  !emailValid && userEmail.length > 0
+                    ? 'Please enter a valid NYCDOE email'
+                    : 'Email (NYCDOE)'
+                }}
                 </Label>
                 <Input type="email" id="email" v-model="userEmail" />
               </div>
@@ -180,7 +180,6 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 
 const toastStore = useToastStore();
-const avatarStore = useAvatarStore();
 const routesStore = useRoutesStore();
 
 // signup fields
@@ -224,32 +223,37 @@ async function handleSignup() {
   signupLoading.value = true;
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
-  const { data, error } = await supabase.auth.signUp({
-    email: userEmail.value,
-    password: userPassword.value,
-    options: {
-      data: {
+  try {
+    const res = await $fetch('/api/signup', {
+      method: 'POST',
+      body: {
+        email: userEmail.value,
+        password: userPassword.value,
         name: userName.value,
-        osis: userOSIS.value,
+        osis: String(userOSIS.value),
         teacher: userTeacher.value,
         grade: userGrade.value,
-        profile_complete: false,
-      },
-    },
-  });
-  if (error) {
-    toastStore.changeToast('Error signing up', error.message);
-  } else {
-    toastStore.changeToast(
-      'Success',
-      'You have successfully signed up. Please confirm in your email.'
-    )
+        agreement: userAgreement.value
+      }
+    });
+    
+    // Handle if API returns { success: false } instead of throwing
+    if (!res?.success) {
+      throw new Error(res?.message || 'Signup failed.');
+    }
+
+    // Show success toast if sign up actually succeeded
+    toastStore.changeToast('Success', 'Check your email to confirm your signup!');
+    isDialogOpen.value = false;
+
+  } catch (err) {
+    // Capture both thrown errors and response errors
+    const message = err?.data?.statusMessage || err?.message || 'Something went wrong.';
+    toastStore.changeToast('Error signing up', message);
+  } finally {
+    signupLoading.value = false;
   }
-
-  isDialogOpen.value = false;
-  signupLoading.value = false;
 }
-
 
 async function handleLogin() {
   // load and login user
@@ -287,10 +291,6 @@ async function handleLogin() {
       }
     }
     toastStore.changeToast('Success', 'You have successfully logged in.');
-
-    // get the new data to update avatar
-    await avatarStore.refreshUser();
-    await avatarStore.retrieveAvatar();
 
     // redirect to last page that wasnt login or signup
     await routesStore.redirectToLast();

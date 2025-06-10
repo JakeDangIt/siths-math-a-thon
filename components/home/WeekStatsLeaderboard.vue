@@ -41,13 +41,9 @@
           >
             <div class="flex items-center space-x-2">
               <Avatar>
-                <AvatarImage
-                  v-if="avatar?.image"
-                  :src="avatar?.image"
-                ></AvatarImage>
-                <AvatarFallback class="text-lg">{{
+                <Avatar class="text-lg">{{
                   useFirstName(avatar?.name ?? ' ')[0]
-                }}</AvatarFallback>
+                }}</Avatar>
               </Avatar>
               <span>{{ avatar?.name ?? '' }}</span>
             </div>

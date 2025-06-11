@@ -8,16 +8,13 @@
   </div>
 
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-  <Tabs v-else :default-value="Number(timeStore.currentWeek)" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
-    @update:model-value="onTabChange">
+  <Tabs v-else :default-value="1" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3" @update:model-value="onTabChange">
     <div class="flex flex-col gap-2 md:flex-row">
       <!-- carousel for the tabs -->
       <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
         align: 'start',
         slidesToScroll: 2,
-        startIndex: weekNames.findIndex(
-          (week) => week == timeStore.currentWeek
-        ),
+        startIndex: 0
       }">
         <CarouselContent>
           <!-- paired into week and its bonus -->
@@ -37,11 +34,7 @@
     <!-- content for the tabs -->
     <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
       <div v-if="
-        timeStore.timeRemainings.find((time) =>
-          time.week.includes(String(weekNames[index]).includes('Bonus')
-            ? `${Number(String(weekNames[index]).replace('Bonus', '')) + 1} Bonus`
-            : `${weekNames[index] + 1}`)
-        ).timeRemaining < 0
+        true
       ">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
@@ -51,9 +44,9 @@
 
         <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
-          .sort((a, b) => a.number - b.number)" :key="question.number" :question="question.number"
-          :mathContent="question.content" :extraInfo="question.extraInfo" :week="weekNames[index]"
-          :imageUrl="question.imageUrl" :points="question.points" />
+          .sort((a, b) => a.question - b.question)" :key="question.id" :question="question.question"
+          :mathContent="question.math_content" :extraInfo="question.extra_info" :week="weekNames[index]"
+          :imageUrl="question.image_url" :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>
@@ -70,7 +63,8 @@
               <SheetTrigger>
                 <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
+                : '' }}</Button>
             </div>
 
             <div :class="isFarDownEnough
@@ -81,7 +75,8 @@
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
+                : '' }}</Button>
             </div>
           </TransitionGroup>
 
@@ -99,13 +94,11 @@
             </SheetHeader>
 
             <!-- another tabs, basically the same as the one outside -->
-            <Tabs :default-value="Number(timeStore.currentWeek)" class="mx-auto my-4">
+            <Tabs :default-value="1" class="mx-auto my-4">
               <Carousel class="mx-auto w-2/3" :opts="{
                 align: 'start',
                 slidesToScroll: 2,
-                startIndex: weekNames.findIndex(
-                  (week) => week == timeStore.currentWeek
-                ),
+                startIndex: 0
               }">
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
@@ -122,8 +115,7 @@
               </Carousel>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
-              <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]"
-                class="grid grid-cols-2">
+              <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="grid grid-cols-2">
                 <!-- each answer, sorted, with a remove button -->
                 <div v-for="answer in answersStore.answerData
                   .filter((answer) => answer.week == weekNames[index])
@@ -137,31 +129,30 @@
                     <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
                   </button>
                 </div>
-
-                <!-- submit and save button -->
-                <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button aria-label="Save Answers" @click="
-                    saveAnswers();
-                  " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
+              </TabsContent>
+              <!-- submit and save button -->
+              <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
+                <Button aria-label="Save Answers" @click="
+                  saveAnswers();
+                " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
                     " class="w-full">
-                    Save Answers
-                  </Button>
-                  <Button aria-label="Submit Answers" @click="
-                    submitAnswers(
-                      weekNames[index],
-                      answersStore.answerData.filter(
-                        (answer) => answer.week == weekNames[index]
-                      )
+                  Save Answers
+                </Button>
+                <Button aria-label="Submit Answers" @click="
+                  submitAnswers(
+                    weekNames[index],
+                    answersStore.answerData.filter(
+                      (answer) => answer.week == weekNames[index]
                     )
-                    " :disabled="submitLoading ||
+                  )
+                  " :disabled="submitLoading ||
                       answersStore.answerData.filter(
                         (answer) => answer.week == weekNames[index]
                       ).length == 0
                       " class="w-full">
-                    Submit {{ width > 640 ? 'Week ' : 'W' }}{{ week }}{{ weekNames[index] }}
-                  </Button>
-                </div>
-              </TabsContent>
+                  Submit {{ width > 640 ? 'Week ' : 'W' }}{{ weekNames[index] }}
+                </Button>
+              </div>
             </Tabs>
           </SheetContent>
         </Sheet>
@@ -180,7 +171,6 @@
 const answersStore = useAnswersStore();
 const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
-const timeStore = useTimeStore();
 
 const user = useSupabaseUser();
 const session = useSupabaseSession();

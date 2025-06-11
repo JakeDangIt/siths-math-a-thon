@@ -37,13 +37,8 @@
 </template>
 
 <script setup>
-const timeStore = useTimeStore();
 const questionsStore = useQuestionsStore();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
-
-const currentWeekQuestions = computed(() => {
-  return questionsStore.questionData.filter((question) => question.week == timeStore.currentWeek || question.week == timeStore.currentWeek + ' Bonus');
-});
 
 // random question
 const randomQuestion = computed(() => {

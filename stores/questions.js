@@ -1,39 +1,27 @@
 export const useQuestionsStore = defineStore('questions', () => {
-  const timeStore = useTimeStore();
+  const toastStore = useToastStore();
 
   // question data and loading state
   const questionData = ref([]);
-  const questionTimeData = ref([]);
   const isLoading = ref(false);
 
   // get questions
-  async function getQuestions() {
-    const QUESTIONS_QUERY = groq`*[_type == "questions"]`;
-    const { data: questions } = await useSanityQuery(QUESTIONS_QUERY);
+  async function retreiveQuestions() {
+    isLoading.value = true;
+    try {
+      const response = await fetch('/api/retreiveQuestions');
+      const result = await response.json();
 
-    const questionsWithImages = questions.value.map((question) => {
-      if (question.image?.asset?._ref) {
-        question.imageUrl = urlFor(question.image);
+      if (result.error) {
+        toastStore.changeToast('Failed to retrieve questions', result.error);
+      } else {
+        questionData.value = result.questions;
       }
-      return question;
-    });
+    } catch (error) {
+      toastStore.changeToast('Error fetching questions', error.message);
+    }
 
-    questionData.value = questionsWithImages.filter(
-      (question) => question?.title && !question.title.includes('Time')
-    );
-
-    questionTimeData.value = questionsWithImages.filter(
-      (question) => question?.title && question.title.includes('Time')
-    );
-
-    // update time store with new time data
-    timeStore.targetDates = questionTimeData.value.map((question) => {
-      const targetDate = new Date(question.content);
-      return {
-        week: [question.week, question.week + ' Bonus'],
-        date: targetDate,
-      };
-    });
+    isLoading.value = false; 
 
     await rerenderMathJax();
   }
@@ -45,27 +33,21 @@ export const useQuestionsStore = defineStore('questions', () => {
     }
   }
 
-  function buildImageUrl(image) {
-    return urlFor(image);
-  }
-
   // get questions on mount and load MathJax (which renders it on load)
-  // onMounted(async () => {
-  //   await getQuestions().then(async () => {
-  //     await rerenderMathJax();
-  //     setTimeout(async () => {
-  //       await rerenderMathJax();
-  //     }, 100);
-  //     isLoading.value = false;
-  //   });
-  // });
+  onMounted(async () => {
+    await retreiveQuestions().then(async () => {
+      await rerenderMathJax();
+      setTimeout(async () => {
+        await rerenderMathJax();
+      }, 100);
+      isLoading.value = false;
+    });
+  });
 
   return {
     questionData,
-    questionTimeData,
     isLoading,
-    getQuestions,
+    retreiveQuestions,
     rerenderMathJax,
-    buildImageUrl,
   };
 });

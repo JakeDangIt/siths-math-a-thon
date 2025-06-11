@@ -49,7 +49,7 @@ function validateAndChangeAnswer() {
   const cleanedValue = input.value.match(/^-?\d*$/)?.[0] || "";
   isInvalid.value = cleanedValue !== input.value;
   input.value = cleanedValue;
-  
+
   nextTick(() => {
     const correspondingQuestionIndex = answersStore.answerData.findIndex(
       (answer) => answer.week == week.value && answer.question == question.value
@@ -79,6 +79,7 @@ onMounted(() => {
 .accent-img {
   display: none;
 }
+
 .bee-mode .accent-img {
   display: block;
 }

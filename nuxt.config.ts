@@ -8,17 +8,8 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
-  modules: [
-    '@nuxt/image',
-    '@nuxt/icon',
-    '@nuxtjs/tailwindcss',
-    '@nuxtjs/supabase',
-    '@nuxtjs/color-mode',
-    'shadcn-nuxt',
-    '@vueuse/nuxt',
-    '@formkit/auto-animate',
-    '@pinia/nuxt',
-  ],
+  modules: [// '@nuxt/image',
+  '@nuxt/icon', '@nuxtjs/tailwindcss', '@nuxtjs/supabase', '@nuxtjs/color-mode', 'shadcn-nuxt', '@vueuse/nuxt', '@formkit/auto-animate', '@pinia/nuxt', '@nuxt/image'],
   app: {
     head: {
       charset: 'utf-8',

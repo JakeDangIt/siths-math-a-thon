@@ -14,8 +14,8 @@
       <CardContent v-else-if="questionsStore.questionData.length > 0"
         class="relative z-10 flex h-full flex-col justify-between">
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
-          <p class="text-lg font-semibold">{{ randomQuestion?.title }}.</p>
-          <span v-html="randomQuestion?.content"></span>
+          <p class="text-lg font-semibold">Week {{ randomQuestion.week }} Question {{ randomQuestion.question }}.</p>
+          <span v-html="randomQuestion?.math_content"></span>
         </div>
 
         <!-- solve now button that goes to /questions -->
@@ -42,9 +42,9 @@ const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
 // random question
 const randomQuestion = computed(() => {
-  return currentWeekQuestions.value[
-    Math.floor(Math.random() * currentWeekQuestions.value.length)
-  ];
+  if (questionsStore.questionData.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * questionsStore.questionData.length);
+  return questionsStore.questionData[randomIndex];
 });
 
 // rerender mathjax when question data changes

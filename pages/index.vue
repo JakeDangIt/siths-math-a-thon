@@ -6,9 +6,9 @@
         <HomeDirections class="col-span-full" />
         <HomeMichaelsCause />
         <HomeWeekStatsLeaderboard class="h-full w-full lg:col-span-2" />
+        <HomeAnnouncements class="md:col-span-2 lg:col-span-3"/>
         <HomeProfileSummary class="h-full" />
-        <!--
-        <HomeFeaturedProblem /> -->
+        <HomeFeaturedProblem />
       </div>
     </div>
   </div>

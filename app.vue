@@ -13,7 +13,7 @@ const { toast } = useToast();
 useQuestionsStore();
 useLeaderboardStore();
 useRoutesStore();
-useActivityStore();
+useAnnouncementsStore();
 if (user.value) {
   useAnswersStore();
 }

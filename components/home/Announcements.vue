@@ -69,7 +69,7 @@
                             <div class="flex items-center justify-between text-sm text-muted-foreground">
                                 <div class="flex items-center">
                                     <Calendar class="w-4 h-4 mr-1" />
-                                    {{ formatDate(announcement.createdAt) }}
+                                    {{ formatDate(announcement.created_at) }}
                                 </div>
                             </div>
                         </div>

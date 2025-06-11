@@ -3,11 +3,10 @@ export const useQuestionsStore = defineStore('questions', () => {
 
   // question data and loading state
   const questionData = ref([]);
-  const questionTimeData = ref([]);
   const isLoading = ref(false);
 
   // get questions
-  async function getQuestions() {
+  async function retreiveQuestions() {
     isLoading.value = true;
     try {
       const response = await fetch('/api/retreiveQuestions');
@@ -35,20 +34,20 @@ export const useQuestionsStore = defineStore('questions', () => {
   }
 
   // get questions on mount and load MathJax (which renders it on load)
-  // onMounted(async () => {
-  //   await getQuestions().then(async () => {
-  //     await rerenderMathJax();
-  //     setTimeout(async () => {
-  //       await rerenderMathJax();
-  //     }, 100);
-  //     isLoading.value = false;
-  //   });
-  // });
+  onMounted(async () => {
+    await retreiveQuestions().then(async () => {
+      await rerenderMathJax();
+      setTimeout(async () => {
+        await rerenderMathJax();
+      }, 100);
+      isLoading.value = false;
+    });
+  });
 
   return {
     questionData,
     isLoading,
-    getQuestions,
+    retreiveQuestions,
     rerenderMathJax,
   };
 });

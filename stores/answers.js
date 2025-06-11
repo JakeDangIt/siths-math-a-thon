@@ -3,7 +3,6 @@ export const useAnswersStore = defineStore('answers', () => {
   const user = useSupabaseUser();
   const toastStore = useToastStore();
   const questionsStore = useQuestionsStore();
-  const leaderboardStore = useLeaderboardStore();
 
   const answerData = ref([]);
   const getAnswerLoading = ref(true);
@@ -64,7 +63,7 @@ export const useAnswersStore = defineStore('answers', () => {
         questionsStore.questionData.forEach((question) => {
           answerData.value.push({
             week: question.week,
-            question: question.number,
+            question: question.question,
             answer: '',
           });
         });

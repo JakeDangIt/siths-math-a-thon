@@ -72,7 +72,6 @@ onMounted(() => {
     );
     input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
   }
-  console.log(props)
 });
 </script>
 

@@ -14,7 +14,7 @@
       <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
         align: 'start',
         slidesToScroll: 2,
-        startIndex: 1
+        startIndex: 0
       }">
         <CarouselContent>
           <!-- paired into week and its bonus -->
@@ -75,7 +75,8 @@
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers' : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
+                : '' }}</Button>
             </div>
           </TransitionGroup>
 
@@ -97,7 +98,7 @@
               <Carousel class="mx-auto w-2/3" :opts="{
                 align: 'start',
                 slidesToScroll: 2,
-                startIndex: 1
+                startIndex: 0
               }">
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
@@ -128,31 +129,30 @@
                     <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
                   </button>
                 </div>
-
-                <!-- submit and save button -->
-                <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                  <Button aria-label="Save Answers" @click="
-                    saveAnswers();
-                  " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
+              </TabsContent>
+              <!-- submit and save button -->
+              <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
+                <Button aria-label="Save Answers" @click="
+                  saveAnswers();
+                " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
                     " class="w-full">
-                    Save Answers
-                  </Button>
-                  <Button aria-label="Submit Answers" @click="
-                    submitAnswers(
-                      weekNames[index],
-                      answersStore.answerData.filter(
-                        (answer) => answer.week == weekNames[index]
-                      )
+                  Save Answers
+                </Button>
+                <Button aria-label="Submit Answers" @click="
+                  submitAnswers(
+                    weekNames[index],
+                    answersStore.answerData.filter(
+                      (answer) => answer.week == weekNames[index]
                     )
-                    " :disabled="submitLoading ||
+                  )
+                  " :disabled="submitLoading ||
                       answersStore.answerData.filter(
                         (answer) => answer.week == weekNames[index]
                       ).length == 0
                       " class="w-full">
-                    Submit {{ width > 640 ? 'Week ' : 'W' }}{{ weekNames[index] }}
-                  </Button>
-                </div>
-              </TabsContent>
+                  Submit {{ width > 640 ? 'Week ' : 'W' }}{{ weekNames[index] }}
+                </Button>
+              </div>
             </Tabs>
           </SheetContent>
         </Sheet>

@@ -40,13 +40,13 @@ export const useAnswersStore = defineStore('answers', () => {
         questionsStore.questionData.forEach((question) => {
           const index = answerData.value.findIndex(
             (answer) =>
-              answer.week == question.week && answer.question == question.number
+              answer.week == question.week && answer.question == question.question
           );
 
           if (index == -1) {
             answerData.value.push({
               week: question.week,
-              question: question.number,
+              question: question.question,
               answer: '',
             });
           }

@@ -45,8 +45,8 @@
         <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
           .filter((question) => question.week == weekNames[index])
           .sort((a, b) => a.question - b.question)" :key="question.id" :question="question.question"
-          :mathContent="question.mathContent" :extraInfo="question.extraInfo" :week="weekNames[index]"
-          :imageUrl="question.imageUrl" :points="question.points" />
+          :mathContent="question.math_content" :extraInfo="question.extra_info" :week="weekNames[index]"
+          :imageUrl="question.image_url" :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>

@@ -8,10 +8,11 @@
   </div>
 
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-  <Tabs v-else :default-value="1" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3" @update:model-value="onTabChange">
+  <Tabs v-else :default-value="defaultWeek" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+    @update:model-value="onTabChange">
     <div class="flex flex-col gap-2 md:flex-row">
       <!-- carousel for the tabs -->
-      <Carousel v-if="questionsStore.questionData.length > 0" class="mx-auto w-2/3" :opts="{
+      <Carousel v-if="presentWeekNames.length > 0" class="mx-auto w-2/3" :opts="{
         align: 'start',
         slidesToScroll: 2,
         startIndex: 0
@@ -32,21 +33,16 @@
     </div>
 
     <!-- content for the tabs -->
-    <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="space-y-2">
-      <div v-if="
-        true
-      ">
+    <TabsContent v-for="week in presentWeekNames" :value="week" :key="week" class="space-y-2">
+      <div v-if="getQuestionsForWeek(week).length > 0">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
-          Week {{ weekNames[index] }} Questions
-          <QuestionsClock :week="weekNames[index]" />
+          Week {{ week }} Questions
         </h1>
 
-        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in questionsStore.questionData
-          .filter((question) => question.week == weekNames[index])
-          .sort((a, b) => a.question - b.question)" :key="question.id" :question="question.question"
-          :mathContent="question.math_content" :extraInfo="question.extra_info" :week="weekNames[index]"
-          :imageUrl="question.image_url" :points="question.points" />
+        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in getQuestionsForWeek(week)"
+          :key="question.id" :question="question.question" :mathContent="question.math_content"
+          :extraInfo="question.extra_info" :week="week" :imageUrl="question.image_url" :points="question.points" />
 
         <!-- preview answer -->
         <Sheet>
@@ -94,7 +90,7 @@
             </SheetHeader>
 
             <!-- another tabs, basically the same as the one outside -->
-            <Tabs :default-value="1" class="mx-auto my-4">
+            <Tabs :default-value="defaultWeek" class="mx-auto my-4" v-model="selectedPreviewWeek">
               <Carousel class="mx-auto w-2/3" :opts="{
                 align: 'start',
                 slidesToScroll: 2,
@@ -115,51 +111,78 @@
               </Carousel>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
-              <TabsContent v-for="(_, index) in weekNames" :value="weekNames[index]" class="grid grid-cols-2">
-                <!-- each answer, sorted, with a remove button -->
-                <div v-for="answer in answersStore.answerData
-                  .filter((answer) => answer.week == weekNames[index])
-                  .sort((a, b) => a.question - b.question)" class="group flex justify-between px-2 hover:bg-slate-200">
-                  <p>
-                    <span class="font-bold">Q{{ answer.question }}.</span>
-                    {{ answer.answer }}
-                  </p>
-                  <button aria-label="Remove Answer" @click="removeAnswer(weekNames[index], answer.question)"
-                    class="flex items-center opacity-0 transition-all group-hover:opacity-100">
-                    <Icon v-if="answer.answer !== ''" name="material-symbols:cancel-outline"></Icon>
-                  </button>
+              <TabsContent v-for="week in presentWeekNames" :value="week" :key="`preview-${week}`">
+                <div v-if="getAnswersForWeek(week).length > 0" class="space-y-2">
+                  <!-- Progress indicator -->
+                  <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-sm font-medium text-gray-700">Progress for Week {{ week }}</span>
+                      <span class="text-sm text-gray-600">
+                        {{ answersStore.getAnsweredCountForWeek(week) }} / {{
+                          answersStore.getTotalQuestionsForWeek(week) }} answered
+                      </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        :style="{ width: `${(answersStore.getAnsweredCountForWeek(week) / answersStore.getTotalQuestionsForWeek(week)) * 100}%` }">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Answers grid -->
+                  <ScrollArea class="h-[50vh] md:h-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <!-- each answer, sorted, with a remove button -->
+                      <div v-for="answer in getAnswersForWeek(week)" :key="`${week}-${answer.question}`"
+                        class="group flex justify-between items-start p-2 rounded-lg border hover:bg-gray-50 transition-colors"
+                        :class="answer.answer && answer.answer.trim() !== '' ? 'border-green-200 bg-green-50' : 'border-gray-200'">
+                        <div class="flex-1 p-1 min-w-0">
+                          <p class="text-sm">
+                            <span class="font-bold text-gray-700">Q{{ answer.question }}.</span>
+                            <span v-if="answer.answer && answer.answer.trim() !== ''" class="text-gray-900 ml-2">
+                              {{ answer.answer }}
+                            </span>
+                            <span v-else class="text-gray-400 italic ml-2">No answer yet</span>
+                          </p>
+                        </div>
+                        <button v-if="answer.answer && answer.answer.trim() !== ''" aria-label="Remove Answer"
+                          @click="removeAnswer(week, answer.question)"
+                          class="flex-shrink-0 ml-2 px-1 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-100">
+                          <Icon name="material-symbols:cancel-outline" class="w-4 h-4 text-red-600"></Icon>
+                        </button>
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </div>
+                <div v-else class="text-center text-gray-500 py-8">
+                  <div class="mb-2">
+                    <Icon name="material-symbols:quiz-outline" class="w-12 h-12 mx-auto text-gray-300"></Icon>
+                  </div>
+                  <p class="text-lg font-medium">No answers for Week {{ week }} yet</p>
+                  <p class="text-sm">Start answering questions to see them here</p>
+                </div>
+
+                <!-- submit and save button -->
+                <div class="mt-6 grid w-full grid-cols-1 md:grid-cols-2 gap-3">
+                  <Button aria-label="Save Answers" @click="saveAnswers" variant="secondary"
+                    :disabled="saveLoading || answersStore.answerData.length == 0" class="w-full">
+                    <Icon name="material-symbols:save-outline" class="w-4 h-4 mr-2"></Icon>
+                    Save All Answers
+                  </Button>
+                  <Button aria-label="Submit Answers" @click="submitAnswers(week, getAnswersForWeek(week))"
+                    :disabled="submitLoading || !answersStore.hasAnswersForWeek(week)" class="w-full">
+                    <Icon name="material-symbols:send-outline" class="w-4 h-4 mr-2"></Icon>
+                    Submit Week {{ week }}
+                  </Button>
                 </div>
               </TabsContent>
-              <!-- submit and save button -->
-              <div class="col-span-2 mt-12 grid w-full grid-cols-2 gap-2 lg:col-auto">
-                <Button aria-label="Save Answers" @click="
-                  saveAnswers();
-                " variant="secondary" :disabled="saveLoading || answersStore.answerData.length == 0
-                    " class="w-full">
-                  Save Answers
-                </Button>
-                <Button aria-label="Submit Answers" @click="
-                  submitAnswers(
-                    weekNames[index],
-                    answersStore.answerData.filter(
-                      (answer) => answer.week == weekNames[index]
-                    )
-                  )
-                  " :disabled="submitLoading ||
-                      answersStore.answerData.filter(
-                        (answer) => answer.week == weekNames[index]
-                      ).length == 0
-                      " class="w-full">
-                  Submit {{ width > 640 ? 'Week ' : 'W' }}{{ weekNames[index] }}
-                </Button>
-              </div>
             </Tabs>
           </SheetContent>
         </Sheet>
       </div>
       <div v-else>
         <h1 class="my-2 text-center text-2xl font-bold">
-          Week {{ weekNames[index] }} Questions
+          Week {{ week }} Questions
         </h1>
         <p class="text-center">Questions are not available</p>
       </div>
@@ -168,6 +191,8 @@
 </template>
 
 <script setup>
+import ScrollArea from '../ui/scroll-area/ScrollArea.vue';
+
 const answersStore = useAnswersStore();
 const questionsStore = useQuestionsStore();
 const toastStore = useToastStore();
@@ -175,6 +200,9 @@ const toastStore = useToastStore();
 const user = useSupabaseUser();
 const session = useSupabaseSession();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
+
+// Add reactive variable for preview sheet tab selection
+const selectedPreviewWeek = ref('1');
 
 // track if answers have changed
 const initialAnswers = ref([]);
@@ -193,20 +221,43 @@ const isFarDownEnough = ref(false);
 const saveLoading = ref(false);
 const submitLoading = ref(false);
 
-// week names and grouped week names, used for the tabs
-const weekNames = [1, '1 Bonus', 2, '2 Bonus', 3, '3 Bonus'];
+// week names - using string format to be consistent
+const allWeekNames = ['1', '1 Bonus', '2', '2 Bonus', '3', '3 Bonus'];
 
-// present week names, also for the tabs, just that it filters out the weeks that don't have any questions or time has passed
+// Helper function to normalize week values for comparison
+const normalizeWeek = (week) => {
+  return String(week);
+};
+
+// present week names, filtered to only show weeks that have questions
 const presentWeekNames = computed(() => {
-  return weekNames.filter((week) => {
+  return allWeekNames.filter((week) => {
     return questionsStore.questionData.some(
-      (question) => question.week == week
+      (question) => normalizeWeek(question.week) === normalizeWeek(week)
     );
   });
 });
 
+// Default week should be the first available week
+const defaultWeek = computed(() => {
+  return presentWeekNames.value.length > 0 ? presentWeekNames.value[0] : '1';
+});
+
+// Helper function to get questions for a specific week
+const getQuestionsForWeek = (week) => {
+  return questionsStore.questionData
+    .filter((question) => normalizeWeek(question.week) === normalizeWeek(week))
+    .sort((a, b) => Number(a.question) - Number(b.question));
+};
+
+// Helper function to get answers for a specific week
+const getAnswersForWeek = (week) => {
+  return answersStore.getAnswersForWeek(week);
+};
+
 // function to rerender mathjax when tab changes, must be nexttick to wait for DOM to update
-function onTabChange() {
+function onTabChange(newWeek) {
+  selectedPreviewWeek.value = newWeek; // Sync preview sheet with main tabs
   nextTick(() => {
     questionsStore.rerenderMathJax();
   });
@@ -215,12 +266,22 @@ function onTabChange() {
 // function to save answers, checks if user is logged in
 async function saveAnswers() {
   saveLoading.value = true;
-  if (user.value == null) {
-    toastStore.changeToast('You must be logged in to save answers');
-  } else if (answersStore.answerData.length == 0) {
-    toastStore.changeToast('You must answer at least one question to save');
-  } else {
-    if (!session.value) return
+  try {
+    if (!user.value) {
+      toastStore.changeToast('You must be logged in to save answers');
+      return;
+    }
+
+    if (answersStore.answerData.length === 0) {
+      toastStore.changeToast('You must answer at least one question to save');
+      return;
+    }
+
+    if (!session.value) {
+      toastStore.changeToast('Session expired, please log in again');
+      return;
+    }
+
     const token = session.value.access_token;
     const response = await $fetch('/api/saveAnswers', {
       method: 'POST',
@@ -235,7 +296,7 @@ async function saveAnswers() {
     });
 
     if (response.error) {
-      toastStore.changeToast('Failed to save answers', error.message);
+      toastStore.changeToast('Failed to save answers', response.error);
     } else {
       initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
       toastStore.changeToast(
@@ -243,49 +304,48 @@ async function saveAnswers() {
         'Your answers have been saved'
       );
     }
+  } catch (error) {
+    console.error('Error saving answers:', error);
+    toastStore.changeToast('Failed to save answers', error.message);
+  } finally {
+    saveLoading.value = false;
   }
-  saveLoading.value = false;
 }
-
 
 // function to submit answers, checks if user is logged in
 async function submitAnswers(week, answers) {
   submitLoading.value = true;
 
-  if (!user.value) {
-    toastStore.changeToast('You must be logged in to submit answers');
-    submitLoading.value = false;
-    return;
-  }
-
-  if (answers.every((answer) => answer.answer === '')) {
-    toastStore.changeToast('You must answer at least one question to submit');
-    submitLoading.value = false;
-    return;
-  }
-
-  if (!session.value) {
-    toastStore.changeToast('Session expired, please log in again');
-    submitLoading.value = false;
-    return;
-  }
-
-  const token = session.value.access_token;
-
   try {
+    if (!user.value) {
+      toastStore.changeToast('You must be logged in to submit answers');
+      return;
+    }
+
+    if (!answers || answers.length === 0 || answers.every((answer) => !answer.answer || answer.answer.trim() === '')) {
+      toastStore.changeToast('You must answer at least one question to submit');
+      return;
+    }
+
+    if (!session.value) {
+      toastStore.changeToast('Session expired, please log in again');
+      return;
+    }
+
+    const token = session.value.access_token;
     const response = await $fetch('/api/submitAnswers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ week, answers }),
+      body: JSON.stringify({ week: normalizeWeek(week), answers }),
     });
 
     if (response.error) {
-      toastStore.changeToast('Answers submitted already: ', response.error);
+      toastStore.changeToast('Submission failed', response.error);
     } else {
-      toastStore.changeToast('Submitted successfully', 'Your answers have been submitted');
+      toastStore.changeToast('Submitted successfully', `Your answers for Week ${week} have been submitted`);
     }
   } catch (err) {
     console.error('Error submitting answers:', err);
@@ -294,7 +354,6 @@ async function submitAnswers(week, answers) {
     submitLoading.value = false;
   }
 }
-
 
 // function to remove an answer from the store (not the input, which is done in the QuestionCard component)
 function removeAnswer(week, question) {
@@ -351,6 +410,7 @@ watch(
   { immediate: true }
 );
 
+// Watch for changes in answer loading state
 watch(
   () => answersStore.getAnswerLoading,
   () => {
@@ -362,6 +422,13 @@ watch(
   },
   { immediate: true }
 );
+
+// Watch for changes in present weeks to update default selection
+watch(presentWeekNames, (newWeeks) => {
+  if (newWeeks.length > 0 && !newWeeks.includes(selectedPreviewWeek.value)) {
+    selectedPreviewWeek.value = newWeeks[0];
+  }
+}, { immediate: true });
 
 // rerender mathjax when the questions are loaded
 watch(

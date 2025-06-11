@@ -19,8 +19,8 @@
         <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full md:max-w-[50%] rounded-lg"
           draggable="false" />
       </div>
-      <Input id="input" type="text" v-model="input" :placeholder="'Question ' + question"
-        @change="validateAndChangeAnswer" :disabled="answersStore.getAnswerLoading" />
+      <Input id="input" type="text" v-model="inputValue" :placeholder="'Question ' + question" @input="handleInput"
+        @blur="handleBlur" :disabled="answersStore.getAnswerLoading" />
     </CardContent>
 
     <!-- Random accent image that only appears in bee mode -->
@@ -40,37 +40,71 @@ const points = ref(props.points);
 // Random accent image (1 to 4)
 const randAccent = ref(Math.floor(Math.random() * 4) + 1);
 
-// Question input
-const input = ref(null);
+// Question input - use computed for two-way binding with store
+const inputValue = computed({
+  get() {
+    return answersStore.getAnswer(week.value, question.value) || '';
+  },
+  set(value) {
+    answersStore.addOrUpdateAnswer(week.value, question.value, value);
+  }
+});
+
 const isInvalid = ref(false);
 
-// Validate and update answer
-function validateAndChangeAnswer() {
-  const cleanedValue = input.value.match(/^-?\d*$/)?.[0] || "";
-  isInvalid.value = cleanedValue !== input.value;
-  input.value = cleanedValue;
+// Validate input and update answer
+function handleInput(event) {
+  const value = event.target.value;
+  const cleanedValue = value.match(/^-?\d*$/)?.[0] || "";
 
-  nextTick(() => {
-    const correspondingQuestionIndex = answersStore.answerData.findIndex(
-      (answer) => answer.week == week.value && answer.question == question.value
-    );
+  isInvalid.value = cleanedValue !== value;
 
-    if (correspondingQuestionIndex !== -1) {
-      answersStore.answerData.splice(correspondingQuestionIndex, 1, {
-        ...answersStore.answerData[correspondingQuestionIndex],
-        answer: String(input.value),
-      });
-    }
-  });
+  if (cleanedValue !== value) {
+    // If invalid, set the cleaned value
+    nextTick(() => {
+      event.target.value = cleanedValue;
+      inputValue.value = cleanedValue;
+    });
+  } else {
+    // If valid, update normally
+    inputValue.value = value;
+  }
 }
 
-// Check if math content is overflowing
+// Handle blur to ensure final validation
+function handleBlur(event) {
+  const value = event.target.value;
+  const cleanedValue = value.match(/^-?\d*$/)?.[0] || "";
+
+  if (cleanedValue !== value) {
+    event.target.value = cleanedValue;
+    inputValue.value = cleanedValue;
+  }
+
+  isInvalid.value = false; // Clear invalid state on blur
+}
+
+// Watch for answer removal from store
+watch(
+  () => answersStore.answerRemoved,
+  (newValue) => {
+    if (
+      newValue.week === week.value &&
+      newValue.question === question.value
+    ) {
+      // Reset the input when answer is removed from store
+      inputValue.value = '';
+    }
+  },
+  { deep: true }
+);
+
+// Initialize input value when component mounts
 onMounted(() => {
-  if (answersStore.answerData.length > 0) {
-    const correspondingQuestionIndex = answersStore.answerData.findIndex(
-      (answer) => answer.week == week.value && answer.question == question.value
-    );
-    input.value = answersStore.answerData[correspondingQuestionIndex]?.answer;
+  // Ensure the answer exists in store when component mounts
+  const existingAnswer = answersStore.getAnswer(week.value, question.value);
+  if (existingAnswer === undefined || existingAnswer === null) {
+    answersStore.addOrUpdateAnswer(week.value, question.value, '');
   }
 });
 </script>

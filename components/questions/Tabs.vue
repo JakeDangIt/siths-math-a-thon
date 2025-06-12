@@ -46,35 +46,44 @@
 
         <!-- preview answer -->
         <Sheet>
-          <!-- scroll down button and preview answer button -->
-          <TransitionGroup tag="div" name="fade" class="buttons">
-            <div :class="isFarDownEnough
-              ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-              : 'translate-x-0'
-              " key="scroll-down"
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
+          <div class="fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto z-20">
+            <!-- Scroll down button group -->
+            <div 
+              :class="[
+                'flex items-center gap-2 transition-all duration-300 ease-in-out',
+                isFarDownEnough 
+                  ? 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0' 
+                  : 'translate-x-0 opacity-100'
+              ]"
+            >
               <Button aria-label="Scroll Down" @click="scrollDown()">
                 <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
               </Button>
               <SheetTrigger>
                 <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
               </SheetTrigger>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
-                : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+                Save {{ width > 1024 ? 'Answers' : '' }}
+              </Button>
             </div>
 
-            <div :class="isFarDownEnough
-              ? 'translate-x-0'
-              : 'translate-x-[20rem] lg:translate-x-[-20rem]'
-              " key="scroll-up"
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
+            <!-- Scroll up button group -->
+            <div 
+              :class="[
+                'flex items-center gap-2 transition-all duration-300 ease-in-out',
+                isFarDownEnough 
+                  ? 'translate-x-0 opacity-100' 
+                  : 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0'
+              ]"
+            >
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
-                : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+                Save {{ width > 1024 ? 'Answers' : '' }}
+              </Button>
             </div>
-          </TransitionGroup>
+          </div>
 
           <!-- another preview button -->
           <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>

@@ -136,22 +136,26 @@ const osisValid = computed(
   () => String(newOsis.value).length == 9 && !isNaN(Number(newOsis.value))
 );
 
-
-
 const updateLoading = ref(false);
-
 
 // update user
 async function updateUser() {
   try {
     const updates = {};
-    if (newName.value && newName.value !== name.value) updates.name = newName.value;
-    if (newOsis.value && newOsis.value !== osis.value) updates.osis = String(newOsis.value);
-    if (newTeacher.value && newTeacher.value !== teacher.value) updates.teacher = newTeacher.value;
-    if (newGrade.value && newGrade.value !== grade.value) updates.grade = newGrade.value;
+    if (newName.value && newName.value !== name.value)
+      updates.name = newName.value;
+    if (newOsis.value && newOsis.value !== osis.value)
+      updates.osis = String(newOsis.value);
+    if (newTeacher.value && newTeacher.value !== teacher.value)
+      updates.teacher = newTeacher.value;
+    if (newGrade.value && newGrade.value !== grade.value)
+      updates.grade = newGrade.value;
 
     if (Object.keys(updates).length === 0) {
-      toastStore.changeToast('No changes', 'No changes were detected to update');
+      toastStore.changeToast(
+        'No changes',
+        'No changes were detected to update'
+      );
       return;
     }
 
@@ -160,7 +164,7 @@ async function updateUser() {
 
     const res = await useFetch('/api/changeProfile', {
       method: 'POST',
-      body: updates
+      body: updates,
     });
 
     if (!res.data.value.success) {
@@ -171,12 +175,15 @@ async function updateUser() {
 
     const supabase = useSupabaseClient();
     const { error: metadataError } = await supabase.auth.updateUser({
-      data: updates
+      data: updates,
     });
 
     if (metadataError) {
       console.error('Metadata update error:', metadataError);
-      toastStore.changeToast('Error', 'Profile saved, but user info sync failed');
+      toastStore.changeToast(
+        'Error',
+        'Profile saved, but user info sync failed'
+      );
       return;
     }
 

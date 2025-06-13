@@ -6,14 +6,10 @@
         <HomeDirections class="col-span-full" />
         <HomeMichaelsCause />
         <HomeWeekStatsLeaderboard class="h-full w-full lg:col-span-2" />
-        <HomeAnnouncements class="md:col-span-2 lg:col-span-3"/>
+        <HomeAnnouncements class="md:col-span-2 lg:col-span-3" />
         <HomeProfileSummary class="h-full" />
         <HomeFeaturedProblem />
       </div>
     </div>
   </div>
 </template>
-
-<script setup>
-const user = useSupabaseUser();
-</script>

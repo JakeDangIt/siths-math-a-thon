@@ -22,9 +22,7 @@
       <!-- user info -->
       <div class="mt-4 flex flex-col items-center justify-center lg:mt-10">
         <Avatar class="lg:h-20 lg:w-20">
-          <Avatar class="text-[16px] lg:text-[24px]">{{
-            firstName[0]
-          }}</Avatar>
+          <Avatar class="text-[16px] lg:text-[24px]">{{ firstName[0] }}</Avatar>
         </Avatar>
         <h1 class="text-[30px] lg:text-[40px]">{{ index }}</h1>
         <p class="lg:text-lg">{{ user.user_name }}</p>

@@ -1,6 +1,9 @@
 <template>
   <!-- show the form if youre logged in  -->
-  <div v-if="showPasswordChange" class="flex flex-col justify-center gap-8 lg:flex-row">
+  <div
+    v-if="showPasswordChange"
+    class="flex flex-col justify-center gap-8 lg:flex-row"
+  >
     <Card class="mx-4 lg:w-1/3">
       <CardHeader class="flex">
         <CardTitle>Update Password</CardTitle>
@@ -16,7 +19,11 @@
           </div>
           <div class="space-y-1">
             <Label for="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" type="password" v-model="confirmPassword" />
+            <Input
+              id="confirmPassword"
+              type="password"
+              v-model="confirmPassword"
+            />
           </div>
         </form>
         <Label class="space-y-1 text-theme-red">{{
@@ -28,11 +35,16 @@
 
       <!-- button -->
       <CardFooter class="flex justify-between">
-        <Button @click="changePassword" :disabled="changePasswordLoading ||
-          password !== confirmPassword ||
-          password.length < 8 ||
-          confirmPassword.length < 8
-          ">Update</Button>
+        <Button
+          @click="changePassword"
+          :disabled="
+            changePasswordLoading ||
+            password !== confirmPassword ||
+            password.length < 8 ||
+            confirmPassword.length < 8
+          "
+          >Update</Button
+        >
       </CardFooter>
     </Card>
   </div>
@@ -65,7 +77,7 @@ async function changePassword() {
   changePasswordLoading.value = true;
   try {
     const { error } = await supabase.auth.updateUser({
-      password: password.value
+      password: password.value,
     });
 
     if (error) {

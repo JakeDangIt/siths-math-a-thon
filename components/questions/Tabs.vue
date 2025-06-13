@@ -15,8 +15,8 @@
       <Carousel v-if="presentWeekNames.length > 0" class="mx-auto w-2/3" :opts="{
         align: 'start',
         slidesToScroll: 2,
-        startIndex: 0
-      }">
+        startIndex: defaultWeek - 1
+      }" ref="mainCarousel">
         <CarouselContent>
           <!-- paired into week and its bonus -->
           <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
@@ -46,35 +46,42 @@
 
         <!-- preview answer -->
         <Sheet>
-          <!-- scroll down button and preview answer button -->
-          <TransitionGroup tag="div" name="fade" class="buttons">
-            <div :class="isFarDownEnough
-              ? 'translate-x-[20rem] lg:translate-x-[-20rem]'
-              : 'translate-x-0'
-              " key="scroll-down"
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
-              <Button aria-label="Scroll Down" @click="scrollDown()">
-                <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
-              </Button>
-              <SheetTrigger>
-                <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
-              </SheetTrigger>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
-                : '' }}</Button>
+          <div class="fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto z-20">
+            <!-- Scroll down button group -->
+            <div :class="[
+              'absolute items-center gap-2 transition-all duration-300 ease-in-out',
+              isFarDownEnough
+                ? 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0'
+                : 'translate-x-0 opacity-100'
+            ]">
+              <div class="flex gap-2">
+                <Button aria-label="Scroll Down" @click="scrollDown()">
+                  <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
+                </Button>
+                <SheetTrigger>
+                  <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
+                </SheetTrigger>
+                <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+                  Save {{ width > 1024 ? 'Answers' : '' }}
+                </Button>
+              </div>
             </div>
 
-            <div :class="isFarDownEnough
-              ? 'translate-x-0'
-              : 'translate-x-[20rem] lg:translate-x-[-20rem]'
-              " key="scroll-up"
-              class="fixed bottom-3 right-[0.9rem] flex items-center gap-2 transition-all lg:left-4 lg:right-auto z-20 translate-x-0">
+            <!-- Scroll up button group -->
+            <div :class="[
+              'flex items-center gap-2 transition-all duration-300 ease-in-out',
+              isFarDownEnough
+                ? 'translate-x-0 opacity-100'
+                : 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0'
+            ]">
               <Button aria-label="Scroll Up" @click="scrollUp()">
                 <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
               </Button>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">Save {{ width > 1024 ? 'Answers'
-                : '' }}</Button>
+              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+                Save {{ width > 1024 ? 'Answers' : '' }}
+              </Button>
             </div>
-          </TransitionGroup>
+          </div>
 
           <!-- another preview button -->
           <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>
@@ -94,8 +101,8 @@
               <Carousel class="mx-auto w-2/3" :opts="{
                 align: 'start',
                 slidesToScroll: 2,
-                startIndex: 0
-              }">
+                startIndex: getCarouselScrollIndex(selectedPreviewWeek)
+              }" ref="previewCarousel">
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
                   <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
@@ -201,6 +208,10 @@ const user = useSupabaseUser();
 const session = useSupabaseSession();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
+// Carousel refs for programmatic control
+const mainCarousel = ref(null);
+const previewCarousel = ref(null);
+
 // Add reactive variable for preview sheet tab selection
 const selectedPreviewWeek = ref('1');
 
@@ -229,6 +240,24 @@ const normalizeWeek = (week) => {
   return String(week);
 };
 
+// Helper function to get the index of a week in the presentWeekNames array
+const getWeekIndex = (week) => {
+  return presentWeekNames.value.findIndex(w => normalizeWeek(w) === normalizeWeek(week));
+};
+
+// Helper function to get the carousel scroll index based on week pairs
+// Since carousel shows 2 items (basis-1/2), we need to scroll to the correct pair
+const getCarouselScrollIndex = (week) => {
+  const weekIndex = getWeekIndex(week);
+  if (weekIndex === -1) return 0;
+  
+  // Group weeks into pairs: [0,1], [2,3], [4,5], etc.
+  // For weeks 1 and 1 Bonus (indices 0,1) -> scroll to index 0
+  // For weeks 2 and 2 Bonus (indices 2,3) -> scroll to index 1  
+  // For weeks 3 and 3 Bonus (indices 4,5) -> scroll to index 2
+  return Math.floor(weekIndex / 2);
+};
+
 // present week names, filtered to only show weeks that have questions
 const presentWeekNames = computed(() => {
   return allWeekNames.filter((week) => {
@@ -255,13 +284,32 @@ const getAnswersForWeek = (week) => {
   return answersStore.getAnswersForWeek(week);
 };
 
+// Function to scroll carousel to specific index
+const scrollCarouselToIndex = (carouselRef, index) => {
+  if (carouselRef?.value?.scrollTo && index >= 0) {
+    carouselRef.value.scrollTo(index);
+  }
+};
+
 // function to rerender mathjax when tab changes, must be nexttick to wait for DOM to update
 function onTabChange(newWeek) {
   selectedPreviewWeek.value = newWeek; // Sync preview sheet with main tabs
+  
+  // Scroll preview carousel to match the selected week pair
+  const carouselScrollIndex = getCarouselScrollIndex(newWeek);
   nextTick(() => {
+    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
     questionsStore.rerenderMathJax();
   });
 }
+
+// Watch for changes in selectedPreviewWeek to sync carousel position
+watch(selectedPreviewWeek, (newWeek) => {
+  const carouselScrollIndex = getCarouselScrollIndex(newWeek);
+  nextTick(() => {
+    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
+  });
+});
 
 // function to save answers, checks if user is logged in
 async function saveAnswers() {

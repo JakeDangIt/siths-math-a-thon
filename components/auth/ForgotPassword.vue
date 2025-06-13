@@ -6,24 +6,34 @@
       <Card class="mx-4">
         <CardHeader class="flex">
           <CardTitle>Forgot Password</CardTitle>
-          <CardDescription>Enter your email and follow the reset password link in your
-            email.</CardDescription>
+          <CardDescription
+            >Enter your email and follow the reset password link in your
+            email.</CardDescription
+          >
         </CardHeader>
 
         <!-- email -->
         <CardContent class="mr-4 flex flex-col space-y-1">
-          <Label for="email" :class="{ 'text-theme-red': !emailValid && email.length > 0 }">
+          <Label
+            for="email"
+            :class="{ 'text-theme-red': !emailValid && email.length > 0 }"
+          >
             {{
               !emailValid && email.length > 0
                 ? 'Please enter a valid NYCDOE email'
                 : 'Email (NYCDOE)'
-            }}</Label>
+            }}</Label
+          >
           <Input id="email" type="email" v-model="email" />
         </CardContent>
 
         <!-- send button -->
         <CardFooter class="flex justify-between">
-          <Button @click="sendResetPassword" :disabled="sendResetPasswordLoading || !emailValid">Send link</Button>
+          <Button
+            @click="sendResetPassword"
+            :disabled="sendResetPasswordLoading || !emailValid"
+            >Send link</Button
+          >
         </CardFooter>
       </Card>
     </form>
@@ -47,9 +57,10 @@ async function sendResetPassword() {
   const { data, error } = await supabase.auth.resetPasswordForEmail(
     email.value,
     {
-      redirectTo: process.env.NODE_ENV === 'production'
-        ? 'https://siths-mathathon.com/auth/updatepassword'
-        : 'http://localhost:3000/auth/updatepassword'
+      redirectTo:
+        process.env.NODE_ENV === 'production'
+          ? 'https://siths-mathathon.com/auth/updatepassword'
+          : 'http://localhost:3000/auth/updatepassword',
     }
   );
   if (error) {

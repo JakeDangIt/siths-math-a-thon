@@ -11,10 +11,15 @@
         <Skeleton class="h-10 w-20" />
       </CardContent>
 
-      <CardContent v-else-if="questionsStore.questionData.length > 0"
-        class="relative z-10 flex h-full flex-col justify-between">
+      <CardContent
+        v-else-if="questionsStore.questionData.length > 0"
+        class="relative z-10 flex h-full flex-col justify-between"
+      >
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
-          <p class="text-lg font-semibold">Week {{ randomQuestion.week }} Question {{ randomQuestion.question }}.</p>
+          <p class="text-lg font-semibold">
+            Week {{ randomQuestion.week }} Question
+            {{ randomQuestion.question }}.
+          </p>
           <span v-html="randomQuestion?.math_content"></span>
         </div>
 
@@ -30,8 +35,12 @@
           <span>Check back later for more questions.</span>
         </div>
       </CardContent>
-      <img src="/theme/card_accent_4.png" class="absolute bottom-0 right-0 h-64 w-64 object-contain" alt="card accent"
-        draggable="false" />
+      <img
+        src="/theme/card_accent_4.png"
+        class="absolute bottom-0 right-0 h-64 w-64 object-contain"
+        alt="card accent"
+        draggable="false"
+      />
     </Card>
   </div>
 </template>
@@ -43,7 +52,9 @@ const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 // random question
 const randomQuestion = computed(() => {
   if (questionsStore.questionData.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * questionsStore.questionData.length);
+  const randomIndex = Math.floor(
+    Math.random() * questionsStore.questionData.length
+  );
   return questionsStore.questionData[randomIndex];
 });
 

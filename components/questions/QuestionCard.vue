@@ -11,27 +11,56 @@
         </span>
       </CardDescription>
     </CardHeader>
-    <CardContent class="relative z-10 flex flex-col gap-2 items-center">
-      <div v-if="props.extraInfo" v-html="props.extraInfo"
-        class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"></div>
-      <div v-if="props.mathContent" v-html="props.mathContent" class="relative w-full text-left overflow-x-auto"></div>
+    <CardContent class="relative z-10 flex flex-col items-center gap-2">
+      <div
+        v-if="props.extraInfo"
+        v-html="props.extraInfo"
+        class="mb-4 w-4/5 items-center rounded-lg border-2 border-black px-4 py-2"
+      ></div>
+      <div
+        v-if="props.mathContent"
+        v-html="props.mathContent"
+        class="relative w-full overflow-x-auto text-left"
+      ></div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
-        <img :src="props.imageUrl" :alt="`Image for Question ${question}`" class="w-full md:max-w-[50%] rounded-lg"
-          draggable="false" />
+        <img
+          :src="props.imageUrl"
+          :alt="`Image for Question ${question}`"
+          class="w-full rounded-lg md:max-w-[50%]"
+          draggable="false"
+        />
       </div>
-      <Input id="input" type="text" v-model="inputValue" :placeholder="'Question ' + question" @input="handleInput"
-        @blur="handleBlur" :disabled="answersStore.getAnswerLoading" />
+      <Input
+        id="input"
+        type="text"
+        v-model="inputValue"
+        :placeholder="'Question ' + question"
+        @input="handleInput"
+        @blur="handleBlur"
+        :disabled="answersStore.getAnswerLoading"
+      />
     </CardContent>
 
     <!-- Random accent image that only appears in bee mode -->
-    <img :src="`/theme/card_accent_${randAccent}.png`"
-      class="accent-img absolute bottom-0 right-0 h-64 w-64 object-contain" alt="card accent" draggable="false" />
+    <img
+      :src="`/theme/card_accent_${randAccent}.png`"
+      class="accent-img absolute bottom-0 right-0 h-64 w-64 object-contain"
+      alt="card accent"
+      draggable="false"
+    />
   </Card>
 </template>
 
 <script setup>
 const answersStore = useAnswersStore();
-const props = defineProps(["question", "week", "mathContent", "extraInfo", "imageUrl", "points"]);
+const props = defineProps([
+  'question',
+  'week',
+  'mathContent',
+  'extraInfo',
+  'imageUrl',
+  'points',
+]);
 
 const question = ref(props.question);
 const week = ref(props.week);
@@ -47,7 +76,7 @@ const inputValue = computed({
   },
   set(value) {
     answersStore.addOrUpdateAnswer(week.value, question.value, value);
-  }
+  },
 });
 
 const isInvalid = ref(false);
@@ -55,7 +84,7 @@ const isInvalid = ref(false);
 // Validate input and update answer
 function handleInput(event) {
   const value = event.target.value;
-  const cleanedValue = value.match(/^-?\d*$/)?.[0] || "";
+  const cleanedValue = value.match(/^-?\d*$/)?.[0] || '';
 
   isInvalid.value = cleanedValue !== value;
 
@@ -74,7 +103,7 @@ function handleInput(event) {
 // Handle blur to ensure final validation
 function handleBlur(event) {
   const value = event.target.value;
-  const cleanedValue = value.match(/^-?\d*$/)?.[0] || "";
+  const cleanedValue = value.match(/^-?\d*$/)?.[0] || '';
 
   if (cleanedValue !== value) {
     event.target.value = cleanedValue;
@@ -88,10 +117,7 @@ function handleBlur(event) {
 watch(
   () => answersStore.answerRemoved,
   (newValue) => {
-    if (
-      newValue.week === week.value &&
-      newValue.question === question.value
-    ) {
+    if (newValue.week === week.value && newValue.question === question.value) {
       // Reset the input when answer is removed from store
       inputValue.value = '';
     }

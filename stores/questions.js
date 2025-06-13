@@ -21,7 +21,7 @@ export const useQuestionsStore = defineStore('questions', () => {
       toastStore.changeToast('Error fetching questions', error.message);
     }
 
-    isLoading.value = false; 
+    isLoading.value = false;
 
     await rerenderMathJax();
   }

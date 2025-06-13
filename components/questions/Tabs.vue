@@ -1,6 +1,9 @@
 <template>
   <!-- skeleton for the question cards and button -->
-  <div v-if="questionsStore.isLoading || !mathJaxLoaded" class="mx-auto space-y-2 lg:w-2/3">
+  <div
+    v-if="questionsStore.isLoading || !mathJaxLoaded"
+    class="mx-auto space-y-2 lg:w-2/3"
+  >
     <Skeleton class="mb-4 h-10" />
     <Skeleton class="h-32" />
     <Skeleton class="h-32" />
@@ -8,18 +11,31 @@
   </div>
 
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
-  <Tabs v-else :default-value="defaultWeek" class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
-    @update:model-value="onTabChange">
+  <Tabs
+    v-else
+    :default-value="defaultWeek"
+    class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
+    @update:model-value="onTabChange"
+  >
     <div class="flex flex-col gap-2 md:flex-row">
       <!-- carousel for the tabs -->
-      <Carousel v-if="presentWeekNames.length > 0" class="mx-auto w-2/3" :opts="{
-        align: 'start',
-        slidesToScroll: 2,
-        startIndex: defaultWeek - 1
-      }" ref="mainCarousel">
+      <Carousel
+        v-if="presentWeekNames.length > 0"
+        class="mx-auto w-2/3"
+        :opts="{
+          align: 'start',
+          slidesToScroll: 2,
+          startIndex: defaultWeek - 1,
+        }"
+        ref="mainCarousel"
+      >
         <CarouselContent>
           <!-- paired into week and its bonus -->
-          <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
+          <CarouselItem
+            v-for="week in presentWeekNames"
+            class="w-full basis-1/2"
+            :key="week"
+          >
             <TabsList class="w-full">
               <TabsTrigger class="w-full" :value="week">
                 Week {{ week }}
@@ -33,58 +49,96 @@
     </div>
 
     <!-- content for the tabs -->
-    <TabsContent v-for="week in presentWeekNames" :value="week" :key="week" class="space-y-2">
+    <TabsContent
+      v-for="week in presentWeekNames"
+      :value="week"
+      :key="week"
+      class="space-y-2"
+    >
       <div v-if="getQuestionsForWeek(week).length > 0">
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ week }} Questions
         </h1>
 
-        <QuestionsQuestionCard class="flex flex-col gap-2" v-for="question in getQuestionsForWeek(week)"
-          :key="question.id" :question="question.question" :mathContent="question.math_content"
-          :extraInfo="question.extra_info" :week="week" :imageUrl="question.image_url" :points="question.points" />
+        <QuestionsQuestionCard
+          class="flex flex-col gap-2"
+          v-for="question in getQuestionsForWeek(week)"
+          :key="question.id"
+          :question="question.question"
+          :mathContent="question.math_content"
+          :extraInfo="question.extra_info"
+          :week="week"
+          :imageUrl="question.image_url"
+          :points="question.points"
+        />
 
         <!-- preview answer -->
         <Sheet>
-          <div class="fixed bottom-3 right-[0.9rem] lg:left-4 lg:right-auto z-20">
+          <div
+            class="fixed bottom-3 right-[0.9rem] z-20 lg:left-4 lg:right-auto"
+          >
             <!-- Scroll down button group -->
-            <div :class="[
-              'absolute items-center gap-2 transition-all duration-300 ease-in-out',
-              isFarDownEnough
-                ? 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0'
-                : 'translate-x-0 opacity-100'
-            ]">
+            <div
+              :class="[
+                'absolute items-center gap-2 transition-all duration-300 ease-in-out',
+                isFarDownEnough
+                  ? 'translate-x-[30rem] opacity-0 lg:translate-x-[-30rem]'
+                  : 'translate-x-0 opacity-100',
+              ]"
+            >
               <div class="flex gap-2">
                 <Button aria-label="Scroll Down" @click="scrollDown()">
-                  <Icon name="material-symbols:arrow-downward" class="h-full w-6"></Icon>
+                  <Icon
+                    name="material-symbols:arrow-downward"
+                    class="h-full w-6"
+                  ></Icon>
                 </Button>
                 <SheetTrigger>
-                  <Button aria-label="Preview Answers">Preview {{ width > 1024 ? 'Answers' : '' }}</Button>
+                  <Button aria-label="Preview Answers"
+                    >Preview {{ width > 1024 ? 'Answers' : '' }}</Button
+                  >
                 </SheetTrigger>
-                <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+                <Button
+                  variant="secondary"
+                  v-if="hasAnswersChanged"
+                  @click="saveAnswers"
+                >
                   Save {{ width > 1024 ? 'Answers' : '' }}
                 </Button>
               </div>
             </div>
 
             <!-- Scroll up button group -->
-            <div :class="[
-              'flex items-center gap-2 transition-all duration-300 ease-in-out',
-              isFarDownEnough
-                ? 'translate-x-0 opacity-100'
-                : 'translate-x-[30rem] lg:translate-x-[-30rem] opacity-0'
-            ]">
+            <div
+              :class="[
+                'flex items-center gap-2 transition-all duration-300 ease-in-out',
+                isFarDownEnough
+                  ? 'translate-x-0 opacity-100'
+                  : 'translate-x-[30rem] opacity-0 lg:translate-x-[-30rem]',
+              ]"
+            >
               <Button aria-label="Scroll Up" @click="scrollUp()">
-                <Icon name="material-symbols:arrow-upward" class="h-full w-6"></Icon>
+                <Icon
+                  name="material-symbols:arrow-upward"
+                  class="h-full w-6"
+                ></Icon>
               </Button>
-              <Button variant="secondary" v-if="hasAnswersChanged" @click="saveAnswers">
+              <Button
+                variant="secondary"
+                v-if="hasAnswersChanged"
+                @click="saveAnswers"
+              >
                 Save {{ width > 1024 ? 'Answers' : '' }}
               </Button>
             </div>
           </div>
 
           <!-- another preview button -->
-          <SheetTrigger><Button class="relative z-20" aria-label="Preview Answers">Preview Answers</Button>
+          <SheetTrigger
+            ><Button class="relative z-20" aria-label="Preview Answers"
+              >Preview Answers</Button
+            >
           </SheetTrigger>
 
           <!-- preview answer content -->
@@ -97,15 +151,27 @@
             </SheetHeader>
 
             <!-- another tabs, basically the same as the one outside -->
-            <Tabs :default-value="defaultWeek" class="mx-auto my-4" v-model="selectedPreviewWeek">
-              <Carousel class="mx-auto w-2/3" :opts="{
-                align: 'start',
-                slidesToScroll: 2,
-                startIndex: getCarouselScrollIndex(selectedPreviewWeek)
-              }" ref="previewCarousel">
+            <Tabs
+              :default-value="defaultWeek"
+              class="mx-auto my-4"
+              v-model="selectedPreviewWeek"
+            >
+              <Carousel
+                class="mx-auto w-2/3"
+                :opts="{
+                  align: 'start',
+                  slidesToScroll: 2,
+                  startIndex: getCarouselScrollIndex(selectedPreviewWeek),
+                }"
+                ref="previewCarousel"
+              >
                 <CarouselContent>
                   <!-- paired into week and its bonus -->
-                  <CarouselItem v-for="week in presentWeekNames" class="w-full basis-1/2" :key="week">
+                  <CarouselItem
+                    v-for="week in presentWeekNames"
+                    class="w-full basis-1/2"
+                    :key="week"
+                  >
                     <TabsList class="w-full">
                       <TabsTrigger :value="week">
                         {{ width > 640 ? 'Week ' : 'W' }}{{ week }}
@@ -118,67 +184,130 @@
               </Carousel>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
-              <TabsContent v-for="week in presentWeekNames" :value="week" :key="`preview-${week}`">
-                <div v-if="getAnswersForWeek(week).length > 0" class="space-y-2">
+              <TabsContent
+                v-for="week in presentWeekNames"
+                :value="week"
+                :key="`preview-${week}`"
+              >
+                <div
+                  v-if="getAnswersForWeek(week).length > 0"
+                  class="space-y-2"
+                >
                   <!-- Progress indicator -->
-                  <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                    <div class="flex justify-between items-center mb-2">
-                      <span class="text-sm font-medium text-gray-700">Progress for Week {{ week }}</span>
+                  <div class="mb-4 rounded-lg bg-gray-50 p-3">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-700"
+                        >Progress for Week {{ week }}</span
+                      >
                       <span class="text-sm text-gray-600">
-                        {{ answersStore.getAnsweredCountForWeek(week) }} / {{
-                          answersStore.getTotalQuestionsForWeek(week) }} answered
+                        {{ answersStore.getAnsweredCountForWeek(week) }} /
+                        {{
+                          answersStore.getTotalQuestionsForWeek(week)
+                        }}
+                        answered
                       </span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                      <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        :style="{ width: `${(answersStore.getAnsweredCountForWeek(week) / answersStore.getTotalQuestionsForWeek(week)) * 100}%` }">
-                      </div>
+                    <div class="h-2 w-full rounded-full bg-gray-200">
+                      <div
+                        class="h-2 rounded-full bg-blue-600 transition-all duration-300"
+                        :style="{
+                          width: `${(answersStore.getAnsweredCountForWeek(week) / answersStore.getTotalQuestionsForWeek(week)) * 100}%`,
+                        }"
+                      ></div>
                     </div>
                   </div>
 
                   <!-- Answers grid -->
                   <ScrollArea class="h-[50vh] md:h-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                       <!-- each answer, sorted, with a remove button -->
-                      <div v-for="answer in getAnswersForWeek(week)" :key="`${week}-${answer.question}`"
-                        class="group flex justify-between items-start p-2 rounded-lg border hover:bg-gray-50 transition-colors"
-                        :class="answer.answer && answer.answer.trim() !== '' ? 'border-green-200 bg-green-50' : 'border-gray-200'">
-                        <div class="flex-1 p-1 min-w-0">
+                      <div
+                        v-for="answer in getAnswersForWeek(week)"
+                        :key="`${week}-${answer.question}`"
+                        class="group flex items-start justify-between rounded-lg border p-2 transition-colors hover:bg-gray-50"
+                        :class="
+                          answer.answer && answer.answer.trim() !== ''
+                            ? 'border-green-200 bg-green-50'
+                            : 'border-gray-200'
+                        "
+                      >
+                        <div class="min-w-0 flex-1 p-1">
                           <p class="text-sm">
-                            <span class="font-bold text-gray-700">Q{{ answer.question }}.</span>
-                            <span v-if="answer.answer && answer.answer.trim() !== ''" class="text-gray-900 ml-2">
+                            <span class="font-bold text-gray-700"
+                              >Q{{ answer.question }}.</span
+                            >
+                            <span
+                              v-if="
+                                answer.answer && answer.answer.trim() !== ''
+                              "
+                              class="ml-2 text-gray-900"
+                            >
                               {{ answer.answer }}
                             </span>
-                            <span v-else class="text-gray-400 italic ml-2">No answer yet</span>
+                            <span v-else class="ml-2 italic text-gray-400"
+                              >No answer yet</span
+                            >
                           </p>
                         </div>
-                        <button v-if="answer.answer && answer.answer.trim() !== ''" aria-label="Remove Answer"
+                        <button
+                          v-if="answer.answer && answer.answer.trim() !== ''"
+                          aria-label="Remove Answer"
                           @click="removeAnswer(week, answer.question)"
-                          class="flex-shrink-0 ml-2 px-1 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-100">
-                          <Icon name="material-symbols:cancel-outline" class="w-4 h-4 text-red-600"></Icon>
+                          class="ml-2 flex-shrink-0 px-1 opacity-0 transition-all hover:bg-red-100 group-hover:opacity-100"
+                        >
+                          <Icon
+                            name="material-symbols:cancel-outline"
+                            class="h-4 w-4 text-red-600"
+                          ></Icon>
                         </button>
                       </div>
                     </div>
                   </ScrollArea>
                 </div>
-                <div v-else class="text-center text-gray-500 py-8">
+                <div v-else class="py-8 text-center text-gray-500">
                   <div class="mb-2">
-                    <Icon name="material-symbols:quiz-outline" class="w-12 h-12 mx-auto text-gray-300"></Icon>
+                    <Icon
+                      name="material-symbols:quiz-outline"
+                      class="mx-auto h-12 w-12 text-gray-300"
+                    ></Icon>
                   </div>
-                  <p class="text-lg font-medium">No answers for Week {{ week }} yet</p>
-                  <p class="text-sm">Start answering questions to see them here</p>
+                  <p class="text-lg font-medium">
+                    No answers for Week {{ week }} yet
+                  </p>
+                  <p class="text-sm">
+                    Start answering questions to see them here
+                  </p>
                 </div>
 
                 <!-- submit and save button -->
-                <div class="mt-6 grid w-full grid-cols-1 md:grid-cols-2 gap-3">
-                  <Button aria-label="Save Answers" @click="saveAnswers" variant="secondary"
-                    :disabled="saveLoading || answersStore.answerData.length == 0" class="w-full">
-                    <Icon name="material-symbols:save-outline" class="w-4 h-4 mr-2"></Icon>
+                <div class="mt-6 grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+                  <Button
+                    aria-label="Save Answers"
+                    @click="saveAnswers"
+                    variant="secondary"
+                    :disabled="
+                      saveLoading || answersStore.answerData.length == 0
+                    "
+                    class="w-full"
+                  >
+                    <Icon
+                      name="material-symbols:save-outline"
+                      class="mr-2 h-4 w-4"
+                    ></Icon>
                     Save All Answers
                   </Button>
-                  <Button aria-label="Submit Answers" @click="submitAnswers(week, getAnswersForWeek(week))"
-                    :disabled="submitLoading || !answersStore.hasAnswersForWeek(week)" class="w-full">
-                    <Icon name="material-symbols:send-outline" class="w-4 h-4 mr-2"></Icon>
+                  <Button
+                    aria-label="Submit Answers"
+                    @click="submitAnswers(week, getAnswersForWeek(week))"
+                    :disabled="
+                      submitLoading || !answersStore.hasAnswersForWeek(week)
+                    "
+                    class="w-full"
+                  >
+                    <Icon
+                      name="material-symbols:send-outline"
+                      class="mr-2 h-4 w-4"
+                    ></Icon>
                     Submit Week {{ week }}
                   </Button>
                 </div>
@@ -242,7 +371,9 @@ const normalizeWeek = (week) => {
 
 // Helper function to get the index of a week in the presentWeekNames array
 const getWeekIndex = (week) => {
-  return presentWeekNames.value.findIndex(w => normalizeWeek(w) === normalizeWeek(week));
+  return presentWeekNames.value.findIndex(
+    (w) => normalizeWeek(w) === normalizeWeek(week)
+  );
 };
 
 // Helper function to get the carousel scroll index based on week pairs
@@ -250,10 +381,10 @@ const getWeekIndex = (week) => {
 const getCarouselScrollIndex = (week) => {
   const weekIndex = getWeekIndex(week);
   if (weekIndex === -1) return 0;
-  
+
   // Group weeks into pairs: [0,1], [2,3], [4,5], etc.
   // For weeks 1 and 1 Bonus (indices 0,1) -> scroll to index 0
-  // For weeks 2 and 2 Bonus (indices 2,3) -> scroll to index 1  
+  // For weeks 2 and 2 Bonus (indices 2,3) -> scroll to index 1
   // For weeks 3 and 3 Bonus (indices 4,5) -> scroll to index 2
   return Math.floor(weekIndex / 2);
 };
@@ -294,7 +425,7 @@ const scrollCarouselToIndex = (carouselRef, index) => {
 // function to rerender mathjax when tab changes, must be nexttick to wait for DOM to update
 function onTabChange(newWeek) {
   selectedPreviewWeek.value = newWeek; // Sync preview sheet with main tabs
-  
+
   // Scroll preview carousel to match the selected week pair
   const carouselScrollIndex = getCarouselScrollIndex(newWeek);
   nextTick(() => {
@@ -335,7 +466,7 @@ async function saveAnswers() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         answers: answersStore.answerData,
@@ -346,11 +477,10 @@ async function saveAnswers() {
     if (response.error) {
       toastStore.changeToast('Failed to save answers', response.error);
     } else {
-      initialAnswers.value = JSON.parse(JSON.stringify(answersStore.answerData));
-      toastStore.changeToast(
-        'Answers saved',
-        'Your answers have been saved'
+      initialAnswers.value = JSON.parse(
+        JSON.stringify(answersStore.answerData)
       );
+      toastStore.changeToast('Answers saved', 'Your answers have been saved');
     }
   } catch (error) {
     console.error('Error saving answers:', error);
@@ -370,7 +500,11 @@ async function submitAnswers(week, answers) {
       return;
     }
 
-    if (!answers || answers.length === 0 || answers.every((answer) => !answer.answer || answer.answer.trim() === '')) {
+    if (
+      !answers ||
+      answers.length === 0 ||
+      answers.every((answer) => !answer.answer || answer.answer.trim() === '')
+    ) {
       toastStore.changeToast('You must answer at least one question to submit');
       return;
     }
@@ -385,7 +519,7 @@ async function submitAnswers(week, answers) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ week: normalizeWeek(week), answers }),
     });
@@ -393,7 +527,10 @@ async function submitAnswers(week, answers) {
     if (response.error) {
       toastStore.changeToast('Submission failed', response.error);
     } else {
-      toastStore.changeToast('Submitted successfully', `Your answers for Week ${week} have been submitted`);
+      toastStore.changeToast(
+        'Submitted successfully',
+        `Your answers for Week ${week} have been submitted`
+      );
     }
   } catch (err) {
     console.error('Error submitting answers:', err);
@@ -442,7 +579,11 @@ function handleBeforeUnload(event) {
 }
 
 function handleSaveBeforeExit(event) {
-  if (user.value && answersStore.answerData.length > 0 && hasAnswersChanged.value) {
+  if (
+    user.value &&
+    answersStore.answerData.length > 0 &&
+    hasAnswersChanged.value
+  ) {
     saveAnswers();
     event.preventDefault();
     event.returnValue = '';
@@ -472,11 +613,15 @@ watch(
 );
 
 // Watch for changes in present weeks to update default selection
-watch(presentWeekNames, (newWeeks) => {
-  if (newWeeks.length > 0 && !newWeeks.includes(selectedPreviewWeek.value)) {
-    selectedPreviewWeek.value = newWeeks[0];
-  }
-}, { immediate: true });
+watch(
+  presentWeekNames,
+  (newWeeks) => {
+    if (newWeeks.length > 0 && !newWeeks.includes(selectedPreviewWeek.value)) {
+      selectedPreviewWeek.value = newWeeks[0];
+    }
+  },
+  { immediate: true }
+);
 
 // rerender mathjax when the questions are loaded
 watch(
@@ -522,7 +667,9 @@ onUnmounted(() => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .fade-enter-from,

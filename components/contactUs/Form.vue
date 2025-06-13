@@ -2,44 +2,75 @@
   <Card class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-4/5">
     <CardHeader>
       <CardTitle>Contact us</CardTitle>
-      <CardDescription>Have any questions? Fill out your information and let us
-        know!</CardDescription>
+      <CardDescription
+        >Have any questions? Fill out your information and let us
+        know!</CardDescription
+      >
     </CardHeader>
     <CardContent>
       <form class="space-y-2">
         <!-- autofilled and disabled with name + email if logged in -->
         <div>
           <Label class="text-md" for="name">Full Name</Label>
-          <Input v-model="formName" type="text" :disabled="name || timeDisableForm" :placeholder="name || ''"
-            id="name"></Input>
+          <Input
+            v-model="formName"
+            type="text"
+            :disabled="name || timeDisableForm"
+            :placeholder="name || ''"
+            id="name"
+          ></Input>
         </div>
 
         <div>
-          <Label class="text-md" for="email" :class="{ 'text-theme-red': !emailValid && formEmail.length > 0 }">
+          <Label
+            class="text-md"
+            for="email"
+            :class="{ 'text-theme-red': !emailValid && formEmail.length > 0 }"
+          >
             {{
               !emailValid && formEmail.length > 0
                 ? 'Please enter a valid NYCDOE email'
                 : 'Email (NYCDOE)'
             }}
           </Label>
-          <Input v-model="formEmail" type="email" :disabled="email || timeDisableForm" :placeholder="email || ''"
-            id="email"></Input>
+          <Input
+            v-model="formEmail"
+            type="email"
+            :disabled="email || timeDisableForm"
+            :placeholder="email || ''"
+            id="email"
+          ></Input>
         </div>
 
         <div>
           <Label class="text-md" for="subject">Subject</Label>
-          <Input v-model="formSubject" type="text" :disabled="timeDisableForm" id="subject"></Input>
+          <Input
+            v-model="formSubject"
+            type="text"
+            :disabled="timeDisableForm"
+            id="subject"
+          ></Input>
         </div>
 
         <div>
           <Label class="text-md" for="body">Body</Label>
-          <Textarea v-model="formBody" type="textarea" :disabled="timeDisableForm" id="body"></Textarea>
+          <Textarea
+            v-model="formBody"
+            type="textarea"
+            :disabled="timeDisableForm"
+            id="body"
+          ></Textarea>
         </div>
       </form>
     </CardContent>
     <CardFooter>
       <!-- disabled if stuff arent filled in, submission is loading, or you already sent a form in the last hour -->
-      <Button type="submit" @click="submitForm" :disabled="!formValid || formLoading || timeDisableForm">Submit</Button>
+      <Button
+        type="submit"
+        @click="submitForm"
+        :disabled="!formValid || formLoading || timeDisableForm"
+        >Submit</Button
+      >
     </CardFooter>
   </Card>
 </template>
@@ -77,7 +108,7 @@ async function submitForm() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       subject: formSubject.value,
@@ -101,7 +132,6 @@ async function submitForm() {
   timeDisableForm.value = true;
   formLoading.value = false;
 }
-
 
 // disable form if you submitted a form in the last hour
 onMounted(() => {

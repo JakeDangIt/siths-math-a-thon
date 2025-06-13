@@ -18,10 +18,10 @@
 </template>
 
 <script setup>
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 onMounted(() => {
   if (!localStorage.getItem('nuxt-color-mode')) {
     colorMode.preference = 'bee'; // Ensure bee is applied initially
   }
-})
+});
 </script>

@@ -11,7 +11,10 @@ export const useAnnouncementsStore = defineStore('announcements', () => {
       const result = await response.json();
 
       if (result.error) {
-        toastStore.changeToast('Failed to retrieve announcements', result.error);
+        toastStore.changeToast(
+          'Failed to retrieve announcements',
+          result.error
+        );
       } else {
         announcementsData.value = result.announcements;
       }

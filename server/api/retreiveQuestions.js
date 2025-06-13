@@ -9,9 +9,7 @@ const supabase = createClient(
 export default defineEventHandler(async (event) => {
   setHeader(event, 'Cache-Control', 'public, max-age=60');
 
-  const { data, error } = await supabase
-    .from('questions')
-    .select('*')
+  const { data, error } = await supabase.from('questions').select('*');
 
   if (error) {
     return { error: error.message };

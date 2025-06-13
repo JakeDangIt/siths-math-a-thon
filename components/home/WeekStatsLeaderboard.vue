@@ -3,11 +3,12 @@
     v-if="leaderboardStore.leaderboardData.length != 0"
     class="h-full w-full"
   >
-    <Card v-if="leaderboardStore.top3Avatars.length != 3">
-      <Skeleton class="h-60 w-full" />
+    <!-- Show skeleton while data is loading -->
+    <Card v-if="leaderboardStore.top3Avatars.length !== 3" class="h-full">
+      <Skeleton class="h-full w-full" />
     </Card>
 
-    <!-- card for the top 3 leaderboard -->
+    <!-- Card for the top 3 leaderboard -->
     <Card class="h-full" v-else>
       <CardHeader>
         <CardTitle class="text-center">

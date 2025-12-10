@@ -28,10 +28,6 @@ Welcome to the Staten Island Technical High School Math-a-thon 2025 repository! 
 I realized that this competition could be graded so much easier if I made it a website. <br>
 Things got a little out of hand from there...
 
-## Demos
-
-Coming soon...
-
 ### Features
 
 - User registration and authentication
@@ -81,17 +77,6 @@ I now am using a free one since I really don't need that much of a rate limit, M
 - Authentication and Database: Supabase
 
 Supabase requires an SMTP to send more than 3 emails an hour, which is highly beneficial when you need like a hundred kids to signup. Supabase is also handy for the data handling of the students' answers, except for the usage of their public functions, which has forced me to call those functions to check and update answers manually. I also use Supabase to host the avatars of users, contact form submissions, and the answer key (shhh). <br>
-
-- Questions: Sanity CMS
-
-I host the questions on Sanity, which allows me to implement an add question feature on the website itself, instead of me inputting the questions manually. Taking the user uid and matching it to the profile allows me to check their role and allow them to have the add question button.
-
-- Spreadsheets: Google Sheets
-
-Unfortunately, the general-ness of the Math Team does not use software like Supabase, instead opting for the more basic Google Sheets to handle the data. Previously, that's how it's always been done, with papers being graded and then inputed on the spreadsheet. <br>
-In 2024, instead of sending the data to Supabase, I sent it to the sheet using Google's API (which was a huge pain) and used the Google formulas to check and validate that data.
-It was a very huge mess, having to share it with other members and them changing my formulas, and overwriting data on accident, prompting me to have to email all the participants (a plus side to using Supabase auth) and have them resubmit. <br>
-Hopefully for 2025, I am sticking to Supabase, and if they need the data, I'll send it to them or input it myself on the sheet.
 
 - Important modules/plugins: [Pinia](https://pinia.vuejs.org/ssr/nuxt.html), [TailwindCSS](https://tailwindcss.com/docs/guides/nuxtjs), [ShadCN](https://www.shadcn-vue.com/), [Icons](https://nuxt.com/modules/icon)
 

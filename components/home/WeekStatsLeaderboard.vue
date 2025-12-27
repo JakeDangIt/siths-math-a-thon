@@ -11,10 +11,12 @@
     <!-- Card for the top 3 leaderboard -->
     <Card class="h-full" v-else>
       <CardHeader>
-        <CardTitle class="text-center">
-          <span v-if="user && leaderboardStore.userPlace">Your Stats & </span
-          >Leaderboard
-        </CardTitle>
+        <NuxtLink to="/leaderboard" class="hover:underline">
+          <CardTitle class="text-center">
+            <span v-if="user && leaderboardStore.userPlace">Your Stats & </span
+            >Leaderboard
+          </CardTitle>
+        </NuxtLink>
       </CardHeader>
       <CardContent>
         <div

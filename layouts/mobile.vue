@@ -9,7 +9,7 @@ defineProps(['isLoading']);
       <slot />
       <img
         src="/theme/clouds.png"
-        class="clouds fixed top-16"
+        class="clouds fixed top-16 hidden"
         alt="clouds"
         draggable="false"
       />
@@ -18,15 +18,6 @@ defineProps(['isLoading']);
 </template>
 
 <style>
-body {
-  height: auto;
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.8);
-  z-index: 10;
-}
-.clouds {
-  display: none;
-}
 .bee-mode .clouds {
   display: block;
 }

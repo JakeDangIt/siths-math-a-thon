@@ -59,6 +59,7 @@
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ week }} Questions
+          <QuestionsClock :week="week" />
         </h1>
 
         <QuestionsQuestionCard
@@ -201,9 +202,7 @@
                       >
                       <span class="text-sm text-gray-600">
                         {{ answersStore.getAnsweredCountForWeek(week) }} /
-                        {{
-                          answersStore.getTotalQuestionsForWeek(week)
-                        }}
+                        {{ answersStore.getTotalQuestionsForWeek(week) }}
                         answered
                       </span>
                     </div>

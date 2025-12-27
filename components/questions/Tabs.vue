@@ -84,7 +84,7 @@
                 'absolute items-center gap-2 transition-all duration-300 ease-in-out',
                 isFarDownEnough
                   ? 'translate-x-[30rem] opacity-0 lg:translate-x-[-30rem]'
-                  : 'translate-x-0 opacity-100',
+                  : 'translate-x-[-5.5rem] opacity-100 lg:translate-x-0',
               ]"
             >
               <div class="flex gap-2">

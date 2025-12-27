@@ -5,11 +5,11 @@
     <img
       src="/theme/grass.png"
       alt="Footer background"
-      class="footer-image"
+      class="footer-image pointer-events-none absolute bottom-0 left-0 z-0 hidden h-auto w-full"
       draggable="false"
     />
 
-    <div class="footer-text relative z-10 flex items-center text-center">
+    <div class="relative z-10 flex items-center text-center">
       <Icon name="material-symbols:copyright-outline" class="mx-1" />
       <p class="text-[12px] leading-tight lg:text-[14px]">
         2025 SITHS Math-a-Thon, all rights reserved.
@@ -20,22 +20,6 @@
 </template>
 
 <style>
-.footer-image {
-  display: none;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.footer-text {
-  position: relative;
-  z-index: 10;
-}
-
 .bee-mode .footer-image {
   display: block;
 }

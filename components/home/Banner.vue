@@ -8,14 +8,12 @@
       src="/theme/mathathon_title.png"
       alt="SITHS Math-a-Thon"
       draggable="false"
+      class="hidden"
     />
   </div>
 </template>
 
 <style scoped>
-img {
-  display: none;
-}
 .bee-mode img {
   display: block;
 }

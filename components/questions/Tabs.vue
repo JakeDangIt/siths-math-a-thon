@@ -143,7 +143,7 @@
           </SheetTrigger>
 
           <!-- preview answer content -->
-          <SheetContent>
+          <SheetContent class="h-screen overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Your Answers</SheetTitle>
               <SheetDescription>

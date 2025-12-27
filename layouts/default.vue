@@ -4,7 +4,7 @@ defineProps(['isLoading']);
 
 <template>
   <div class="flex min-h-[100dvh] flex-col">
-    <Body class="flex-1">
+    <Body class="z-10 h-auto flex-1 bg-white text-black/80">
       <HeaderNavBar v-if="!isLoading" />
       <slot />
       <img
@@ -19,12 +19,6 @@ defineProps(['isLoading']);
 </template>
 
 <style>
-body {
-  height: auto;
-  background-color: #fff;
-  color: rgba(0, 0, 0, 0.8);
-  z-index: 10;
-}
 .clouds {
   display: none;
 }

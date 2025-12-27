@@ -142,7 +142,7 @@
           </SheetTrigger>
 
           <!-- preview answer content -->
-          <SheetContent>
+          <SheetContent class="h-screen overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Your Answers</SheetTitle>
               <SheetDescription>
@@ -201,9 +201,7 @@
                       >
                       <span class="text-sm text-gray-600">
                         {{ answersStore.getAnsweredCountForWeek(week) }} /
-                        {{
-                          answersStore.getTotalQuestionsForWeek(week)
-                        }}
+                        {{ answersStore.getTotalQuestionsForWeek(week) }}
                         answered
                       </span>
                     </div>

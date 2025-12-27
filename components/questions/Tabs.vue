@@ -74,7 +74,7 @@
         />
 
         <!-- preview answer -->
-        <Sheet>
+        <Sheet v-if="user">
           <div
             class="fixed bottom-3 right-[0.9rem] z-20 lg:left-4 lg:right-auto"
           >
@@ -201,9 +201,7 @@
                       >
                       <span class="text-sm text-gray-600">
                         {{ answersStore.getAnsweredCountForWeek(week) }} /
-                        {{
-                          answersStore.getTotalQuestionsForWeek(week)
-                        }}
+                        {{ answersStore.getTotalQuestionsForWeek(week) }}
                         answered
                       </span>
                     </div>

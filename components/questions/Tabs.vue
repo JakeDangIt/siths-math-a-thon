@@ -70,7 +70,6 @@
           :extraInfo="question.extra_info"
           :week="week"
           :imageUrl="question.image_url"
-          :points="question.points"
         />
 
         <!-- preview answer -->
@@ -201,9 +200,7 @@
                       >
                       <span class="text-sm text-gray-600">
                         {{ answersStore.getAnsweredCountForWeek(week) }} /
-                        {{
-                          answersStore.getTotalQuestionsForWeek(week)
-                        }}
+                        {{ answersStore.getTotalQuestionsForWeek(week) }}
                         answered
                       </span>
                     </div>

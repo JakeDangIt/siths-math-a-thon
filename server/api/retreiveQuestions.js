@@ -42,7 +42,5 @@ export default defineEventHandler(async (event) => {
 
   const weekData = data.filter((q) => q.week.replace(' Bonus', '') === week);
 
-  console.log(weekData);
-
   return { questions: weekData };
 });

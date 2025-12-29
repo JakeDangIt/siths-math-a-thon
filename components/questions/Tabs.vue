@@ -18,34 +18,12 @@
     @update:model-value="onTabChange"
   >
     <div class="flex flex-col gap-2 md:flex-row">
-      <!-- carousel for the tabs -->
-      <Carousel
-        v-if="presentWeekNames.length > 0"
-        class="mx-auto w-2/3"
-        :opts="{
-          align: 'start',
-          slidesToScroll: 2,
-          startIndex: defaultWeek - 1,
-        }"
-        ref="mainCarousel"
-      >
-        <CarouselContent>
-          <!-- paired into week and its bonus -->
-          <CarouselItem
-            v-for="week in presentWeekNames"
-            class="w-full basis-1/2"
-            :key="week"
-          >
-            <TabsList class="w-full">
-              <TabsTrigger class="w-full" :value="week">
-                Week {{ week }}
-              </TabsTrigger>
-            </TabsList>
-          </CarouselItem>
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      <!-- buttons for the tabs -->
+      <TabsList v-for="week in presentWeekNames" class="w-full">
+        <TabsTrigger class="w-full" :value="week">
+          Week {{ week }}
+        </TabsTrigger>
+      </TabsList>
     </div>
 
     <!-- content for the tabs -->
@@ -156,32 +134,13 @@
               class="mx-auto my-4"
               v-model="selectedPreviewWeek"
             >
-              <Carousel
-                class="mx-auto w-2/3"
-                :opts="{
-                  align: 'start',
-                  slidesToScroll: 2,
-                  startIndex: getCarouselScrollIndex(selectedPreviewWeek),
-                }"
-                ref="previewCarousel"
-              >
-                <CarouselContent>
-                  <!-- paired into week and its bonus -->
-                  <CarouselItem
-                    v-for="week in presentWeekNames"
-                    class="w-full basis-1/2"
-                    :key="week"
-                  >
-                    <TabsList class="w-full">
-                      <TabsTrigger :value="week">
-                        {{ width > 640 ? 'Week ' : 'W' }}{{ week }}
-                      </TabsTrigger>
-                    </TabsList>
-                  </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
+              <div class="flex flex-col gap-2 md:flex-row">
+                <TabsList v-for="week in presentWeekNames" class="w-full">
+                  <TabsTrigger class="w-full" :value="week">
+                    Week {{ week }}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <!-- each of the inputted answers, sorted by number, split into two columns on mobile -->
               <TabsContent
@@ -335,10 +294,6 @@ const user = useSupabaseUser();
 const session = useSupabaseSession();
 const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
-// Carousel refs for programmatic control
-const mainCarousel = ref(null);
-const previewCarousel = ref(null);
-
 // Add reactive variable for preview sheet tab selection
 const selectedPreviewWeek = ref('1');
 
@@ -367,26 +322,6 @@ const normalizeWeek = (week) => {
   return String(week);
 };
 
-// Helper function to get the index of a week in the presentWeekNames array
-const getWeekIndex = (week) => {
-  return presentWeekNames.value.findIndex(
-    (w) => normalizeWeek(w) === normalizeWeek(week)
-  );
-};
-
-// Helper function to get the carousel scroll index based on week pairs
-// Since carousel shows 2 items (basis-1/2), we need to scroll to the correct pair
-const getCarouselScrollIndex = (week) => {
-  const weekIndex = getWeekIndex(week);
-  if (weekIndex === -1) return 0;
-
-  // Group weeks into pairs: [0,1], [2,3], [4,5], etc.
-  // For weeks 1 and 1 Bonus (indices 0,1) -> scroll to index 0
-  // For weeks 2 and 2 Bonus (indices 2,3) -> scroll to index 1
-  // For weeks 3 and 3 Bonus (indices 4,5) -> scroll to index 2
-  return Math.floor(weekIndex / 2);
-};
-
 // present week names, filtered to only show weeks that have questions
 const presentWeekNames = computed(() => {
   return allWeekNames.filter((week) => {
@@ -413,32 +348,14 @@ const getAnswersForWeek = (week) => {
   return answersStore.getAnswersForWeek(week);
 };
 
-// Function to scroll carousel to specific index
-const scrollCarouselToIndex = (carouselRef, index) => {
-  if (carouselRef?.value?.scrollTo && index >= 0) {
-    carouselRef.value.scrollTo(index);
-  }
-};
-
 // function to rerender mathjax when tab changes, must be nexttick to wait for DOM to update
 function onTabChange(newWeek) {
   selectedPreviewWeek.value = newWeek; // Sync preview sheet with main tabs
 
-  // Scroll preview carousel to match the selected week pair
-  const carouselScrollIndex = getCarouselScrollIndex(newWeek);
   nextTick(() => {
-    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
     questionsStore.rerenderMathJax();
   });
 }
-
-// Watch for changes in selectedPreviewWeek to sync carousel position
-watch(selectedPreviewWeek, (newWeek) => {
-  const carouselScrollIndex = getCarouselScrollIndex(newWeek);
-  nextTick(() => {
-    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
-  });
-});
 
 // function to save answers, checks if user is logged in
 async function saveAnswers() {

@@ -1,53 +1,11 @@
 <template>
   <!-- HAMBURGER -->
-  <label class="burger" for="burger">
-    <span />
-    <span />
-    <span />
+  <label
+    class="[&>span]:duration-[250ms] relative block h-[24px] w-[28px] cursor-pointer bg-transparent [&>span:nth-child(1)]:top-0 [&>span:nth-child(2)]:top-1/2 [&>span:nth-child(2)]:-translate-y-1/2 [&>span:nth-child(3)]:top-full [&>span:nth-child(3)]:-translate-y-full [&>span]:absolute [&>span]:left-0 [&>span]:block [&>span]:h-1 [&>span]:w-full [&>span]:origin-left [&>span]:rounded-[9px] [&>span]:bg-black [&>span]:opacity-100 [&>span]:transition-all [&>span]:ease-in-out"
+    for="burger"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
   </label>
 </template>
-
-<style scoped>
-.burger {
-  position: relative;
-  width: 28px;
-  height: 24px;
-  background: transparent;
-  cursor: pointer;
-  display: block;
-}
-
-.burger input {
-  display: none;
-}
-
-.burger span {
-  display: block;
-  position: absolute;
-  height: 4px;
-  width: 100%;
-  background: black;
-  border-radius: 9px;
-  opacity: 1;
-  left: 0;
-  transform: rotate(0deg);
-  transition: 0.25s ease-in-out;
-}
-
-.burger span:nth-of-type(1) {
-  top: 0px;
-  transform-origin: left center;
-}
-
-.burger span:nth-of-type(2) {
-  top: 50%;
-  transform: translateY(-50%);
-  transform-origin: left center;
-}
-
-.burger span:nth-of-type(3) {
-  top: 100%;
-  transform-origin: left center;
-  transform: translateY(-100%);
-}
-</style>

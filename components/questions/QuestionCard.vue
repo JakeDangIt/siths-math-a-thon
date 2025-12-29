@@ -44,7 +44,7 @@
     <!-- Random accent image that only appears in bee mode -->
     <img
       :src="`/theme/card_accent_${randAccent}.png`"
-      class="accent-img absolute bottom-0 right-0 h-64 w-64 object-contain"
+      class="accent-img absolute bottom-0 right-0 hidden h-64 w-64 object-contain"
       alt="card accent"
       draggable="false"
     />
@@ -136,10 +136,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.accent-img {
-  display: none;
-}
-
 .bee-mode .accent-img {
   display: block;
 }

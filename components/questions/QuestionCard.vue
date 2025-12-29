@@ -5,7 +5,6 @@
         {{ `Question ${question}` }}
       </CardTitle>
       <CardDescription>
-        {{ `[${points} ${points > 1 ? 'points' : 'point'}]` }}
         <span class="text-theme-red">
           {{ isInvalid ? 'Please enter a valid number' : '' }}
         </span>
@@ -59,12 +58,10 @@ const props = defineProps([
   'mathContent',
   'extraInfo',
   'imageUrl',
-  'points',
 ]);
 
 const question = ref(props.question);
 const week = ref(props.week);
-const points = ref(props.points);
 
 // Random accent image (1 to 4)
 const randAccent = ref(Math.floor(Math.random() * 4) + 1);

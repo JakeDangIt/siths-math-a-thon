@@ -18,7 +18,7 @@
         <HomeProfileSummary class="h-full" />
 
         <!-- Charity and Leaderboard Row -->
-        <HomeMichaelsCause class="h-full" />
+        <HomeLuvMichael class="h-full" />
         <HomeWeekStatsLeaderboard class="h-full md:col-span-1 lg:col-span-2" />
 
         <!-- Announcements - Full width but condensed -->

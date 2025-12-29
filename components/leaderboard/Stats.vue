@@ -100,6 +100,19 @@
                 weeksAnswers(weekNames[index]).at(-1).submittedAnswer
               }}</TableCell>
             </TableRow>
+            <TableRow
+              v-else-if="
+                timeStore.now <=
+                timeStore.weeks.find(
+                  (w) =>
+                    w.week == weekNames[index].toString().replace(' Bonus', '')
+                )?.endsAt
+              "
+            >
+              <TableCell colspan="3"
+                >This week has not ended yet. Check again later.</TableCell
+              >
+            </TableRow>
             <TableRow v-else>
               <TableCell colspan="3"
                 >No answers submitted for this set of questions</TableCell
@@ -133,6 +146,7 @@
 <script setup>
 const questionsStore = useQuestionsStore();
 const leaderboardStore = useLeaderboardStore();
+const timeStore = useTimeStore();
 
 // if there is some answer, you've submited
 const hasSubmitted = computed(() => leaderboardStore.userAnswers[0] != null);

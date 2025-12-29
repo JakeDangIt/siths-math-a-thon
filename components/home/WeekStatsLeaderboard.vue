@@ -1,11 +1,18 @@
 <template>
   <div
-    v-if="leaderboardStore.leaderboardData.length != 0"
+    v-if="leaderboardStore.leaderboardData"
     class="h-full w-full"
   >
-    <!-- Show skeleton while data is loading -->
-    <Card v-if="leaderboardStore.top3Avatars.length !== 3" class="h-full">
-      <Skeleton class="h-full w-full" />
+    <!-- Card for when there is not enough data -->
+    <Card v-if="leaderboardStore.top3Avatars !== 3" class="h-full">
+      <CardHeader>
+        <CardTitle class="text-center">Leaderboard</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p class="text-center">Not enough data to show leaderboard.</p>
+        <img src="/math-a-thon-icon.png" alt="Bird Icon" class="mx-auto mt-4 h-100% w-100%"/>
+        <p class="text-center">Sorry, come back later.</p>
+      </CardContent>
     </Card>
 
     <!-- Card for the top 3 leaderboard -->

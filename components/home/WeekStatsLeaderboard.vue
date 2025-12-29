@@ -68,8 +68,6 @@
 </template>
 
 <script setup>
-import Card from '../ui/card/Card.vue';
-
 const leaderboardStore = useLeaderboardStore();
 const user = useSupabaseUser();
 </script>

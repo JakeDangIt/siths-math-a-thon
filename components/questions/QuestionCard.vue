@@ -30,6 +30,7 @@
         />
       </div>
       <Input
+        v-if="user"
         id="input"
         type="text"
         v-model="inputValue"
@@ -51,6 +52,8 @@
 </template>
 
 <script setup>
+const user = useSupabaseUser();
+
 const answersStore = useAnswersStore();
 const props = defineProps([
   'question',

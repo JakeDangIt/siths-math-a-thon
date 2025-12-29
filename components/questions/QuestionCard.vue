@@ -19,7 +19,7 @@
       <div
         v-if="props.mathContent"
         v-html="props.mathContent"
-        class="relative w-full overflow-x-auto text-left"
+        class="relative w-full overflow-x-auto overflow-y-hidden text-left"
       ></div>
       <div v-if="props.imageUrl" class="mb-4 flex justify-center">
         <img

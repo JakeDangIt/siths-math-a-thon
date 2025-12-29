@@ -100,10 +100,14 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   // get your answers
   async function getUserAnswers() {
-    const { data, error } = await supabase
-      .from('submitted_answers')
-      .select('correct_answers, uid, created_at')
-      .eq('uid', user.value.id);
+    const session = await supabase.auth.getSession();
+    const token = session.data.session?.access_token;
+
+    const { data, error } = await $fetch('/api/retrieveSubmittedAnswers', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (error) {
       toastStore.changeToast('Failed to retrieve user answers', error.message);

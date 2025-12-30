@@ -114,7 +114,7 @@
 
           <!-- another preview button -->
           <SheetTrigger
-            ><Button class="relative z-20" aria-label="Preview Answers"
+            ><Button class="relative" aria-label="Preview Answers"
               >Preview Answers</Button
             >
           </SheetTrigger>

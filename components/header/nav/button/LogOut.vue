@@ -4,7 +4,7 @@
     routePath="/auth/login"
     variant="secondary"
     @click="logout()"
-    class="text-lg"
+    class="p-1 text-lg"
     :disabled="logoutLoading"
   ></HeaderNavLink>
 </template>

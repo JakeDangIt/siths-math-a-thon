@@ -9,16 +9,17 @@
 
 <script setup>
 const props = defineProps({
-  week: Number | String,
+  week: String,
 });
+
+import { weeks } from '@/utils/dates.js';
+
+console.log(weeks);
 
 const timeStore = useTimeStore();
 
 const target = computed(
-  () =>
-    timeStore.weeks.find(
-      (w) => w.week === Number(props.week.replace(' Bonus', ''))
-    )?.endsAt
+  () => weeks.find((w) => w.week === props.week.replace(' Bonus', ''))?.endsAt
 );
 
 const remaining = computed(() => {

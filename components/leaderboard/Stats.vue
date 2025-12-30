@@ -54,7 +54,7 @@
         >
           <CarouselContent>
             <CarouselItem
-              v-for="week in presentWeekNames"
+              v-for="week in weekNames"
               class="w-full basis-1/2"
               :key="week"
             >
@@ -103,7 +103,7 @@
             <TableRow
               v-else-if="
                 timeStore.now <=
-                timeStore.weeks.find(
+                weeks.find(
                   (w) =>
                     w.week == weekNames[index].toString().replace(' Bonus', '')
                 )?.endsAt
@@ -144,6 +144,8 @@
 </template>
 
 <script setup>
+import { weeks } from '@/utils/dates.js';
+
 const questionsStore = useQuestionsStore();
 const leaderboardStore = useLeaderboardStore();
 const timeStore = useTimeStore();

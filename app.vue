@@ -55,7 +55,7 @@ useHead({
     { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
     { 'http-equiv': 'Content-Type', content: 'text/html; charset=utf-8' },
     { name: 'theme-color', content: '#B1BAD1' },
-    { name: 'copyright', content: '© 2025 SITHS Math-a-Thon' },
+    { name: 'copyright', content: '© 2026 SITHS Math-a-Thon' },
     { name: 'rating', content: 'general' },
   ],
   link: [

@@ -5,6 +5,24 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+const weeks = [
+  {
+    week: '1',
+    startsAt: Date.UTC(2025, 11, 22, 5),
+    endsAt: Date.UTC(2025, 11, 29, 5),
+  },
+  {
+    week: '2',
+    startsAt: Date.UTC(2025, 11, 29, 5),
+    endsAt: Date.UTC(2026, 0, 5, 5),
+  },
+  {
+    week: '3',
+    startsAt: Date.UTC(2026, 0, 5, 5),
+    endsAt: Date.UTC(2026, 0, 12, 5),
+  },
+];
+
 export default defineEventHandler(async (event) => {
   const token = getHeader(event, 'authorization')?.replace('Bearer ', '');
   const { week, answers } = await readBody(event);
@@ -18,6 +36,22 @@ export default defineEventHandler(async (event) => {
     const userId = decoded.sub;
 
     if (!userId) return { error: 'Unauthorized' };
+
+    const selectedWeek = weeks.find(
+      (w) => w.week === week.replace(' Bonus', '')
+    );
+
+    if (!selectedWeek) {
+      return { error: 'Invalid week' };
+    }
+
+    const nowMs = Date.now();
+
+    if (nowMs < selectedWeek.startsAt || nowMs >= selectedWeek.endsAt) {
+      return {
+        error: 'Submissions are not allowed for this week at this time',
+      };
+    }
 
     const now = new Date().toISOString();
 

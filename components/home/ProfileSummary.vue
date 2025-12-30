@@ -1,7 +1,7 @@
 <template>
-  <div v-if="user">
+  <div>
     <!-- user profile on home -->
-    <Card class="h-full">
+    <Card v-if="user" class="relative flex h-full">
       <CardHeader>
         <CardTitle>Your Profile</CardTitle>
       </CardHeader>
@@ -28,11 +28,27 @@
         </nuxt-link>
       </CardContent>
     </Card>
+
+    <!-- no user profile on home -->
+    <Card v-else class="relative flex h-full flex-col">
+      <CardHeader>
+        <CardTitle>User Profile</CardTitle>
+      </CardHeader>
+      <CardContent class="relative flex flex-1 flex-col justify-between">
+        <p>
+          Please log in to view your profile information and track your
+          progress in the Math-a-Thon.
+        </p>
+
+        <nuxt-link to="/auth/login">
+          <Button>Log In</Button>
+        </nuxt-link>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
 <script setup>
 const user = useSupabaseUser();
-
 const firstName = useFirstName(user.value?.user_metadata?.name);
 </script>

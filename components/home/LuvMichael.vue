@@ -7,13 +7,12 @@
       </CardHeader>
       <CardContent class="relative z-10">
         <p>
-          The 2025 SITHS Math-a-Thon is fundraising for Luv Michael, 
+          The 2026 SITHS Math-a-Thon is fundraising for Luv Michael, 
           a nonprofit organization dedicated to empowering autistic individuals. 
           Founded in honor of Michael Kessaris, an autistic young man, 
           Luv Michael was created to support adults with autism through 
           job training, education, employment opportunities, and community living programs. 
-          The organization promotes inclusion and independence by providing meaningful work experiences 
-          and advocating for autism acceptance. All proceeds will go toward supporting 
+          All proceeds will go toward supporting 
           Luv Michael's programs and services for the autistic community.
         </p>
       </CardContent>

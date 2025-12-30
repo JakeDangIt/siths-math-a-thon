@@ -13,7 +13,7 @@
 
       <CardContent
         v-else-if="questionsStore.questionData.length > 0"
-        class="relative z-10 flex h-full flex-col justify-between"
+        class="relative z-10 flex flex-1 flex-col justify-between"
       >
         <div class="mb-4 flex flex-col gap-2 overflow-clip">
           <p class="text-lg font-semibold">

@@ -227,3 +227,20 @@ onUnmounted(() => {
   });
 });
 </script>
+
+<style>
+/* Removes the scrollbar which messed with the width of the screen */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Firefox, IE */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+</style>

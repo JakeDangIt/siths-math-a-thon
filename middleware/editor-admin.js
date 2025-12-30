@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async () => {
     },
   });
 
-  if (!data?.user || data.user.role !== 'admin') {
+  if (!data || data.role !== 'admin') {
     return navigateTo('/');
   }
 });

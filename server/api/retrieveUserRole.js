@@ -3,13 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import { getHeader, setHeader } from 'h3';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-  {
-    auth: { persistSession: false },
-  }
-);
+import { retrieveUser } from '../utils/retrieveUser';
 
 export default defineEventHandler(async (event) => {
   setHeader(event, 'Cache-Control', 'no-store');
@@ -30,22 +24,16 @@ export default defineEventHandler(async (event) => {
       return { user: null };
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('uid', userId)
-      .single();
+    const { user, error } = await retrieveUser(userId);
 
-    if (profileError) {
-      console.error('Profile fetch error:', profileError);
-      return { error: profileError.message };
+    if (error) {
+      console.error('User retrieval error:', error);
+      return { user: null };
     }
 
     return {
-      user: {
-        id: userId,
-        role: profile.role,
-      },
+      id: userId,
+      role: user.role,
     };
   } catch (err) {
     console.error('JWT verification error:', err);

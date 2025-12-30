@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- user profile on home -->
-    <Card v-if="user" class="relative flex h-full">
+    <Card v-if="user" class="relative flex h-full flex-col">
       <CardHeader>
         <CardTitle>Your Profile</CardTitle>
       </CardHeader>
@@ -36,8 +36,8 @@
       </CardHeader>
       <CardContent class="relative flex flex-1 flex-col justify-between">
         <p>
-          Please log in to view your profile information and track your
-          progress in the Math-a-Thon.
+          Please log in to view your profile information and track your progress
+          in the Math-a-Thon.
         </p>
 
         <nuxt-link to="/auth/login">

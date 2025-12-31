@@ -21,6 +21,14 @@
       >
         <Icon name="material-symbols:arrow-downward" class="h-4 w-4" />
       </Button>
+      <Button
+        @click="deleteQuestion"
+        size="sm"
+        variant="destructive"
+        class="p-1"
+      >
+        <Icon name="material-symbols:delete" class="h-4 w-4" />
+      </Button>
     </div>
     <Card class="relative overflow-hidden">
       <CardHeader>
@@ -116,6 +124,7 @@ const emit = defineEmits([
   'update:answer',
   'moveUp',
   'moveDown',
+  'delete',
 ]);
 
 const question = computed(() => props.question);
@@ -167,6 +176,10 @@ function moveUp() {
 
 function moveDown() {
   emit('moveDown');
+}
+
+function deleteQuestion() {
+  emit('delete');
 }
 
 function handleAnswerInput(event) {

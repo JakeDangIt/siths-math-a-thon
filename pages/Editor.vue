@@ -69,7 +69,13 @@
           @update:answer="answerList[question.id] = $event"
           @moveUp="moveQuestionUp(question.id, week)"
           @moveDown="moveQuestionDown(question.id, week)"
+          @delete="deleteQuestion(question.id)"
         />
+
+        <Button @click="addQuestion(week)" class="mt-4">Add Question</Button>
+        <Button @click="saveQuestions" variant="secondary" class="ml-2 mt-4"
+          >Save Changes</Button
+        >
       </div>
       <div v-else>
         <h1 class="my-2 text-center text-2xl font-bold">
@@ -189,6 +195,98 @@ const moveQuestionDown = (id, week) => {
     nextTick(() => window.scrollTo(0, scrollY));
   }
 };
+
+const addQuestion = (week) => {
+  const questions = getQuestionsForWeek(week);
+  const maxQuestion = Math.max(...questions.map((q) => Number(q.question)), 0);
+  const newQuestionNum = maxQuestion + 1;
+  const newId = 'new-' + Date.now();
+  const newQuestion = {
+    id: newId,
+    week: week,
+    question: newQuestionNum.toString(),
+    math_content: '',
+    extra_info: '',
+    image_url: '',
+  };
+  data.value.questions.push(newQuestion);
+  answerList.value[newId] = '';
+};
+
+const saveQuestions = async () => {
+  try {
+    const response = await $fetch('/api/saveEditorQuestions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        questions: data.value.questions,
+        answers: answerList.value,
+      }),
+    });
+
+    if (response.error) {
+      console.error('Error saving:', response.error);
+    } else {
+      console.log('Saved successfully');
+      // Reload data to get actual database IDs for new questions
+      await reloadData();
+    }
+  } catch (error) {
+    console.error('Error saving questions:', error);
+  }
+};
+
+const deleteQuestion = async (id) => {
+  const questionToDelete = data.value.questions.find((q) => q.id === id);
+  if (questionToDelete) {
+    // Delete from database if it's an existing question
+    if (!id.toString().startsWith('new-')) {
+      try {
+        const response = await $fetch('/api/deleteEditorQuestion', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            questionId: id,
+          }),
+        });
+
+        if (response.error) {
+          console.error('Error deleting from database:', response.error);
+          return;
+        }
+
+        // Reload data to sync with database
+        await reloadData();
+      } catch (error) {
+        console.error('Error deleting question:', error);
+        return;
+      }
+    } else {
+      // For new questions, just remove from local state and renumber
+      const week = questionToDelete.week;
+      const index = data.value.questions.findIndex((q) => q.id === id);
+      if (index !== -1) {
+        data.value.questions.splice(index, 1);
+        delete answerList.value[id];
+
+        // Renumber questions in this week
+        const questionsInWeek = data.value.questions
+          .filter((q) => normalizeWeek(q.week) === normalizeWeek(week))
+          .sort((a, b) => Number(a.question) - Number(b.question));
+        questionsInWeek.forEach((q, idx) => {
+          q.question = (idx + 1).toString();
+        });
+      }
+    }
+  }
+};
+
 const scrollCarouselToIndex = (carouselRef, index) => {
   if (carouselRef?.value?.scrollTo && index >= 0) {
     carouselRef.value.scrollTo(index);
@@ -213,7 +311,7 @@ watch(
   { immediate: true }
 );
 
-onMounted(async () => {
+const reloadData = async () => {
   const res = await fetch('/api/retrieveEditorQuestions', {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -229,6 +327,7 @@ onMounted(async () => {
   });
   const answersData = await answersRes.json();
 
+  answerList.value = {};
   data.value.questions.forEach((question) => {
     answerList.value[question.id] = '';
   });
@@ -248,6 +347,10 @@ onMounted(async () => {
     await nextTick();
     await questionsStore.rerenderMathJax();
   }
+};
+
+onMounted(async () => {
+  await reloadData();
 });
 </script>
 

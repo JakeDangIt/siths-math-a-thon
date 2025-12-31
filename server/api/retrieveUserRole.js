@@ -1,5 +1,4 @@
 // server/api/retrieveUserRole.js
-import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import { getHeader, setHeader } from 'h3';
 

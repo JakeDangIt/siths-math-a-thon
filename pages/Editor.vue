@@ -49,15 +49,26 @@
           Week {{ week }} Questions
         </h1>
 
-        <QuestionsQuestionCard
+        <QuestionsEditorCard
           class="flex flex-col gap-2"
-          v-for="question in getQuestionsForWeek(week)"
+          v-for="(question, index) in getQuestionsForWeek(week)"
           :key="question.id"
           :question="question.question"
           :mathContent="question.math_content"
           :extraInfo="question.extra_info"
           :week="week"
           :imageUrl="question.image_url"
+          :answer="answerList[question.id] || ''"
+          :canMoveUp="index > 0"
+          :canMoveDown="index < getQuestionsForWeek(week).length - 1"
+          @update:mathContent="
+            updateQuestion(question.id, 'math_content', $event)
+          "
+          @update:extraInfo="updateQuestion(question.id, 'extra_info', $event)"
+          @update:imageUrl="updateQuestion(question.id, 'image_url', $event)"
+          @update:answer="answerList[question.id] = $event"
+          @moveUp="moveQuestionUp(question.id, week)"
+          @moveDown="moveQuestionDown(question.id, week)"
         />
       </div>
       <div v-else>
@@ -78,6 +89,7 @@ definePageMeta({
 const session = useSupabaseSession();
 const token = session.value?.access_token;
 const data = ref({ questions: [] });
+const answerList = ref({});
 
 const questionsStore = useQuestionsStore();
 
@@ -117,7 +129,7 @@ function onTabChange(newWeek) {
   const carouselScrollIndex = getCarouselScrollIndex(newWeek);
 
   nextTick(() => {
-    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
+    scrollCarouselToIndex(mainCarousel, carouselScrollIndex);
     questionsStore.rerenderMathJax();
   });
 }
@@ -141,6 +153,42 @@ const getCarouselScrollIndex = (week) => {
   return Math.floor(weekIndex / 2);
 };
 
+const updateQuestion = (id, field, value) => {
+  const question = data.value.questions.find((q) => q.id === id);
+  if (question) {
+    question[field] = value;
+    nextTick(() => {
+      questionsStore.rerenderMathJax();
+    });
+  }
+};
+const moveQuestionUp = (id, week) => {
+  const scrollY = window.scrollY;
+  const questions = data.value.questions
+    .filter((q) => normalizeWeek(q.week) === normalizeWeek(week))
+    .sort((a, b) => Number(a.question) - Number(b.question));
+  const index = questions.findIndex((q) => q.id === id);
+  if (index > 0) {
+    const temp = questions[index].question;
+    questions[index].question = questions[index - 1].question;
+    questions[index - 1].question = temp;
+    nextTick(() => window.scrollTo(0, scrollY));
+  }
+};
+
+const moveQuestionDown = (id, week) => {
+  const scrollY = window.scrollY;
+  const questions = data.value.questions
+    .filter((q) => normalizeWeek(q.week) === normalizeWeek(week))
+    .sort((a, b) => Number(a.question) - Number(b.question));
+  const index = questions.findIndex((q) => q.id === id);
+  if (index < questions.length - 1) {
+    const temp = questions[index].question;
+    questions[index].question = questions[index + 1].question;
+    questions[index + 1].question = temp;
+    nextTick(() => window.scrollTo(0, scrollY));
+  }
+};
 const scrollCarouselToIndex = (carouselRef, index) => {
   if (carouselRef?.value?.scrollTo && index >= 0) {
     carouselRef.value.scrollTo(index);
@@ -150,7 +198,7 @@ const scrollCarouselToIndex = (carouselRef, index) => {
 watch(selectedPreviewWeek, (newWeek) => {
   const carouselScrollIndex = getCarouselScrollIndex(newWeek);
   nextTick(() => {
-    scrollCarouselToIndex(previewCarousel, carouselScrollIndex);
+    scrollCarouselToIndex(mainCarousel, carouselScrollIndex);
   });
 });
 
@@ -173,6 +221,28 @@ onMounted(async () => {
   });
   const fetchedData = await res.json();
   data.value = fetchedData;
+
+  const answersRes = await fetch('/api/retrieveEditorAnswers', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const answersData = await answersRes.json();
+
+  data.value.questions.forEach((question) => {
+    answerList.value[question.id] = '';
+  });
+
+  answersData.answers.forEach((answer) => {
+    const question = data.value.questions.find(
+      (q) =>
+        normalizeWeek(q.week) === normalizeWeek(answer.week) &&
+        q.question == answer.question_number
+    );
+    if (question) {
+      answerList.value[question.id] = answer.answer;
+    }
+  });
 
   if (window.MathJax) {
     await nextTick();

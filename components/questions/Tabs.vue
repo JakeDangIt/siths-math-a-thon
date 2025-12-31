@@ -376,17 +376,11 @@ async function saveAnswers() {
       return;
     }
 
-    const token = session.value.access_token;
-    const response = await $fetch('/api/saveAnswers', {
+    const response = await requestEndpoint('/api/saveAnswers', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({
         answers: answersStore.answerData,
       }),
-      keepalive: true,
     });
 
     if (response.error) {
@@ -429,13 +423,8 @@ async function submitAnswers(week, answers) {
       return;
     }
 
-    const token = session.value.access_token;
-    const response = await $fetch('/api/submitAnswers', {
+    const response = await requestEndpoint('/api/submitAnswers', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({ week: normalizeWeek(week), answers }),
     });
 

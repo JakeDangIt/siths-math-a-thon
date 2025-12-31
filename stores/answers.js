@@ -139,14 +139,9 @@ export const useAnswersStore = defineStore('answers', () => {
     }
 
     try {
-      const session = await supabase.auth.getSession();
-      const token = session.data.session?.access_token;
-
-      const { data, error } = await $fetch('/api/retrieveSavedAnswers', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data, error } = await requestEndpoint(
+        '/api/retrieveSavedAnswers'
+      );
 
       if (error) {
         console.error('Error retrieving answers:', error);

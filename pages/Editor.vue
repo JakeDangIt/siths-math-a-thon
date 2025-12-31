@@ -73,9 +73,12 @@
         />
 
         <Button @click="addQuestion(week)" class="mt-4">Add Question</Button>
-        <Button @click="saveQuestions" variant="secondary" class="ml-2 mt-4"
-          >Save Changes</Button
-        >
+
+        <div class="fixed bottom-3 right-[0.9rem] z-20 lg:left-4 lg:right-auto">
+          <Button @click="saveQuestions" variant="secondary">
+            Save Changes
+          </Button>
+        </div>
       </div>
       <div v-else>
         <h1 class="my-2 text-center text-2xl font-bold">

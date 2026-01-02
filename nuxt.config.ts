@@ -33,6 +33,7 @@ export default defineNuxtConfig({
       script: [
         {
           src: '/mathjax/es5/tex-chtml.js',
+          async: true,
         },
       ],
     },

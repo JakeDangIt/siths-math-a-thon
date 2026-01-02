@@ -32,20 +32,14 @@ export const requestEndpoint = async (endpoint, method, body) => {
     return undefined;
   }
 
-  let responseText = await res.text();
-  if (!responseText) {
-    if (!res.ok) {
-      throw new Error(`Request failed with status ${res.status}`);
-    }
-    return undefined;
-  }
+  let responseText = await res.json();
 
   console.log('BEFORE JASON IS EVEN INITIALIZED');
 
   let jason;
   try {
     console.log('BEFORE DA BAM', endpoint);
-    jason = JSON.parse(responseText);
+    jason = responseText;
     console.log('bam?', endpoint, jason);
   } catch (e) {
     console.log(

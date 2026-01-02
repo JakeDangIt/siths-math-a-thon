@@ -4,7 +4,7 @@
   >
     <div class="relative z-20 flex items-center py-1 text-center">
       <Icon name="material-symbols:copyright-outline" class="mx-1" />
-      <p class="text-[10px] leading-tight lg:text-[14px]">
+      <p class="text-[8px] leading-tight lg:text-[14px]">
         2026 SITHS Math-a-Thon, all rights reserved.
       </p>
       <FooterGithubLogoLink class="ml-1" />

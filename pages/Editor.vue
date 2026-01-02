@@ -95,17 +95,12 @@ definePageMeta({
   middleware: ['editor-admin'],
 });
 
-const session = useSupabaseSession();
-const token = session.value?.access_token;
 const data = ref({ questions: [] });
 const answerList = ref({});
 
 const questionsStore = useQuestionsStore();
 
 const mainCarousel = ref(null);
-const previewCarousel = ref(null);
-
-const mathJaxLoaded = computed(() => typeof MathJax !== 'undefined');
 
 const selectedPreviewWeek = ref('1');
 
@@ -218,12 +213,8 @@ const addQuestion = (week) => {
 
 const saveQuestions = async () => {
   try {
-    const response = await $fetch('/api/saveEditorQuestions', {
+    const response = await requestEndpoint('/api/saveEditorQuestions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({
         questions: data.value.questions,
         answers: answerList.value,
@@ -248,12 +239,8 @@ const deleteQuestion = async (id) => {
     // Delete from database if it's an existing question
     if (!id.toString().startsWith('new-')) {
       try {
-        const response = await $fetch('/api/deleteEditorQuestion', {
+        const response = await requestEndpoint('/api/deleteEditorQuestion', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
           body: JSON.stringify({
             questionId: id,
           }),
@@ -315,20 +302,10 @@ watch(
 );
 
 const reloadData = async () => {
-  const res = await fetch('/api/retrieveEditorQuestions', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const fetchedData = await res.json();
+  const fetchedData = await requestEndpoint('/api/retrieveEditorQuestions');
   data.value = fetchedData;
 
-  const answersRes = await fetch('/api/retrieveEditorAnswers', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const answersData = await answersRes.json();
+  const answersData = await requestEndpoint('/api/retrieveEditorAnswers');
 
   answerList.value = {};
   data.value.questions.forEach((question) => {

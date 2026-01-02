@@ -11,6 +11,8 @@ export const useQuestionsStore = defineStore('questions', () => {
     try {
       const result = await requestEndpoint('/api/retreiveQuestions');
 
+      console.log('RETRIEVED QUESTIONS', result);
+
       if (!result) {
         toastStore.changeToast(
           'Failed to retrieve questions',

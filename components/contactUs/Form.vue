@@ -102,14 +102,14 @@ const timeDisableForm = ref(false);
 async function submitForm() {
   formLoading.value = true;
 
-  const result = await requestEndpoint('/api/submitContactForm', {
-    method: 'POST',
-    body: JSON.stringify({
+  const result = await requestEndpoint(
+    '/api/submitContactForm',
+    'POST',
+    JSON.stringify({
       subject: formSubject.value,
       body: formBody.value,
-    }),
-  });
-
+    })
+  );
   if (result.error) {
     toastStore.changeToast('Error submitting', result.error);
   } else {

@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue';
+
 const user = useSupabaseUser();
 
 // for current route and matching
@@ -10,6 +12,12 @@ const currentRouteName = computed(() =>
     : routes.find((route) => route?.routePath == currentRoutePath.value)
         ?.routeName
 );
+
+const userRole = ref();
+
+onMounted(async () => {
+  userRole.value = await requestEndpoint('/api/retrieveUserRole');
+});
 </script>
 
 <template>
@@ -65,6 +73,15 @@ const currentRouteName = computed(() =>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <HeaderNavLink
+        v-if="userRole?.role === 'admin'"
+        route-path="/editor"
+        route-name="Editor"
+        :currentRoutePath="currentRoutePath"
+        variant="link"
+        class="bar-links flex flex-1 justify-center text-lg hover:bg-gray-500 hover:bg-opacity-20"
+      />
     </nav>
 
     <!-- right buttons -->

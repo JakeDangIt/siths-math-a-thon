@@ -162,10 +162,7 @@ async function updateUser() {
     updateLoading.value = true;
     toastStore.changeToast('Updating', 'Saving your changes...');
 
-    const res = await requestEndpoint('/api/changeProfile', {
-      method: 'POST',
-      body: updates,
-    });
+    const res = await requestEndpoint('/api/changeProfile', 'POST', updates);
 
     if (!res.data.value.success) {
       console.error('Update error:', res.statusMessage);

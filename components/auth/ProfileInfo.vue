@@ -162,7 +162,7 @@ async function updateUser() {
     updateLoading.value = true;
     toastStore.changeToast('Updating', 'Saving your changes...');
 
-    const res = await useFetch('/api/changeProfile', {
+    const res = await requestEndpoint('/api/changeProfile', {
       method: 'POST',
       body: updates,
     });

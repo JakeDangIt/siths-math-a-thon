@@ -9,8 +9,7 @@ export const useQuestionsStore = defineStore('questions', () => {
   async function retreiveQuestions() {
     isLoading.value = true;
     try {
-      const response = await fetch('/api/retreiveQuestions');
-      const result = await response.json();
+      const result = await requestEndpoint('/api/retreiveQuestions');
 
       if (result.error) {
         toastStore.changeToast('Failed to retrieve questions', result.error);

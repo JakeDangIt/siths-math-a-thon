@@ -77,8 +77,6 @@
 
 <script setup>
 const user = useSupabaseUser();
-const session = useSupabaseSession();
-const token = session.value.access_token;
 
 // for autofilling form
 const { name, email } = user.value?.user_metadata || {};
@@ -104,19 +102,13 @@ const timeDisableForm = ref(false);
 async function submitForm() {
   formLoading.value = true;
 
-  const response = await fetch('/api/submitContactForm', {
+  const result = await requestEndpoint('/api/submitContactForm', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify({
       subject: formSubject.value,
       body: formBody.value,
     }),
   });
-
-  const result = await response.json();
 
   if (result.error) {
     toastStore.changeToast('Error submitting', result.error);

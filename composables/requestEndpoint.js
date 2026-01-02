@@ -33,7 +33,7 @@ export const requestEndpoint = async (endpoint, method, body) => {
   let responseText = await res.text();
   if (!responseText) {
     if (!res.ok) {
-      throw `Request failed with status ${res.status}`;
+      throw new Error(`Request failed with status ${res.status}`);
     }
     return undefined;
   }
@@ -44,12 +44,12 @@ export const requestEndpoint = async (endpoint, method, body) => {
   } catch (e) {
     console.error(new Error(`Failed to parse JSON response: ${e.message}`));
     console.error(`Response was: ${responseText}`);
-    throw `Failed to parse response from ${endpoint}: ${e.message}`;
+    throw new Error(`Failed to parse response from ${endpoint}: ${e.message}`);
   }
 
   if (!res.ok) {
     console.error(new Error(jason.message || jason.error));
-    throw (
+    throw new Error(
       jason.message || jason.error || `Request failed with status ${res.status}`
     );
   }

@@ -28,13 +28,22 @@ export const requestEndpoint = async (endpoint, method, body) => {
   const contentLength = res.headers.get('Content-Length');
   const contentType = res.headers.get('Content-Type');
 
+  console.log(
+    'CONTENT TYPE AND LENGTH',
+    contentType,
+    contentLength,
+    endpoint,
+    'BATTABOOM',
+    res
+  );
+
   if (!contentLength || contentType === 'text/plain; charset=utf-8') {
     return undefined;
   }
 
   let responseText = await res.json();
 
-  console.log('BEFORE JASON IS EVEN INITIALIZED');
+  console.log('BEFORE JASON IS EVEN INITIALIZED', endpoint, responseText);
 
   let jason;
   try {

@@ -17,7 +17,7 @@
     class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange"
   >
-    <div class="flex flex-col gap-2 md:flex-row">
+    <div class="flex flex-col gap-2 md:flex-row md:px-20">
       <!-- buttons for the tabs -->
       <TabsList v-for="week in presentWeekNames" class="w-full">
         <TabsTrigger class="w-full" :value="week">

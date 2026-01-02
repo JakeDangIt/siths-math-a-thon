@@ -84,7 +84,7 @@ const isInvalid = ref(false);
 // Validate input and update answer
 function handleInput(event) {
   const value = event.target.value;
-  const cleanedValue = value.match(/^-?\d*$/)?.[0] || '';
+  const cleanedValue = event.target.value.replace(/\D/g, '')
 
   isInvalid.value = cleanedValue !== value;
 
@@ -94,6 +94,7 @@ function handleInput(event) {
       event.target.value = cleanedValue;
       inputValue.value = cleanedValue;
     });
+
   } else {
     // If valid, update normally
     inputValue.value = value;

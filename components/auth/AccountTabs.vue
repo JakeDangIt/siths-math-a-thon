@@ -262,17 +262,14 @@ async function handleSignup() {
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
   try {
-    const res = await requestEndpoint('/api/signup', {
-      method: 'POST',
-      body: {
-        email: userEmail.value,
-        password: userPassword.value,
-        name: userName.value,
-        osis: String(userOSIS.value),
-        teacher: userTeacher.value,
-        grade: userGrade.value,
-        agreement: userAgreement.value,
-      },
+    const res = await requestEndpoint('/api/signup', 'POST', {
+      email: userEmail.value,
+      password: userPassword.value,
+      name: userName.value,
+      osis: String(userOSIS.value),
+      teacher: userTeacher.value,
+      grade: userGrade.value,
+      agreement: userAgreement.value,
     });
 
     // Handle if API returns { success: false } instead of throwing

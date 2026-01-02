@@ -376,11 +376,8 @@ async function saveAnswers() {
       return;
     }
 
-    const response = await requestEndpoint('/api/saveAnswers', {
-      method: 'POST',
-      body: JSON.stringify({
-        answers: answersStore.answerData,
-      }),
+    const response = await requestEndpoint('/api/saveAnswers', 'POST', {
+      answers: answersStore.answerData,
     });
 
     if (response.error) {
@@ -423,9 +420,9 @@ async function submitAnswers(week, answers) {
       return;
     }
 
-    const response = await requestEndpoint('/api/submitAnswers', {
-      method: 'POST',
-      body: JSON.stringify({ week: normalizeWeek(week), answers }),
+    const response = await requestEndpoint('/api/submitAnswers', 'POST', {
+      week: normalizeWeek(week),
+      answers,
     });
 
     if (response.error) {

@@ -50,4 +50,8 @@ export const routes = [
     routePath: '/auth/updatepassword',
     routeName: 'Update Password',
   },
+  {
+    routePath: '/editor',
+    routeName: 'Editor',
+  },
 ];

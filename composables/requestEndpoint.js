@@ -14,6 +14,8 @@ export const requestEndpoint = async (endpoint, method, body) => {
     headers['Content-Type'] = 'application/json';
   }
 
+  console.log('REQUESTING ENEDPOTINT', endpoint, options);
+
   options.headers = headers;
 
   const fullUrl = endpoint.startsWith('http')

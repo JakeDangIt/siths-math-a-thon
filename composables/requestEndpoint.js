@@ -14,52 +14,26 @@ export const requestEndpoint = async (endpoint, method, body) => {
     headers['Content-Type'] = 'application/json';
   }
 
-  console.log('REQUESTING ENEDPOTINT', endpoint, options);
-
   options.headers = headers;
 
   const fullUrl = endpoint.startsWith('http')
     ? endpoint
-    : process.server
+    : import.meta.server
       ? `http://localhost:3000${endpoint}`
       : endpoint;
+
   const res = await fetch(fullUrl, options);
-
-  const contentLength = res.headers.get('Content-Length');
-  const contentType = res.headers.get('Content-Type');
-
-  console.log(
-    'CONTENT TYPE AND LENGTH',
-    contentType,
-    contentLength,
-    endpoint,
-    'BATTABOOM',
-    res
-  );
-
-  if (!contentLength || contentType === 'text/plain; charset=utf-8') {
-    return undefined;
-  }
 
   let responseText = await res.json();
 
-  console.log('BEFORE JASON IS EVEN INITIALIZED', endpoint, responseText);
-
   let jason;
   try {
-    console.log('BEFORE DA BAM', endpoint);
     jason = responseText;
-    console.log('bam?', endpoint, jason);
   } catch (e) {
-    console.log(
-      'THIS IS THE ERROR CATCH BUT I DONT THINK ITS HERE BUT ITS WORTH A SHOT'
-    );
     console.error(new Error(`Failed to parse JSON response: ${e.message}`));
     console.error(`Response was: ${responseText}`);
     throw new Error(`Failed to parse response from ${endpoint}: ${e.message}`);
   }
-
-  console.log('THIS IS BEFORE THE CHECK', jason, res.ok, endpoint);
 
   if (!res.ok) {
     console.error(new Error(jason.message || jason.error));
@@ -67,8 +41,6 @@ export const requestEndpoint = async (endpoint, method, body) => {
       jason.message || jason.error || `Request failed with status ${res.status}`
     );
   }
-
-  console.log('RESPONSE FROM ENDPOINT FOR', endpoint, jason);
 
   return jason;
 };

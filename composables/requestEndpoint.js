@@ -40,10 +40,13 @@ export const requestEndpoint = async (endpoint, method, body) => {
     return undefined;
   }
 
+  console.log('BEFORE JASON IS EVEN INITIALIZED');
+
   let jason;
   try {
+    console.log('BEFORE DA BAM', endpoint);
     jason = JSON.parse(responseText);
-    console.log('bam?', jason);
+    console.log('bam?', endpoint, jason);
   } catch (e) {
     console.log(
       'THIS IS THE ERROR CATCH BUT I DONT THINK ITS HERE BUT ITS WORTH A SHOT'

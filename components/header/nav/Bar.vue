@@ -74,7 +74,7 @@ const currentRouteName = computed(() =>
         <HeaderNavButtonSignUp />
         <HeaderNavButtonLogIn />
       </div>
-      <div v-if="user?.role == 'authenticated'" class="flex gap-2">
+      <div v-if="user?.role == 'authenticated'" class="flex items-center gap-2">
         <HeaderAvatar />
         <HeaderNavButtonLogOut />
       </div>

@@ -75,4 +75,13 @@ export default defineNuxtConfig({
       exclude: [],
     },
   },
+  nitro: {
+    routeRules: {
+      '/_nuxt/**': {
+        headers: {
+          'cache-control': 'public, max-age=31536000, immutable',
+        },
+      },
+    },
+  },
 });

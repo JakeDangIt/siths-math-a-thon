@@ -14,8 +14,6 @@ const props = defineProps({
 
 import { weeks } from '@/utils/dates.js';
 
-console.log(weeks);
-
 const timeStore = useTimeStore();
 
 const target = computed(

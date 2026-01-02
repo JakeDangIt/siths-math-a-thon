@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="leaderboardStore.leaderboardData"
-    class="h-full w-full"
-  >
+  <div v-if="leaderboardStore.leaderboardData" class="h-full w-full">
     <!-- Card for when there is not enough data -->
     <Card v-if="leaderboardStore.top3Avatars !== 3" class="h-full">
       <CardHeader>
@@ -10,7 +7,12 @@
       </CardHeader>
       <CardContent>
         <p class="text-center">Not enough data to show leaderboard.</p>
-        <img src="/math-a-thon-icon.png" alt="Bird Icon" class="mx-auto mt-4 h-100% w-100%"/>
+        <img
+          src="/math-a-thon-icon.png"
+          alt="Bird Icon"
+          draggable="false"
+          class="h-100% w-100% mx-auto mt-4"
+        />
         <p class="text-center">Sorry, come back later.</p>
       </CardContent>
     </Card>

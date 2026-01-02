@@ -31,16 +31,16 @@
 
     <!-- no user profile on home -->
     <Card v-else class="relative flex h-full flex-col">
-      <CardHeader>
+      <CardHeader class="pb-4">
         <CardTitle>User Profile</CardTitle>
       </CardHeader>
-      <CardContent class="relative flex flex-1 flex-col justify-between">
+      <CardContent class="relative flex flex-1 flex-col">
         <p>
           Please log in to view your profile information and track your progress
           in the Math-a-Thon.
         </p>
 
-        <nuxt-link to="/auth/login">
+        <nuxt-link to="/auth/login" class="mt-6">
           <Button>Log In</Button>
         </nuxt-link>
       </CardContent>

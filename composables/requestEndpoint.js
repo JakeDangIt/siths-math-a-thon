@@ -1,5 +1,4 @@
 export const requestEndpoint = async (endpoint, method, body) => {
-  const config = useRuntimeConfig();
   const session = useSupabaseSession();
   const token = session.value?.access_token;
 
@@ -17,7 +16,11 @@ export const requestEndpoint = async (endpoint, method, body) => {
 
   options.headers = headers;
 
-  const fullUrl = endpoint.startsWith('http') ? endpoint : endpoint;
+  const fullUrl = endpoint.startsWith('http')
+    ? endpoint
+    : process.server
+      ? `http://localhost:3000${endpoint}`
+      : endpoint;
   const res = await fetch(fullUrl, options);
 
   const contentLength = res.headers.get('Content-Length');

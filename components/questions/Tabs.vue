@@ -175,7 +175,7 @@
                   </div>
 
                   <!-- Answers grid -->
-                  <ScrollArea class="h-[50vh] md:h-auto">
+                  <ScrollArea class="h-[50dvh] md:h-auto">
                     <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                       <!-- each answer, sorted, with a remove button -->
                       <div

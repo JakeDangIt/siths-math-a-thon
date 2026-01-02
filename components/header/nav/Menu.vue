@@ -12,7 +12,7 @@ const currentRouteName = computed(() =>
 </script>
 
 <template>
-  <Sheet>
+  <Sheet class="z-50">
     <!-- header w/ hamburger icon -->
     <header
       class="header flex h-14 items-center justify-between bg-theme-blue px-2"
@@ -48,9 +48,9 @@ const currentRouteName = computed(() =>
       <!-- right -->
       <div v-if="user?.role !== 'authenticated'" class="flex justify-end">
         <HeaderNavButtonSignUp />
-        <HeaderNavButtonLogIn class="hidden md:block" />
+        <HeaderNavButtonLogIn />
       </div>
-      <div v-else class="flex justify-end gap-2">
+      <div v-else class="flex items-center justify-end gap-2">
         <HeaderAvatar class="sm:hidden md:block" />
         <HeaderNavButtonLogOut class="sm:hidden md:block" />
       </div>

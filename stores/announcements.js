@@ -7,8 +7,7 @@ export const useAnnouncementsStore = defineStore('announcements', () => {
     isLoading.value = true;
 
     try {
-      const response = await fetch('/api/retreiveAnnouncements');
-      const result = await response.json();
+      const result = await requestEndpoint('/api/retreiveAnnouncements');
 
       if (result.error) {
         toastStore.changeToast(

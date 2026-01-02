@@ -262,7 +262,7 @@ async function handleSignup() {
   toastStore.changeToast('Signing up', 'Please wait while we sign you up.');
 
   try {
-    const res = await $fetch('/api/signup', {
+    const res = await requestEndpoint('/api/signup', {
       method: 'POST',
       body: {
         email: userEmail.value,

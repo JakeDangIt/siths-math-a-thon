@@ -40,8 +40,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     isLoading.value = true;
 
     try {
-      const response = await fetch('/api/retreiveLeaderboard');
-      const result = await response.json();
+      const result = await requestEndpoint('/api/retreiveLeaderboard');
 
       if (result.error) {
         toastStore.changeToast('Failed to retrieve leaderboard', result.error);
@@ -66,8 +65,9 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
     }
 
     try {
-      const response = await fetch(`/api/userPlace?uid=${user_id.value}`);
-      const result = await response.json();
+      const result = await requestEndpoint(
+        `/api/userPlace?uid=${user_id.value}`
+      );
 
       if (result.error) {
         toastStore.changeToast('Failed to retrieve user place', result.error);
@@ -85,8 +85,7 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
   async function getTop3UserAvatars() {
     avatarLoading.value = true;
 
-    const response = await fetch('/api/top3Avatars');
-    const result = await response.json();
+    const result = await requestEndpoint('/api/top3Avatars');
 
     if (result.error) {
       console.error('Error fetching avatars:', result.error);
@@ -100,14 +99,9 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
   // get your answers
   async function getUserAnswers() {
-    const session = await supabase.auth.getSession();
-    const token = session.data.session?.access_token;
-
-    const { data, error } = await $fetch('/api/retrieveSubmittedAnswers', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data, error } = await requestEndpoint(
+      '/api/retrieveSubmittedAnswers'
+    );
 
     if (error) {
       toastStore.changeToast('Failed to retrieve user answers', error.message);

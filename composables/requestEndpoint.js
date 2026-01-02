@@ -43,11 +43,17 @@ export const requestEndpoint = async (endpoint, method, body) => {
   let jason;
   try {
     jason = JSON.parse(responseText);
+    console.log('bam?', jason);
   } catch (e) {
+    console.log(
+      'THIS IS THE ERROR CATCH BUT I DONT THINK ITS HERE BUT ITS WORTH A SHOT'
+    );
     console.error(new Error(`Failed to parse JSON response: ${e.message}`));
     console.error(`Response was: ${responseText}`);
     throw new Error(`Failed to parse response from ${endpoint}: ${e.message}`);
   }
+
+  console.log('THIS IS BEFORE THE CHECK', jason, res.ok, endpoint);
 
   if (!res.ok) {
     console.error(new Error(jason.message || jason.error));

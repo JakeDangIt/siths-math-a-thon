@@ -56,5 +56,7 @@ export const requestEndpoint = async (endpoint, method, body) => {
     );
   }
 
+  console.log('RESPONSE FROM ENDPOINT FOR', endpoint, jason);
+
   return jason;
 };

@@ -99,6 +99,7 @@ const data = ref({ questions: [] });
 const answerList = ref({});
 
 const questionsStore = useQuestionsStore();
+const toastStore = useToastStore();
 
 const mainCarousel = ref(null);
 
@@ -223,6 +224,7 @@ const saveQuestions = async () => {
     } else {
       console.log('Saved successfully');
       // Reload data to get actual database IDs for new questions
+      toastStore.changeToast('Success', 'The questions have been saved.');
       await reloadData();
     }
   } catch (error) {

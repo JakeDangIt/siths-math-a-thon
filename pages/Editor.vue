@@ -213,12 +213,9 @@ const addQuestion = (week) => {
 
 const saveQuestions = async () => {
   try {
-    const response = await requestEndpoint('/api/saveEditorQuestions', {
-      method: 'POST',
-      body: JSON.stringify({
-        questions: data.value.questions,
-        answers: answerList.value,
-      }),
+    const response = await requestEndpoint('/api/saveEditorQuestions', 'POST', {
+      questions: data.value.questions,
+      answers: answerList.value,
     });
 
     if (response.error) {
@@ -239,12 +236,13 @@ const deleteQuestion = async (id) => {
     // Delete from database if it's an existing question
     if (!id.toString().startsWith('new-')) {
       try {
-        const response = await requestEndpoint('/api/deleteEditorQuestion', {
-          method: 'POST',
-          body: JSON.stringify({
+        const response = await requestEndpoint(
+          '/api/deleteEditorQuestion',
+          'POST',
+          {
             questionId: id,
-          }),
-        });
+          }
+        );
 
         if (response.error) {
           console.error('Error deleting from database:', response.error);

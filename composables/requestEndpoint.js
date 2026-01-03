@@ -16,11 +16,11 @@ export const requestEndpoint = async (endpoint, method, body) => {
 
   options.headers = headers;
 
+  const reqURL = useRequestURL();
+
   const fullUrl = endpoint.startsWith('http')
     ? endpoint
-    : import.meta.server
-      ? `http://localhost:3000${endpoint}`
-      : endpoint;
+    : `${reqURL.origin}${endpoint}`;
 
   const res = await fetch(fullUrl, options);
 

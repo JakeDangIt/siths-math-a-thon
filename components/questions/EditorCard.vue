@@ -48,7 +48,7 @@
         <Textarea
           v-model="mathContentValue"
           placeholder="Math Content (LaTeX)"
-          class="relative w-full overflow-x-auto text-left h-fit"
+          class="relative w-full overflow-x-auto text-left "
         />
         <Input v-model="imageUrlValue" placeholder="Image URL" class="mb-4" />
         <Input

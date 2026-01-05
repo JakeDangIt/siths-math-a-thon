@@ -21,8 +21,7 @@ export default defineEventHandler(async (event) => {
     return { error: 'Invalid or expired session' };
   }
 
-  const { subject, body } = await readBody(event);
-  const { name, email } = user.user_metadata;
+  const { name, email, subject, body } = await readBody(event);
 
   if (!name || !email || !subject || !body) {
     return { error: 'All fields are required' };

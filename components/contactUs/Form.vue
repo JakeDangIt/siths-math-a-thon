@@ -105,11 +105,14 @@ async function submitForm() {
   const result = await requestEndpoint(
     '/api/submitContactForm',
     'POST',
-    JSON.stringify({
+    {
+      name: formName.value,
+      email: formEmail.value,
       subject: formSubject.value,
       body: formBody.value,
-    })
+    }
   );
+
   if (result.error) {
     toastStore.changeToast('Error submitting', result.error);
   } else {

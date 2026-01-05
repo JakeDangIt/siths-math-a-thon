@@ -50,13 +50,13 @@ export const staff = [
   },
   {
     name: 'Ethan Cherny',
-    title: 'Question Solver',
+    title: 'Question Reviewer',
     email: '',
     retired: false,
   },
   {
     name: 'Denis Afanasev',
-    title: 'Question Solver',
+    title: 'Question Reviewer',
     email: '',
     retired: false,
   },

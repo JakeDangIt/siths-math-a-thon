@@ -39,25 +39,25 @@ export const staff = [
   {
     name: 'Vicky Huang',
     title: 'Media Manager & Head Designer',
-    email: 'vickyh17@nycstudents.net',
+    email: '',
     retired: false,
   },
   {
     name: 'Nicholas Belenky',
     title: 'Questions Overseer & Head of Content',
-    email: 'nicholasb413@nycstudents.net',
+    email: '',
     retired: false,
   },
   {
     name: 'Ethan Cherny',
     title: 'Question Solver',
-    email: 'ethanc312@nycstudents.net',
+    email: '',
     retired: false,
   },
   {
     name: 'Denis Afanasev',
     title: 'Question Solver',
-    email: 'denisa17@nycstudents.net',
+    email: '',
     retired: false,
   },
 ];

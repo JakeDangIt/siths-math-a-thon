@@ -43,7 +43,7 @@
       :key="week"
       class="space-y-2"
     >
-      <div v-if="getQuestionsForWeek(week).length > 0">
+      <div>
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ week }} Questions
@@ -80,12 +80,6 @@
           </Button>
         </div>
       </div>
-      <div v-else>
-        <h1 class="my-2 text-center text-2xl font-bold">
-          Week {{ week }} Questions
-        </h1>
-        <p class="text-center">Questions are not available</p>
-      </div>
     </TabsContent>
   </Tabs>
 </template>
@@ -111,13 +105,7 @@ const normalizeWeek = (week) => {
   return String(week);
 };
 
-const presentWeekNames = computed(() => {
-  return allWeekNames.filter((week) => {
-    return data.value.questions.some(
-      (question) => normalizeWeek(question.week) === normalizeWeek(week)
-    );
-  });
-});
+const presentWeekNames = ref(allWeekNames);
 
 const defaultWeek = computed(() => {
   return presentWeekNames.value.length > 0 ? presentWeekNames.value[0] : '1';

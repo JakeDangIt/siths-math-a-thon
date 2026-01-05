@@ -3,7 +3,7 @@
     <h2>For general inquiries, please use contact form.</h2>
     <div class="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
       <StaffPerson
-        v-for="person in staff.filter((person) => !person.special)"
+        v-for="person in staff.filter((person) => !person.retired)"
         :key="person.name"
         :person="person"
       />
@@ -11,13 +11,13 @@
 
     <Separator class="w-2/3" />
 
-    <h2 v-if="staff.some((person) => person.special)">Special Mentions:</h2>
+    <h2 v-if="staff.some((person) => person.retired)">Retired Staff:</h2>
     <div
-      v-if="staff.some((person) => person.special)"
+      v-if="staff.some((person) => person.retired)"
       class="grid w-full grid-cols-1 gap-2 md:grid-cols-2"
     >
       <StaffPerson
-        v-for="person in staff.filter((person) => person.special)"
+        v-for="person in staff.filter((person) => person.retired)"
         :key="person.name"
         :person="person"
       />

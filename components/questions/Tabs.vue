@@ -12,7 +12,7 @@
 
   <!-- tabs for the questions, if you switch tab, rerenders mathjax -->
   <Tabs
-    v-else
+    v-else-if="presentWeekNames.length > 0 && mathJaxLoaded"
     :default-value="defaultWeek"
     class="md:mx-auto md:w-4/5 lg:mx-auto lg:w-2/3"
     @update:model-value="onTabChange"
@@ -33,7 +33,7 @@
       :key="week"
       class="space-y-2"
     >
-      <div v-if="getQuestionsForWeek(week).length > 0">
+      <div>
         <!-- week name and each question for that week -->
         <h1 class="my-2 text-center text-2xl font-bold">
           Week {{ week }} Questions
@@ -273,14 +273,16 @@
           </SheetContent>
         </Sheet>
       </div>
-      <div v-else>
-        <h1 class="my-2 text-center text-2xl font-bold">
-          Week {{ week }} Questions
-        </h1>
-        <p class="text-center">Questions are not available</p>
-      </div>
     </TabsContent>
   </Tabs>
+
+  <div v-else class="mx-auto space-y-2 lg:w-2/3">
+    <h1 class="my-2 text-center text-2xl font-bold">No Questions Available</h1>
+    <p class="text-center">
+      Questions are not available at this time. Please check back in
+      <QuestionsClock :week="'1'" unstyled /> for week 1.
+    </p>
+  </div>
 </template>
 
 <script setup>

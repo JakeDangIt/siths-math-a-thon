@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   const currentWeek = () => {
     const now = Date.now();
-    return weeks.find((w) => now < w.endsAt)?.week ?? null;
+    return weeks.find((w) => now >= w.startsAt && now < w.endsAt)?.week ?? null;
   };
 
   const week = currentWeek();

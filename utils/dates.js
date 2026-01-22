@@ -6,12 +6,12 @@ export const weeks = [
   },
   {
     week: '2',
-    startsAt: Date.UTC(2026, 1, 9, 5),
+    startsAt: Date.UTC(2026, 1, 2, 5),
     endsAt: Date.UTC(2026, 1, 9, 5),
   },
   {
     week: '3',
-    startsAt: Date.UTC(2026, 1, 16, 5),
+    startsAt: Date.UTC(2026, 1, 9, 5),
     endsAt: Date.UTC(2026, 1, 16, 5),
   },
 ];

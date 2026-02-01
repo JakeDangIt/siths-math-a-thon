@@ -84,7 +84,10 @@ const isInvalid = ref(false);
 // Validate input and update answer
 function handleInput(event) {
   const value = event.target.value;
-  const cleanedValue = event.target.value.replace(/\D/g, '')
+  // Allow optional minus sign and digits only
+  const hasMinusSign = value.startsWith('-');
+  const digitsOnly = value.replace(/\D/g, '');
+  const cleanedValue = hasMinusSign ? '-' + digitsOnly : digitsOnly;
 
   isInvalid.value = cleanedValue !== value;
 
@@ -94,7 +97,6 @@ function handleInput(event) {
       event.target.value = cleanedValue;
       inputValue.value = cleanedValue;
     });
-
   } else {
     // If valid, update normally
     inputValue.value = value;
@@ -104,7 +106,10 @@ function handleInput(event) {
 // Handle blur to ensure final validation
 function handleBlur(event) {
   const value = event.target.value;
-  const cleanedValue = value.match(/^-?\d*$/)?.[0] || '';
+  // Allow optional minus sign and digits only
+  const hasMinusSign = value.startsWith('-');
+  const digitsOnly = value.replace(/\D/g, '');
+  const cleanedValue = hasMinusSign ? '-' + digitsOnly : digitsOnly;
 
   if (cleanedValue !== value) {
     event.target.value = cleanedValue;

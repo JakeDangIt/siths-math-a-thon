@@ -1,7 +1,7 @@
 <template>
   <div v-if="leaderboardStore.leaderboardData" class="h-full w-full">
     <!-- Card for when there is not enough data -->
-    <Card v-if="leaderboardStore.top3Avatars !== 3" class="h-full">
+    <Card v-if="leaderboardStore.top3Avatars.length !== 3" class="h-full">
       <CardHeader>
         <CardTitle class="text-center">Leaderboard</CardTitle>
       </CardHeader>

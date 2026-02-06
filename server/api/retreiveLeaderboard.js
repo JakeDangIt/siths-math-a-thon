@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     .from('leaderboard')
     .select('uid, user_name, total_points')
     .order('total_points', { ascending: false })
-    .limit(10);
+    .limit(150);
 
   if (error) {
     return { error: error.message };

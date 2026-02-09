@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-const props = defineProps(['user', 'index']);
+const props = defineProps(['user', 'placement']);
 const leaderboardStore = useLeaderboardStore();
 
 // used for matching with your card
@@ -44,7 +44,7 @@ const { width } = useWindowSize();
 // user data
 const top3 = ref(leaderboardStore.top10.slice(0, 3));
 const user = ref(props.user);
-const index = ref(props.index + 1);
+const index = ref(props.placement);
 const firstName = useFirstName(user.value.user_name);
 
 // some stats

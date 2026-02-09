@@ -16,7 +16,7 @@
           v-for="(user, index) in leaderboardStore.top10.slice(0, 3)"
           :key="user.id"
           :user="user"
-          :index="index"
+          :placement="getPlacement(index)"
           :class="{
             'order-2': index === 0,
             'order-1': index === 1,
@@ -33,7 +33,7 @@
           v-for="(user, index) in leaderboardStore.top10.slice(3, 10)"
         >
           <p class="m-2 w-6 text-center text-lg lg:text-2xl">
-            {{ index + 4 }}
+            {{ getPlacement(index + 3) }}
           </p>
 
           <p class="w-5/6 rounded-lg bg-slate-100 p-2 lg:w-auto">
@@ -57,4 +57,19 @@
 const leaderboardStore = useLeaderboardStore();
 const user = useSupabaseUser();
 const user_id = computed(() => user.value?.id);
+
+function getPlacement(index) {
+  const top10 = leaderboardStore.top10;
+
+  const currentScore = top10[index].total_points;
+  
+  let placement = 1;
+  for (let i = 0; i < index; i++) {
+    if (top10[i].total_points > currentScore) {
+      placement += 1;      
+    }
+  }
+  
+  return placement;
+};
 </script>
